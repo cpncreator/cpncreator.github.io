@@ -13,6 +13,163 @@
     }
     body {
       font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(to right, #0f172a, #1e3a8a);
+      color: white;
+      text-align: center;
+      padding: 120px 20px 100px;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+    header p {
+      font-size: 1.2rem;
+      max-width: 680px;
+      margin: 0 auto 30px;
+      color: #d1d5db;
+    }
+    .btn {
+      display: inline-block;
+      background: #38bdf8;
+      color: #0f172a;
+      padding: 14px 32px;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: #0ea5e9;
+      color: #ffffff;
+    }
+    section.features {
+      background: #ffffff;
+      padding: 80px 20px;
+      display: grid;
+      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      max-width: 1200px;
+      margin: auto;
+    }
+    .feature {
+      background: #f8fafc;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+    .feature h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+    .feature p {
+      font-size: 1rem;
+      color: #475569;
+    }
+    .cta {
+      text-align: center;
+      background: #f1f5f9;
+      padding: 80px 20px;
+    }
+    .cta h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+    .cta p {
+      font-size: 1.1rem;
+      color: #475569;
+      margin-bottom: 30px;
+    }
+    form input[type="submit"] {
+      background: #0ea5e9;
+      color: white;
+      font-weight: 600;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CPN Creator</h1>
+    <p>The most powerful offline tool for generating and validating CPNs — secure, private, and machine-bound.</p>
+    <a href="#buy" class="btn">💸 Buy Now with Bitcoin</a>
+  </header>
+
+  <section class="features">
+    <div class="feature">
+      <h3>🔐 License Lock</h3>
+      <p>Each copy is locked to your machine. No license sharing. Total control.</p>
+    </div>
+    <div class="feature">
+      <h3>📋 SSN Validator</h3>
+      <p>Built-in SSN status checker for instant validation — even offline.</p>
+    </div>
+    <div class="feature">
+      <h3>🧠 Clean Generation</h3>
+      <p>Smart CPN generation logic that follows real-world formatting rules.</p>
+    </div>
+    <div class="feature">
+      <h3>💻 Cross-Platform</h3>
+      <p>Supports both Windows and macOS. Simple UI, powerful backend.</p>
+    </div>
+  </section>
+
+  <section class="cta" id="buy">
+    <h2>Secure Your Copy</h2>
+    <p>One-time payment. Lifetime access. Download immediately after payment.</p>
+    <form method="POST" action="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos">
+      <input type="hidden" name="email" value="customer@example.com" />
+      <input type="hidden" name="orderId" value="CPN-CREATOR-ACCESS" />
+      <input type="hidden" name="notificationUrl" value="" />
+      <input type="hidden" name="redirectUrl" value="https://cpncreator.github.io/downloads.html" />
+      <input type="submit" value="Buy Now with BTC">
+    </form>
+  </section>
+
+  <footer>
+    &copy; 2025 CPN Creator | Designed for anonymous offline use
+  </footer>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPN Creator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
       background-color: #f8f9fa;
       color: #1a1a1a;
       line-height: 1.6;
