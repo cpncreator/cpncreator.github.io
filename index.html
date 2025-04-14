@@ -89,6 +89,30 @@
       max-width: 100%;
       border-radius: 12px;
     }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    .feature-box {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .feature-box h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .feature-box p {
+      font-size: 0.95rem;
+      color: #475569;
+      margin-bottom: 0;
+    }
     footer {
       text-align: center;
       padding: 40px 20px;
@@ -114,23 +138,24 @@
   </section>
 
   <section>
-    <h2>🧠 Smart SSN Scanner</h2>
-    <p>Checks if a number has already been used as a CPN. A multi-stage scan highlights if it’s flagged in public or internal databases.</p>
-  </section>
-
-  <section>
-    <h2>📊 CPN Status Verifier</h2>
-    <p>Verifies SSNs with built-in rule validation. Flags invalid, restricted, or previously unissued numbers — including post-2011 SSA randomized ranges.</p>
-  </section>
-
-  <section>
-    <h2>🎯 Intelligent CPN Generator</h2>
-    <p>Generates high-quality CPNs. Automatically respects SSA structuring rules before and after 2011 randomization, skipping banned sequences like 000, 666, 00, and 900–999.</p>
-  </section>
-
-  <section>
-    <h2>💻 Cross-Platform Simplicity</h2>
-    <p>Works seamlessly on both Windows and macOS. Clean UI on the front, serious logic under the hood.</p>
+    <div class="feature-grid">
+      <div class="feature-box">
+        <h3>🧠 Smart SSN Scanner</h3>
+        <p>Checks if a number has already been used as a CPN. Multi-stage scanning exposes red flags instantly.</p>
+      </div>
+      <div class="feature-box">
+        <h3>📊 CPN Status Verifier</h3>
+        <p>Built-in rule validation flags invalid, restricted, or unissued SSNs including SSA 2011+ formats.</p>
+      </div>
+      <div class="feature-box">
+        <h3>🎯 Intelligent CPN Generator</h3>
+        <p>Creates high-quality CPNs following SSA structuring rules, skipping blocked patterns like 000 & 666.</p>
+      </div>
+      <div class="feature-box">
+        <h3>💻 Cross-Platform Simplicity</h3>
+        <p>Runs smoothly on both Windows & macOS with a clean UI and powerful backend logic.</p>
+      </div>
+    </div>
   </section>
 
   <section>
