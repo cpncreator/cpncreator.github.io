@@ -6,9 +6,13 @@
   <title>CPN Creator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Inter', sans-serif;
-      margin: 0;
       background-color: #f9fafb;
       color: #1f2937;
       line-height: 1.6;
@@ -16,42 +20,103 @@
     header {
       background: linear-gradient(to right, #0f172a, #1e3a8a);
       color: white;
-      padding: 100px 20px;
       text-align: center;
+      padding: 140px 20px 120px;
+      position: relative;
+    }
+    header h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+    header p {
+      font-size: 1.25rem;
+      max-width: 700px;
+      margin: 0 auto 40px;
+      color: #d1d5db;
+    }
+    .hero-accent {
+      background: #38bdf8;
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 999px;
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+    .btn {
+      display: inline-block;
+      background: #38bdf8;
+      color: #0f172a;
+      padding: 16px 36px;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: #0ea5e9;
+      color: #ffffff;
     }
     section {
       padding: 60px 20px;
-      max-width: 1100px;
-      margin: auto;
+    }
+    section h2, section h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #0f172a;
+      text-align: center;
+    }
+    section p {
+      font-size: 1.05rem;
+      color: #334155;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      text-align: center;
+    }
+    .image-placeholder {
+      display: block;
+      margin: 40px auto;
+      max-width: 100%;
+      border-radius: 12px;
     }
     .highlight {
       background: #e0f2fe;
       padding: 20px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin: 20px auto;
+      max-width: 800px;
     }
     .stat-box {
       background: #f3f4f6;
       padding: 20px;
       border-left: 6px solid #2563eb;
-      margin: 30px 0;
+      margin: 30px auto;
+      max-width: 800px;
     }
-    .centered-image {
-      display: block;
-      margin: 40px auto;
-      max-width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    ul {
+      max-width: 800px;
+      margin: 0 auto 20px;
+      color: #334155;
     }
-    h2, h3 {
-      font-weight: 800;
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>CPN Creator</h1>
-    <p>Your all-in-one tool for identity-safe personal number generation</p>
+    <div class="hero-accent">Now available for Windows & macOS</div>
+    <h1>The Fastest Way To Create A CPN Profile</h1>
+    <p>CPN Creator is the ultimate tool for generating CPNs and checking if it already exist in public or flagged profiles.</p>
+    <a href="#buy" class="btn">💸 Buy Now with Bitcoin</a>
   </header>
 
   <section>
@@ -65,8 +130,7 @@
         <li>Will never conflict with real SSNs in government databases</li>
       </ul>
     </div>
-    <img src="img/invalid-ssns.png" alt="117 million invalid SSNs" class="centered-image">
-
+    <img src="https://raw.githubusercontent.com/cpncreator/assets/main/ssn-invalid-usage.png" alt="117 million invalid SSNs" class="image-placeholder">
     <div class="stat-box">
       ✅ This gives CPN creators a massive pool of identifiers — without overlapping real SSNs.
     </div>
@@ -80,14 +144,12 @@
       <li>Unused: ~389 million (still untouched)</li>
       <li>At current rate, we're good until ~2088</li>
     </ul>
-    <img src="img/ssn-breakdown.png" alt="SSN breakdown recap" class="centered-image">
+    <img src="https://raw.githubusercontent.com/cpncreator/assets/main/ssn-breakdown.png" alt="SSN breakdown recap" class="image-placeholder">
   </section>
 
   <section>
     <h2>🧠 Built for Bulk Generation & Testing</h2>
-    <p>
-      By sticking to the 117M+ known invalid SSNs, CPN Creator:
-    </p>
+    <p>By sticking to the 117M+ known invalid SSNs, CPN Creator:</p>
     <ul>
       <li>✔ Avoids overlapping with real issued SSNs</li>
       <li>✔ Reduces the risk of identity flagging or fraud triggers</li>
@@ -98,10 +160,8 @@
 
   <section>
     <h2>📊 U.S. SSN Capacity Timeline</h2>
-    <p>
-      Since 1936, the U.S. has issued SSNs at an increasing rate. Here's the modeled growth:
-    </p>
-    <img src="img/ssn-timeline.png" alt="SSN issuance timeline" class="centered-image">
+    <p>Since 1936, the U.S. has issued SSNs at an increasing rate. Here's the modeled growth:</p>
+    <img src="https://raw.githubusercontent.com/cpncreator/assets/main/ssn-timeline.png" alt="SSN issuance timeline" class="image-placeholder">
   </section>
 
   <section>
@@ -116,13 +176,11 @@
 
   <section>
     <h2>👥 Why This Matters</h2>
-    <p>
-      With only ~335 million people in the U.S. (as of 2024), and 889 million valid SSNs in the system, there’s still over 389 million available combinations left.
-    </p>
+    <p>With only ~335 million people in the U.S. (as of 2024), and 889 million valid SSNs in the system, there’s still over 389 million available combinations left.</p>
   </section>
 
-  <footer style="text-align: center; padding: 40px 20px; background: #0f172a; color: white;">
-    <p>© 2025 CPN Creator. All rights reserved.</p>
+  <footer>
+    &copy; 2025 CPN Creator
   </footer>
 </body>
 </html>
