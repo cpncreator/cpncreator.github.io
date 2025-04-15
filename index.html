@@ -120,7 +120,16 @@
       color: #94a3b8;
       font-size: 0.9rem;
     }
-  </style>
+    .image-placeholder:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .image-placeholder.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
 </head>
 <body>
   <header>
@@ -219,6 +228,92 @@
   <footer>
     &copy; 2025 CPN Creator
   </footer>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-box').forEach(box => {
+      observer.observe(box);
+    });
+  });
+</script>
+
+<style>
+  header {
+    opacity: 0;
+    animation: fadeIn 1.5s ease-in-out forwards;
+  }
+  .btn {
+    animation: pulse 2s infinite;
+  }
+  .feature-box {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+  .feature-box.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+  }
+</style>
+<button id="scrollTopBtn" style="position:fixed;bottom:30px;right:30px;background:#38bdf8;border:none;padding:12px 20px;border-radius:30px;color:#0f172a;font-weight:700;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.1);">⬆ Top</button>
+<script>
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+  window.onscroll = function() {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  };
+  scrollTopBtn.onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+</script>
+<style>
+  .image-placeholder {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+  }
+  .image-placeholder.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+<script>
+  document.querySelectorAll('.image-placeholder').forEach(img => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate-in");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    observer.observe(img);
+  });
+</script>
 </body>
 </html>
 
