@@ -132,6 +132,7 @@
 .footer-animated { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-in-out; }
 .footer-animated.show { opacity: 1; transform: translateY(0); }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" integrity="sha512-X3LQoy7H0kdrIZ7U/ERH5zAElU8YcQ1fQOQruKHk4KFPp3+9d7Z+kAfGb5TzIjYw5gmDiBGczOYZykB7soh1eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
   <header>
@@ -184,7 +185,7 @@
     <p style="text-align: justify; text-align-last: center;">But having access to numbers doesn’t mean generating them effectively. The real edge lies in speed and structure. CPN Creator takes this opportunity and turns it into an advantage by automating selection from clean, rarely issued number segments. These identifiers aren’t just random — they’re calculated based on structural patterns, issuance gaps, and SSA logic that even many experts overlook.</p>
     <p style="text-align: justify; text-align-last: center;">This means you can create a CPN in under a minute with higher confidence that it won’t trigger red flags or match an existing record. No learning curve. No delays. No second-guessing. Just smart, instant generation for users who want to stay ahead of the curve.</p>
     <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: nowrap; overflow-x: auto; margin-top: 40px;">
-      <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/4.jpg" alt="CPN Step 1" class="image-placeholder" style="width: 300px;">
+      <a href="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/4.jpg" data-lightbox="gallery"><img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/4.jpg" alt="CPN Step 1" class="image-placeholder" style="width: 300px;"></a>
       <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/5.jpg" alt="CPN Step 2" class="image-placeholder" style="width: 300px;">
       <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/6.jpg" alt="CPN Step 3" class="image-placeholder" style="width: 300px;">
     </div>
@@ -328,16 +329,21 @@ function showConfirmation(event) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 </script>
-<style>
-  .image-placeholder {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.8s ease;
-  }
+.image-placeholder {
+  display: block;
+  margin: 40px auto;
+  max-width: 100%;
+  border-radius: 12px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
   .image-placeholder.animate-in {
     opacity: 1;
     transform: translateY(0);
   }
+.image-placeholder:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
 </style>
 <script>
   document.querySelectorAll('.image-placeholder').forEach(img => {
@@ -352,6 +358,7 @@ function showConfirmation(event) {
     observer.observe(img);
   });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" integrity="sha512-qYrA9+WQQ7cyxELX3VtLsGZJQg1ppzwMLZfjNEr2LLWBHaQrVKc7YJu8zKjGL4lR1LxEdLKJkZ0fhd4aZddQfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>
 
