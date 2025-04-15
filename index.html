@@ -129,6 +129,8 @@
     opacity: 1;
     transform: translateY(0);
   }
+.footer-animated { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-in-out; }
+.footer-animated.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -216,8 +218,27 @@
   </section>
 
   <footer>
-    &copy; 2025 CPN Creator
-  </footer>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 10px;">📞 Contact</h3>
+    <p style="margin: 5px 0;">
+      <strong>WhatsApp (messages only):</strong> <a href="https://wa.me/18186176711" target="_blank" style="color: #38bdf8; text-decoration: underline;">+1 818 617 6711</a>
+    </p>
+    <p style="margin: 5px 0;">
+      <strong>Email:</strong> <a href="mailto:coding-planet@proton.me" style="color: #38bdf8; text-decoration: underline;">coding-planet@proton.me</a>
+    </p>
+  </div>
+  <div style="margin-top: 30px;">
+  <form style="max-width: 500px; margin: 0 auto; text-align: left;">
+    <label for="email" style="display: block; color: #ffffff; margin-bottom: 6px;">Your Email:</label>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required style="width: 100%; padding: 10px; border-radius: 6px; border: none; margin-bottom: 15px;">
+
+    <label for="message" style="display: block; color: #ffffff; margin-bottom: 6px;">Message:</label>
+    <textarea id="message" name="message" rows="4" placeholder="Type your message here..." required style="width: 100%; padding: 10px; border-radius: 6px; border: none; margin-bottom: 15px;"></textarea>
+
+    <button type="submit" class="btn" style="background-color: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 12px 30px; border-radius: 999px; cursor: pointer;">Send Message</button>
+  </form>
+</div>
+</footer>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const observer = new IntersectionObserver(entries => {
@@ -233,6 +254,18 @@
       observer.observe(box);
     });
   });
+document.querySelectorAll('footer').forEach(section => {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  section.classList.add("footer-animated");
+  observer.observe(section);
+});
 </script>
 
 <style>
