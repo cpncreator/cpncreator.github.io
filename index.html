@@ -44,17 +44,28 @@
       font-size: 0.95rem;
       margin-bottom: 30px;
     }
-    .btn {
-      display: inline-block;
-      background: #38bdf8;
-      color: #0f172a;
-      padding: 16px 36px;
-      font-weight: 600;
-      font-size: 1rem;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
+    /* avatar-style-cpn */
+.avatar-box {
+  max-width: 200px;
+  margin: 40px auto 60px;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  text-align: center;
+}
+.avatar-box img {
+  width: 100px;
+  height: 100px;
+  border-radius: 999px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+.avatar-box p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #475569;
+}
     .btn:hover {
       background: #0ea5e9;
       color: #ffffff;
@@ -139,6 +150,11 @@
   <div class="hero-accent">Now available for Windows & MacOS</div>
   <h1>Instantly Generate Verified CPN Profiles — No Guesswork</h1>
   <p class="subhead">The fastest tool to create clean, validated CPN profiles with a single click.</p>
+    <!-- built-by-coding-planet -->
+<div class="avatar-box">
+  <img src="https://i.imgur.com/dRZzF4P.png" alt="Developer Avatar">
+  <p>Built by <strong>Coding Planet</strong><br>Data Tools Developer</p>
+</div>
   <a href="#video" class="btn">▶️ Watch Demo</a>
   <p class="stat-line">Over 5,000 profiles generated since 2024</p>
 </header>
