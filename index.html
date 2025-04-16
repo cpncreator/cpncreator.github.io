@@ -5,12 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CPN Creator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" integrity="sha512-X3LQoy7H0kdrIZ7U/ERH5zAElU8YcQ1fQOQruKHk4KFPp3+9d7Z+kAfGb5TzIjYw5gmDiBGczOYZykB7soh1eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f9fafb;
@@ -23,11 +20,7 @@
       text-align: center;
       padding: 140px 20px 120px;
     }
-    header h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      margin-bottom: 20px;
-    }
+    header h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; }
     header p {
       font-size: 1.25rem;
       max-width: 700px;
@@ -44,28 +37,27 @@
       font-size: 0.95rem;
       margin-bottom: 30px;
     }
-    /* avatar-style-cpn */
-.avatar-box {
-  max-width: 200px;
-  margin: 40px auto 60px;
-  padding: 20px;
-  border-radius: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  text-align: center;
-}
-.avatar-box img {
-  width: 100px;
-  height: 100px;
-  border-radius: 999px;
-  object-fit: cover;
-  margin-bottom: 12px;
-}
-.avatar-box p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #475569;
-}
+    .avatar-box {
+      max-width: 200px;
+      margin: 40px auto 60px;
+      padding: 20px;
+      border-radius: 16px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .avatar-box img {
+      width: 100px;
+      height: 100px;
+      border-radius: 999px;
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+    .avatar-box p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #475569;
+    }
     .btn:hover {
       background: #0ea5e9;
       color: #ffffff;
@@ -132,39 +124,69 @@
       font-size: 0.9rem;
     }
     .image-placeholder:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .image-placeholder.animate-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
-.footer-animated { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-in-out; }
-.footer-animated.show { opacity: 1; transform: translateY(0); }
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" integrity="sha512-X3LQoy7H0kdrIZ7U/ERH5zAElU8YcQ1fQOQruKHk4KFPp3+9d7Z+kAfGb5TzIjYw5gmDiBGczOYZykB7soh1eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .image-placeholder.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .footer-animated {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-in-out;
+    }
+    .footer-animated.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    header { opacity: 0; animation: fadeIn 1.5s ease-in-out forwards; }
+    .btn { animation: pulse 2s infinite; }
+    .feature-box {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+    .feature-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+  </style>
 </head>
 <body>
+
   <header>
-  <!-- testimonial-section-cpn -->
-<section>
-  <h2>💬 What People Are Saying</h2>
-  <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 30px;">
-    <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 300px;">
-      <img src="https://i.imgur.com/dyptYcG.png" alt="Testimonial Screenshot 1" style="width: 100%; border-radius: 8px; margin-bottom: 12px;">
-      <p style="font-size: 0.95rem; color: #475569; text-align: center;"><strong>@cpnbuilderdaily</strong><br>“I used to waste 3 hours a day validating SSNs. This tool cuts that to under 5 minutes.”</p>
-    </div>
-    <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 300px;">
-      <img src="https://i.imgur.com/FtPpsG9.png" alt="Testimonial Screenshot 2" style="width: 100%; border-radius: 8px; margin-bottom: 12px;">
-      <p style="font-size: 0.95rem; color: #475569; text-align: center;"><strong>Private Client</strong><br>“No more guesswork or flagged numbers. I’m using it weekly now.”</p>
-    </div>
-    <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 300px;">
-      <img src="https://i.imgur.com/30U3TbH.png" alt="Testimonial Screenshot 3" style="width: 100%; border-radius: 8px; margin-bottom: 12px;">
-      <p style="font-size: 0.95rem; color: #475569; text-align: center;"><strong>WhatsApp Feedback</strong><br>“Legit tool. Worked on my first try. Buying again for my team next week.”</p>
-    </div>
-  </div>
+    <h1>CPN Creator</h1>
+    <p>Generate verified CPNs in under 10 minutes.</p>
+  </header>
+
+  <!-- Testimonial Section -->
+  <section>
+    <h2>💬 What People Are Saying</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 30px;">
+      <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 300px;">
+        <img src="https://i.imgur.com/dyptYcG.png" alt="Testimonial Screenshot 1" style="width: 100%; border-radius: 8px; margin-bottom: 12px;">
+        <p style="font-size: 0.95rem; color: #475569; text-align: center;"><strong>@cpnbuilderdaily</strong><br>“I used to waste 3 hours a day validating SSNs. This tool cuts that to under 5 minutes.”</p>
+      </div>
+      <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 300px;">
+        <img src="https://i.imgur.com/FtPpsG9.png" alt="Testimonial Screenshot 2" style="width: 100%; border-radius: 8px; margin-bottom: 12px;">
+        <p style="font-size: 0.95rem; color: #475569; text-align: center;"><strong>Private Client</strong><br>“No more guesswork or flagged numbers. I’m using it weekly now.”</p>
+      </div>
+      <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 300px;">
+        <img src="https://i.imgur.com/30U3TbH.png" alt="Testimonial Screenshot 3" style="width: 100%; border-radius: 8px; margin-bottom: 12px;">
+        <p style="font-size: 0.95rem; color: #475569; text-align: center;"><strong>WhatsApp Feedback</strong><br>“Legit tool. Worked on my first try. Buying again for my team next week.”</p>
+      </div>
 </section>
+
+<section>
     <h2>🎥 See CPN Creator In Action</h2>
     <div style="max-width: 800px; margin: 0 auto;">
       <iframe src="https://streamable.com/e/vvw115" 
