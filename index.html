@@ -163,10 +163,11 @@
 </head>
 <body>
 
-  <header>
-  <div class="hero-accent">Now available for Windows & MacOS</div>
+ <header class="fade-in-delayed">
+  <div class="hero-accent badge-animate">Now available for Windows & MacOS</div>
   <h1>The Fastest Way to Generate Clean, Verified CPNs</h1>
-  <p>CPN Creator instantly creates fresh identifiers that pass SSA format checks and are scanned for red flags — all in under 10 minutes. Built for credit pros who can’t afford to guess.</p>
+  <p>CPN Creator instantly creates fresh identifiers that pass SSA format checks and scans for red flags — all in under 10 minutes. Built for credit pros who can’t afford to guess.</p>
+  <a href="#video" class="btn header-cta">💸 Get Started Now</a>
 </header>
 
   <!-- Testimonial Section -->
@@ -373,6 +374,46 @@ function showConfirmation(event) {
       transform: scale(1.03);
     }
   }
+  .fade-in-delayed {
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out forwards;
+  animation-delay: 0.6s;
+}
+
+.badge-animate {
+  animation: popBadge 0.6s ease-in-out forwards;
+}
+
+.header-cta {
+  display: inline-block;
+  margin-top: 30px;
+  background: #38bdf8;
+  color: #0f172a;
+  padding: 14px 32px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 1s ease-in-out forwards;
+  animation-delay: 1.2s;
+}
+
+@keyframes popBadge {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>
 <button id="scrollTopBtn" style="position:fixed;bottom:30px;right:30px;background:#38bdf8;border:none;padding:12px 20px;border-radius:30px;color:#0f172a;font-weight:700;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.1);">⬆ Top</button>
 <script>
