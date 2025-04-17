@@ -410,6 +410,34 @@
     </div>
   </div>
 </section>
+<!-- 💡 Rotating Bonus Tip Section -->
+<section style="padding: 40px 20px; background: #fff9c4;">
+  <div style="max-width: 800px; margin: auto; text-align: center;">
+    <p id="bonus-tip" style="font-size: 1.1rem; color: #92400e; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/icon-lightbulb.png" alt="Tip Icon" style="width: 22px; height: 22px;">
+      💡 Tip: Generating at off-peak hours increases your chance of getting untouched segments.
+    </p>
+  </div>
+</section>
+
+<script>
+  const tips = [
+    "💡 Tip: Generating at off-peak hours increases your chance of getting untouched segments.",
+    "💡 Tip: Double-check the generated number using the built-in SSA validator before saving it.",
+    "💡 Tip: Batch mode can generate up to 20 clean CPNs in one go — perfect for bulk testing.",
+    "💡 Tip: Avoid using patterns ending in sequential digits — the scanner flags those instantly.",
+    "💡 Tip: Local generation means no IP logs, email trails, or account footprints."
+  ];
+
+  const tipEl = document.getElementById("bonus-tip");
+
+  function rotateTip() {
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    tipEl.innerHTML = `<img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/icon-lightbulb.png" alt="Tip Icon" style="width: 22px; height: 22px;"> ${randomTip}`;
+  }
+
+  setInterval(rotateTip, 7000); // Change every 7 seconds
+</script>
 
 <!-- 🙋 Short FAQ Section -->
  <section id="faq-section" style="padding: 80px 20px;">
