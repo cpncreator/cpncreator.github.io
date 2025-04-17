@@ -259,7 +259,15 @@
 
   <section>
     <h2>🖥️ Inside the CPN Creator App</h2>
-    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/cpn%20create33.png" alt="CPN Creator App" class="image-placeholder">
+    <div style="max-width: 800px; margin: 0 auto; overflow: hidden; position: relative;">
+  <div id="carousel" style="display: flex; transition: transform 0.6s ease; width: 2400px;">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/cpn%20create33.png" style="width: 800px; border-radius: 12px; margin: 0 10px;" alt="Screenshot 1">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/1.jpg" style="width: 800px; border-radius: 12px; margin: 0 10px;" alt="Screenshot 2">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/2.jpg" style="width: 800px; border-radius: 12px; margin: 0 10px;" alt="Screenshot 3">
+  </div>
+  <button onclick="moveSlide(-1)" style="position: absolute; top: 45%; left: 0; background: #0f172a; color: white; border: none; padding: 10px 14px; cursor: pointer; border-radius: 6px;">‹</button>
+  <button onclick="moveSlide(1)" style="position: absolute; top: 45%; right: 0; background: #0f172a; color: white; border: none; padding: 10px 14px; cursor: pointer; border-radius: 6px;">›</button>
+</div>
   </section>
 
  <section>
@@ -384,6 +392,16 @@ function showConfirmation(event) {
       alert("There was an error sending your message. Please try again later.");
     }
   }).catch(() => alert("There was an error connecting. Please try again later."));
+}
+  let currentIndex = 0;
+function moveSlide(direction) {
+  const carousel = document.getElementById("carousel");
+  const slideWidth = 820; // width + margin
+  const maxIndex = carousel.children.length - 1;
+  currentIndex += direction;
+  if (currentIndex < 0) currentIndex = maxIndex;
+  if (currentIndex > maxIndex) currentIndex = 0;
+  carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
 }
 </script>
 
