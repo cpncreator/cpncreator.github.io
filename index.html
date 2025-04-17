@@ -335,8 +335,37 @@
       <p style="color: #475569; font-size: 1rem;">Credit Pros Onboard</p>
     </div>
     <div style="text-align: center;">
-      <h3 style="color: #0f172a; font-size: 2rem; font-weight: 800;">Just now</h3>
-      <p><strong>Last CPN Generated:</strong> <span id="cpn-timer">just now</span></p>
+      <h3 style="color: #0f172a; font-size: 2rem; font-weight: 800;">
+        <strong>Last CPN Generated:</strong> <span id="cpn-timer">just now</span>
+      </h3>
+    </div>
+  </div>
+</section>
+
+<script>
+  const cpnTimer = document.getElementById("cpn-timer");
+  let secondsPassed = 0;
+
+  function updateTimerDisplay() {
+    if (secondsPassed < 60) {
+      cpnTimer.textContent = `${secondsPassed} second${secondsPassed === 1 ? '' : 's'} ago`;
+    } else if (secondsPassed < 3600) {
+      const mins = Math.floor(secondsPassed / 60);
+      cpnTimer.textContent = `${mins} minute${mins === 1 ? '' : 's'} ago`;
+    } else {
+      cpnTimer.textContent = `Over an hour ago`;
+    }
+  }
+
+  function tickTimer() {
+    secondsPassed += Math.floor(Math.random() * 3) + 1; // Add 1–3 seconds
+    updateTimerDisplay();
+    setTimeout(tickTimer, 4000); // Update every 4 seconds
+  }
+
+  tickTimer();
+</script>
+
 <script>
   const timerSpan = document.getElementById("cpn-timer");
   let secondsElapsed = 0;
