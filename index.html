@@ -160,7 +160,51 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.03); }
     }
+    /* 📱 Mobile Responsiveness Fixes */
+@media (max-width: 600px) {
+  body, section {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  header {
+    padding: 100px 20px 80px;
+  }
+
+  header h1 {
+    font-size: 2rem !important;
+  }
+
+  header p {
+    font-size: 1rem !important;
+  }
+
+  .image-placeholder {
+    width: 100% !important;
+    height: auto;
+  }
+
+  #carousel img {
+    width: 90vw !important;
+  }
+
+  button[onclick*="moveSlide"] {
+    padding: 6px 10px !important;
+    font-size: 1.2rem;
+  }
+
+  .testimonial-wrapper {
+    flex-direction: column !important;
+    align-items: center;
+  }
+
+  .trust-badge-row {
+    flex-direction: column !important;
+    align-items: center;
+  }
+}
   </style>
+
 </head>
 <body>
 
