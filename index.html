@@ -314,6 +314,80 @@
     <p style="text-align: justify; text-align-last: center;">CPN Creator streamlines that process by acting as your backend logic engine. It combines format filters, SSA guidelines, validation constraints, and assignment history checks — and condenses that logic into a single tap. You’re not just generating an ID — you’re verifying its logic before you ever use it.</p>
     <p style="text-align: justify; text-align-last: center;">The result is an application that minimizes the human error and manual research most setups are vulnerable to. What used to take hours — now takes one click. And what used to be high-risk, becomes a consistent, structured routine anyone can follow with confidence.</p>
   </section>
+<!-- 🙋 Short FAQ Section -->
+<section>
+ <section id="faq-section" style="padding: 80px 20px;">
+  <h2 style="text-align: center; color: #0f172a; font-size: 2rem; font-weight: 800; margin-bottom: 40px;">❓ Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <button class="faq-question">How fast will I receive the app?</button>
+    <div class="faq-answer">Immediately. As soon as payment is confirmed, the download link is unlocked.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question">Do I need to install anything?</button>
+    <div class="faq-answer">Just download, unzip, and run the app. There is instructions included.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question">Does this require internet or logins?</button>
+    <div class="faq-answer">Yes. You must be online for the license registration of your machine.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question">Can I generate multiple CPNs?</button>
+    <div class="faq-answer">Yes. You can generate up to 20 CPNs per batch. There’s no daily limit.</div>
+  </div>
+</section>
+
+<style>
+  #faq-section {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .faq-question {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    padding: 15px 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  .faq-question:hover {
+    color: #38bdf8;
+  }
+  .faq-answer {
+    display: none;
+    font-size: 1rem;
+    color: #475569;
+    padding-bottom: 15px;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .faq-item.active .faq-answer {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    });
+  });
+</script>
+</section>
 
   <section>
     <h2>🚀 Secure Your Copy</h2>
