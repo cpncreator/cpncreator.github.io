@@ -336,7 +336,38 @@
     </div>
     <div style="text-align: center;">
       <h3 style="color: #0f172a; font-size: 2rem; font-weight: 800;">Just now</h3>
-      <p style="color: #475569; font-size: 1rem;">Last CPN Generated</p>
+      <p><strong>Last CPN Generated:</strong> <span id="cpn-timer">just now</span></p>
+<script>
+  const timerSpan = document.getElementById("cpn-timer");
+  let secondsElapsed = 0;
+
+  function updateTimer() {
+    secondsElapsed++;
+    if (secondsElapsed < 60) {
+      timerSpan.textContent = `${secondsElapsed} seconds ago`;
+    } else if (secondsElapsed < 3600) {
+      const minutes = Math.floor(secondsElapsed / 60);
+      const seconds = secondsElapsed % 60;
+      timerSpan.textContent = `${minutes} minute${minutes !== 1 ? 's' : ''}${seconds ? ` ${seconds}s` : ''} ago`;
+    } else {
+      timerSpan.textContent = `a while ago`;
+    }
+  }
+
+  setInterval(updateTimer, 1000);
+
+  // Optional: simulate a new CPN being generated every 2-4 mins
+  function resetTimerRandomly() {
+    const resetInterval = Math.floor(Math.random() * 120) + 120; // 2–4 min
+    setTimeout(() => {
+      secondsElapsed = 0;
+      timerSpan.textContent = `just now`;
+      resetTimerRandomly();
+    }, resetInterval * 1000);
+  }
+
+  resetTimerRandomly();
+</script>
     </div>
   </div>
 </section>
