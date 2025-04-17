@@ -278,6 +278,17 @@
     <a href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos" class="btn header-cta" style="margin: 40px auto; display: inline-block;">
       💸 Buy Now with Bitcoin
     </a>
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+  <div style="display: flex; align-items: center; gap: 8px; background: #e0f2fe; padding: 8px 16px; border-radius: 999px; font-size: 0.85rem; color: #0f172a;">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/icon-lock.png" alt="Secure" style="width: 18px; height: 18px;"> Secure Payment
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; background: #e0f2fe; padding: 8px 16px; border-radius: 999px; font-size: 0.85rem; color: #0f172a;">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/icon-bitcoin.png" alt="Bitcoin" style="width: 18px; height: 18px;"> Bitcoin Verified
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; background: #e0f2fe; padding: 8px 16px; border-radius: 999px; font-size: 0.85rem; color: #0f172a;">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/icon-lightning.png" alt="Instant Delivery" style="width: 18px; height: 18px;"> Instant Delivery
+  </div>
+</div>
   </div>
    <p style="font-size: 0.85rem; color: #64748b; margin-top: 8px;">
 ⚠️ Instant download after payment. No email or signup required.
@@ -654,6 +665,13 @@ function moveSlide(direction) {
   100% {
     transform: scale(1);
   }
+}
+  /* 🎯 Trust Badge Hover Effect */
+div[style*="background: #e0f2fe"] {
+  transition: transform 0.3s ease;
+}
+div[style*="background: #e0f2fe"]:hover {
+  transform: scale(1.05);
 }
 </style>
 <button id="scrollTopBtn" style="position:fixed;bottom:30px;right:30px;background:#38bdf8;border:none;padding:12px 20px;border-radius:30px;color:#0f172a;font-weight:700;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.1);">⬆ Top</button>
