@@ -238,7 +238,7 @@
   <div class="hero-accent badge-animate">Now available for Windows & MacOS</div>
   <h1>The Fastest Way to Generate Clean, Verified CPNs</h1>
   <p>CPN Creator instantly creates fresh identifiers that pass SSA format checks and scans for red flags — all in under 10 minutes. Built for credit pros who can’t afford to guess.</p>
-  <a href="#video" class="btn header-cta">💸 Get Started Now</a>
+  <a href="#video" class="btn header-cta fade-in-delayed">💸 Get Started Now</a>
    <p style="margin-top: 14px; font-size: 0.85rem; color: #dbeafe;">
   Version 1.4 • Updated April 2025
 </p>
@@ -968,9 +968,6 @@ function moveSlide(direction) {
   text-decoration: none;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  opacity: 0;
-  animation: fadeIn 1s ease-in-out forwards;
-  animation-delay: 1.2s;
 }
 
 @keyframes popBadge {
@@ -986,7 +983,15 @@ function moveSlide(direction) {
     transform: scale(1);
   }
 }
-  /* 🎯 Trust Badge Hover Effect */
+
+/* ✨ Fix: Fade animation only for header CTA */
+.fade-in-delayed {
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out forwards;
+  animation-delay: 1.2s;
+}
+
+/* 🎯 Trust Badge Hover Effect */
 div[style*="background: #e0f2fe"] {
   transition: transform 0.3s ease;
 }
