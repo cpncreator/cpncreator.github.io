@@ -371,13 +371,17 @@
     </div>
   </div>
 </section>
+  
 <!-- 🧨 Scarcity Message -->
-<p style="font-size: 0.95rem; color: #ef4444; text-align: center; margin-bottom: 6px; font-weight: 600;">
-  ⚠️ Only <strong id="copies-left">12</strong> copies left
-</p>
-<p style="font-size: 0.85rem; color: #0f172a; text-align: center; margin-top: -2px; margin-bottom: 20px;">
-  Claimed by <strong id="claimed-pros">4,127</strong> pros
-</p>
+<div class="scarcity-alert">
+  <p class="scarcity-main">
+    ⚠️ Only <strong id="copies-left">12</strong> copies left
+  </p>
+  <p class="scarcity-sub">
+    Claimed by <strong id="claimed-pros">4,127</strong> pros
+  </p>
+</div>
+
 
   <section>
   <h2>🖥️ Inside the CPN Creator App</h2>
@@ -854,6 +858,40 @@ function moveSlide(direction) {
     opacity: 0;
     animation: fadeIn 1.5s ease-in-out forwards;
   }
+  
+  .scarcity-alert {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  padding: 20px 26px;
+  border-radius: 14px;
+  max-width: 500px;
+  margin: 40px auto 30px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  animation: pulseBox 2s infinite;
+}
+
+.scarcity-main {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #b91c1c;
+  margin-bottom: 6px;
+}
+
+.scarcity-sub {
+  font-size: 1rem;
+  color: #7f1d1d;
+  margin: 0;
+}
+
+@keyframes pulseBox {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239,68,68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239,68,68, 0);
+  }
+
   .btn {
     animation: pulse 2s infinite;
   }
