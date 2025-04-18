@@ -371,6 +371,13 @@
     </div>
   </div>
 </section>
+<!-- 🧨 Scarcity Message -->
+<p style="font-size: 0.95rem; color: #ef4444; text-align: center; margin-bottom: 6px; font-weight: 600;">
+  ⚠️ Only <strong id="copies-left">12</strong> copies left
+</p>
+<p style="font-size: 0.85rem; color: #0f172a; text-align: center; margin-top: -2px; margin-bottom: 20px;">
+  Claimed by <strong id="claimed-pros">4,127</strong> pros
+</p>
 
   <section>
   <h2>🖥️ Inside the CPN Creator App</h2>
@@ -678,6 +685,14 @@
   <p style="text-align: center; color: #64748b; font-size: 0.9rem;">Coding Planet</p>
 </section>
 
+  <!-- 🧨 Scarcity Message Repeater -->
+<p style="font-size: 0.95rem; color: #ef4444; text-align: center; margin-top: 40px; font-weight: 600;">
+  ⚠️ Only <strong id="copies-left-footer">12</strong> copies left
+</p>
+<p style="font-size: 0.85rem; color: #0f172a; text-align: center; margin-top: -2px; margin-bottom: 20px;">
+  Claimed by <strong id="claimed-pros-footer">4,127</strong> pros
+</p>
+
   <section>
     <h2>🚀 Secure Your Copy</h2>
     <p>One-time payment. Lifetime access. Download immediately after payment.</p>
@@ -926,6 +941,16 @@ div[style*="background: #e0f2fe"]:hover {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 </script>
+  
+  <script>
+  const baseClaimed = 4127;
+  const randomBoost = Math.floor(Math.random() * 15); // 0–14 extra claims
+  document.addEventListener("DOMContentLoaded", () => {
+    const el = document.getElementById("claimed-pros");
+    if (el) el.textContent = (baseClaimed + randomBoost).toLocaleString();
+  });
+</script>
+
 <script>
   document.querySelectorAll('.image-placeholder').forEach(img => {
     const observer = new IntersectionObserver(entries => {
@@ -945,5 +970,17 @@ div[style*="background: #e0f2fe"]:hover {
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat" style="width: 20px; height: 20px;">
   Chat Now
 </a>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const footerClaim = document.getElementById("claimed-pros-footer");
+    const footerLeft = document.getElementById("copies-left-footer");
+    const mainClaim = document.getElementById("claimed-pros");
+    const mainLeft = document.getElementById("copies-left");
+
+    if (mainClaim && footerClaim) footerClaim.textContent = mainClaim.textContent;
+    if (mainLeft && footerLeft) footerLeft.textContent = mainLeft.textContent;
+  });
+</script>
+
 </body>
 </html>
