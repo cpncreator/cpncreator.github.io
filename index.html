@@ -250,8 +250,9 @@
   <div class="hero-accent badge-animate">Now available for Windows & MacOS</div>
   <h1>Generate & Verify Clean CPNs — No Guesswork, No Flagged Numbers</h1>
   <p>CPN Creator instantly creates fresh identifiers that pass SSA format checks and scans for red flags — all in under 10 minutes. Built for credit pros who can’t afford to guess.</p>
-  <a href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos"
-  class="btn header-cta fade-in-delayed">
+   <a
+  href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos"
+  class="btn header-cta countapi-click fade-in-delayed">
   💸 Get Started Now
 </a>
    <p style="margin-top: 14px; font-size: 0.85rem; color: #dbeafe;">
@@ -409,11 +410,11 @@
 
 <section style="padding: 20px 0 10px;">
   <div style="text-align: center;">
-    <a href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos"
-       class="btn header-cta"
-       style="margin: 40px auto; display: inline-block;">
-      💸 Buy Now with Bitcoin
-    </a>
+    <a
+  href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos"
+  class="btn header-cta countapi-click">
+  💸 Buy Now with Bitcoin
+</a>
   </div>
 </section>
 
@@ -717,7 +718,11 @@
   🛠️ This app receives silent updates. Your version will always be the latest. See our changelog for details.
 </p>
     <div style="text-align: center;">
-      <a href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos" class="btn header-cta" style="margin: 40px auto; display: inline-block;">💸 Buy Now with Bitcoin</a>
+       <a
+  href="https://mainnet.demo.btcpayserver.org/apps/Z4hxjZ2jN4ueAG5b7Rp4U3zkiUK/pos"
+  class="btn header-cta countapi-click">
+  💸 Buy Now with Bitcoin
+</a>
     </div>
     <p style="font-size: 0.85rem; color: #64748b; margin-top: 8px;">
 ⚠️ Instant download after payment. No email or signup required.
@@ -1062,6 +1067,17 @@ div[style*="background: #e0f2fe"]:hover {
 
     if (mainClaim && footerClaim) footerClaim.textContent = mainClaim.textContent;
     if (mainLeft && footerLeft) footerLeft.textContent = mainLeft.textContent;
+  });
+</script>
+<!-- CountAPI click‑tracking -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const key    = 'cpncreator/demoClicks';             // cpncreator/demoClicks
+    const hitURL = `https://api.countapi.xyz/hit/${key}`;
+
+    document.querySelectorAll('.countapi-click').forEach(el => {
+      el.addEventListener('click', () => fetch(hitURL));
+    });
   });
 </script>
 
