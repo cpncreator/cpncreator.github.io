@@ -808,10 +808,14 @@
 </form>
   <!-- 👇 Add this below the copyright -->
   <p style="color: #94a3b8; margin-top: 30px; text-align: center;">
-  © 2025 CPN Creator &nbsp; | &nbsp;
-  <a href="privacy.html" style="color: #38bdf8; text-decoration: underline;">Privacy Policy</a> &nbsp; | &nbsp;
+  © 2025 CPN Creator &nbsp;| &nbsp;
+  <a href="privacy.html" style="color: #38bdf8; text-decoration: underline;">Privacy Policy</a>
+  &nbsp;|&nbsp;
   <a href="terms.html" style="color: #38bdf8; text-decoration: underline;">Terms of Service</a>
-</p>
+  &nbsp;|&nbsp;
+  <span id="admin-click-counter" style="font-size:0.9rem; color:#94a3b8;">
+    [admin] clicks: <span id="click-count">–</span>
+  </span>
 </div>
 <div id="formConfirmation" style="display: none; color: #38bdf8; font-weight: 600; margin-top: 15px; text-align: center;">✅ Message sent successfully. We'll get back to you soon!</div>
 </footer>
@@ -1069,16 +1073,31 @@ div[style*="background: #e0f2fe"]:hover {
     if (mainLeft && footerLeft) footerLeft.textContent = mainLeft.textContent;
   });
 </script>
-<!-- CountAPI click‑tracking -->
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const key    = 'cpncreator/demoClicks';             // cpncreator/demoClicks
-    const hitURL = `https://api.countapi.xyz/hit/${key}`;
+document.addEventListener('DOMContentLoaded', () => {
+  const KEY     = 'cpncreator/demoClicks';
+  const GET_URL = `https://api.countapi.xyz/get/${KEY}`;
+  const HIT_URL = `https://api.countapi.xyz/hit/${KEY}`;
+  const display = document.getElementById('click-count');
 
-    document.querySelectorAll('.countapi-click').forEach(el => {
-      el.addEventListener('click', () => fetch(hitURL));
+  function refreshCount() {
+    fetch(GET_URL)
+      .then(res => res.json())
+      .then(data => display.textContent = data.value)
+      .catch(console.error);
+  }
+
+  // bump + refresh on every click
+  document.querySelectorAll('.countapi-click').forEach(btn => {
+    btn.addEventListener('click', () => {
+      fetch(HIT_URL)
+        .then(() => refreshCount());
     });
   });
+
+  // initial load
+  refreshCount();
+});
 </script>
 
 </body>
