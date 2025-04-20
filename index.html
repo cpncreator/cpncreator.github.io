@@ -814,6 +814,8 @@
   <a href="terms.html" style="color: #38bdf8; text-decoration: underline;">Terms of Service</a>
   &nbsp;|&nbsp;
 <span id="click-count" style="font-size:0.9rem; color:#94a3b8;">–</span>
+    &nbsp;|&nbsp;
+   </p>
   </p>
 </div>
 <div id="formConfirmation" style="display: none; color: #38bdf8; font-weight: 600; margin-top: 15px; text-align: center;">✅ Message sent successfully. We'll get back to you soon!</div>
@@ -1061,19 +1063,11 @@ div[style*="background: #e0f2fe"]:hover {
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat" style="width: 20px; height: 20px;">
   Chat Now
 </a>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const footerClaim = document.getElementById("claimed-pros-footer");
-    const footerLeft = document.getElementById("copies-left-footer");
-    const mainClaim = document.getElementById("claimed-pros");
-    const mainLeft = document.getElementById("copies-left");
+<!-- …all your page content… -->
 
-    if (mainClaim && footerClaim) footerClaim.textContent = mainClaim.textContent;
-    if (mainLeft && footerLeft) footerLeft.textContent = mainLeft.textContent;
-  });
-</script>
+<!-- ↓ Put this right above </body> ↓ -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
   const KEY     = 'cpncreator/demoClicks';
   const GET_URL = `https://api.countapi.xyz/get/${KEY}`;
   const HIT_URL = `https://api.countapi.xyz/hit/${KEY}`;
@@ -1082,23 +1076,23 @@ document.addEventListener('DOMContentLoaded', () => {
   function refreshCount() {
     fetch(GET_URL)
       .then(res => res.json())
-      .then(data => {
-        display.textContent = data.value;
-      })
+      .then(data => { if (display) display.textContent = data.value; })
       .catch(console.error);
   }
 
-  // bump + refresh on every click
+  // Initial load
+  refreshCount();
+
+  // On every .countapi-click, bump + refresh
   document.querySelectorAll('.countapi-click').forEach(btn => {
-    btn.addEventListener('click', () => {
-      fetch(HIT_URL).then(() => refreshCount());
+    btn.addEventListener('click', function() {
+      fetch(HIT_URL)
+        .then(res => res.json())
+        .then(() => refreshCount())
+        .catch(console.error);
     });
   });
-
-  // initial load
-  refreshCount();
 });
 </script>
-
 </body>
 </html>
