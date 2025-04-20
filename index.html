@@ -813,9 +813,8 @@
   &nbsp;|&nbsp;
   <a href="terms.html" style="color: #38bdf8; text-decoration: underline;">Terms of Service</a>
   &nbsp;|&nbsp;
-  <span id="admin-click-counter" style="font-size:0.9rem; color:#94a3b8;">
-    [admin] clicks: <span id="click-count">–</span>
-  </span>
+<span id="click-count" style="font-size:0.9rem; color:#94a3b8;">–</span>
+  </p>
 </div>
 <div id="formConfirmation" style="display: none; color: #38bdf8; font-weight: 600; margin-top: 15px; text-align: center;">✅ Message sent successfully. We'll get back to you soon!</div>
 </footer>
@@ -1083,15 +1082,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function refreshCount() {
     fetch(GET_URL)
       .then(res => res.json())
-      .then(data => display.textContent = data.value)
+      .then(data => {
+        display.textContent = data.value;
+      })
       .catch(console.error);
   }
 
   // bump + refresh on every click
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', () => {
-      fetch(HIT_URL)
-        .then(() => refreshCount());
+      fetch(HIT_URL).then(() => refreshCount());
     });
   });
 
