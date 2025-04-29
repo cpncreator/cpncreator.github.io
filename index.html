@@ -1068,14 +1068,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const API_URL = 'https://cleddoffshores.com/counter.php';
 
   function updateCounter() {
+    if (!display) return;
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
-        const value = data.count || 0;
+        const value = (data && typeof data.count === 'number') ? data.count : 0;
         display.textContent = value.toLocaleString();
       })
       .catch(() => {
-        display.textContent = '—';
+        display.textContent = '–';
       });
   }
 
@@ -1083,7 +1084,9 @@ document.addEventListener('DOMContentLoaded', function() {
     btn.addEventListener('click', function() {
       fetch(API_URL, { method: 'POST' })
         .then(() => updateCounter())
-        .catch(() => display.textContent = '—');
+        .catch(() => {
+          if (display) display.textContent = '–';
+        });
     });
   });
 
