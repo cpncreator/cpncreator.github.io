@@ -1067,31 +1067,35 @@ div[style*="background: #e0f2fe"]:hover {
 <!-- ↓ Put this right above </body> ↓ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const KEY     = 'cpncreator/demoClicks';
-  const GET_URL = `https://api.countapi.xyz/get/${KEY}`;
-  const HIT_URL = `https://api.countapi.xyz/hit/${KEY}`;
+  const KEY = 'cpncreator/demoClicks';
+  const BASE_URL = `https://countapi.dev/hit/${KEY}`;
   const display = document.getElementById('click-count');
 
-  function refreshCount() {
-    fetch(GET_URL)
+  function updateCounter() {
+    fetch(BASE_URL)
       .then(res => res.json())
-      .then(data => { if (display) display.textContent = data.value; })
-      .catch(console.error);
+      .then(data => {
+        if (display) {
+          display.textContent = data.value;
+        }
+      })
+      .catch(error => {
+        console.error('Counter fetch failed:', error);
+        if (display) display.textContent = 'Error';
+      });
   }
 
   // Initial load
-  refreshCount();
+  updateCounter();
 
-  // On every .countapi-click, bump + refresh
+  // Every time a .countapi-click is clicked, bump + refresh
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
-      fetch(HIT_URL)
-        .then(res => res.json())
-        .then(() => refreshCount())
-        .catch(console.error);
+      updateCounter();
     });
   });
 });
 </script>
+
 </body>
 </html>
