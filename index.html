@@ -528,9 +528,6 @@
 
   resetTimerRandomly();
 </script>
-    </div>
-  </div>
-</section>
 <!-- 💡 Rotating Bonus Tip Section -->
 <section style="padding: 40px 20px; background: #fff9c4;">
   <div style="max-width: 800px; margin: auto; text-align: center;">
@@ -1068,16 +1065,35 @@ div[style*="background: #e0f2fe"]:hover {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const display = document.getElementById('click-count');
-  let count = 1; // Start at 1 visitor
+  
+  const NAMESPACE = 'cpncreator';  // <-- Your namespace
+  const KEY = 'clicks';             // <-- Your key
+  const API_URL = `https://counterapi.dev/api/${NAMESPACE}/${KEY}`;
 
-  display.textContent = count;
+  function updateCounter() {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (display) {
+          display.textContent = data.value;
+        }
+      })
+      .catch(error => {
+        console.error('Counter fetch failed:', error);
+        if (display) display.textContent = 'Error';
+      });
+  }
 
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
-      count++;
-      display.textContent = count;
+      fetch(API_URL, { method: 'POST' }) // Increase the global counter
+        .then(res => res.json())
+        .then(() => updateCounter())     // Update the number after click
+        .catch(console.error);
     });
   });
+
+  updateCounter(); // On page load
 });
 </script>
 
