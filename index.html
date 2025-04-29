@@ -1104,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', function() {
   visitDisplay.style.cssText = 'margin-left: 6px; font-size: 0.9rem; color: #fbbf24;';
   clickSpan.after(visitDisplay);
 
-  const VISIT_API_URL = 'https://cleddoffshores.com/visits.php'; // ✅ your working PHP endpoint
+  const VISIT_API_URL = 'https://cleddoffshores.com/visits.php';
 
   function updateVisitCount() {
     fetch(VISIT_API_URL)
@@ -1114,14 +1114,19 @@ document.addEventListener('DOMContentLoaded', function() {
         visitDisplay.textContent = `• ${value}v`;
       })
       .catch(() => {
-        visitDisplay.textContent = '• 0v'; // fallback if error
+        visitDisplay.textContent = '• 0v';
       });
   }
 
-  // First increment visit counter
-  fetch(VISIT_API_URL, { method: 'POST' })
-    .then(() => updateVisitCount())
-    .catch(() => updateVisitCount());
+  fetch(VISIT_API_URL, { 
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'update=1' 
+  })
+  .then(() => updateVisitCount())
+  .catch(() => updateVisitCount());
 });
 </script>
 
