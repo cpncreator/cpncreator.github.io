@@ -1065,29 +1065,13 @@ div[style*="background: #e0f2fe"]:hover {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const display = document.getElementById('click-count');
-  const NAMESPACE = 'cpncreator';
-  const KEY = 'clicks';
-  const API_URL = `https://cleddoffshores.com/counter.php/api/${NAMESPACE}/${KEY}`;
+  const API_URL = 'https://cleddoffshores.com/counter.php';
 
   function updateCounter() {
     fetch(API_URL)
-      .then(res => {
-        if (!res.ok) {
-          if (res.status === 404) {
-            // Counter doesn't exist yet, create it
-            return fetch(API_URL, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ value: 0 })
-            }).then(() => 0); // Return 0 after creation
-          } else {
-            throw new Error('Counter error');
-          }
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        const value = typeof data === 'object' ? data.value : data;
+        const value = data.count || 0;
         display.textContent = value.toLocaleString();
       })
       .catch(() => {
@@ -1097,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
-      fetch(API_URL, { method: 'POST' })
+      fetch(API_URL, { method: 'POST' }) // Send POST to increment counter
         .then(() => updateCounter())
         .catch(() => display.textContent = '—');
     });
