@@ -1065,35 +1065,43 @@ div[style*="background: #e0f2fe"]:hover {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const display = document.getElementById('click-count');
-  
-  const NAMESPACE = 'cpncreator';  // <-- Your namespace
-  const KEY = 'clicks';             // <-- Your key
+
+  const NAMESPACE = 'cpncreator';
+  const KEY = 'clicks';
   const API_URL = `https://counterapi.dev/api/${NAMESPACE}/${KEY}`;
+
+  // 🔧 Auto-create the counter if it doesn't exist
+  fetch(API_URL, { method: 'GET' })
+    .then(res => {
+      if (res.status === 404) {
+        // Create it
+        return fetch(API_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ value: 0 })
+        });
+      }
+    })
+    .then(() => updateCounter()) // Now update the UI
+    .catch(() => display.textContent = '—');
 
   function updateCounter() {
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
-        if (display) {
-          display.textContent = data.value;
-        }
+        display.textContent = data.value.toLocaleString();
       })
-      .catch(error => {
-        console.error('Counter fetch failed:', error);
-        if (display) display.textContent = 'Error';
-      });
+      .catch(() => display.textContent = '—');
   }
 
+  // When user clicks a count button, increment and update display
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
-      fetch(API_URL, { method: 'POST' }) // Increase the global counter
-        .then(res => res.json())
-        .then(() => updateCounter())     // Update the number after click
-        .catch(console.error);
+      fetch(API_URL, { method: 'POST' })
+        .then(() => updateCounter())
+        .catch(() => display.textContent = '—');
     });
   });
-
-  updateCounter(); // On page load
 });
 </script>
 
