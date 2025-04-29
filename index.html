@@ -1081,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
-      fetch(API_URL, { method: 'POST' }) // Send POST to increment counter
+      fetch(API_URL, { method: 'POST' })
         .then(() => updateCounter())
         .catch(() => display.textContent = '—');
     });
