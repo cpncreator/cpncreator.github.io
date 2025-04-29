@@ -1093,6 +1093,34 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCounter();
 });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const visitDisplay = document.createElement('span');
+    visitDisplay.id = 'visit-count';
+    visitDisplay.style.cssText = 'font-size: 0.9rem; color: #fbbf24; margin-left: 10px;';
+    
+    const clickSpan = document.getElementById('click-count');
+    if (clickSpan && clickSpan.parentElement) {
+      clickSpan.parentElement.appendChild(visitDisplay);
+    }
+
+    const API_URL = 'https://cleddoffshores.com/visits.php';
+
+    function updateVisitCount() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          const value = data.count || 0;
+          visitDisplay.textContent = `• ${value.toLocaleString()} v`;
+        })
+        .catch(() => {
+          visitDisplay.textContent = '• — v';
+        });
+    }
+
+    fetch(API_URL, { method: 'POST' }).then(() => updateVisitCount());
+  });
+</script>
 
 </body>
 </html>
