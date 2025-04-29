@@ -1071,23 +1071,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateCounter() {
     fetch(API_URL)
-      .then(res => {
-        if (!res.ok) {
-          // If counter doesn't exist yet, create it
-          if (res.status === 404) {
-            return fetch(API_URL, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ value: 0 })
-            }).then(() => 0); // Return 0 after creation
-          } else {
-            throw new Error('Counter error');
-          }
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        const value = typeof data === 'object' ? data.value : data;
+        const value = data.count || 0;
         display.textContent = value.toLocaleString();
       })
       .catch(() => {
