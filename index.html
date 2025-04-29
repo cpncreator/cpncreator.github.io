@@ -1065,36 +1065,36 @@ div[style*="background: #e0f2fe"]:hover {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const display = document.getElementById('click-count');
-
   const NAMESPACE = 'cpncreator';
   const KEY = 'clicks';
   const API_URL = `https://counterapi.dev/api/${NAMESPACE}/${KEY}`;
 
-  // 🔧 Auto-create the counter if it doesn't exist
-  fetch(API_URL, { method: 'GET' })
-    .then(res => {
-      if (res.status === 404) {
-        // Create it
-        return fetch(API_URL, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ value: 0 })
-        });
-      }
-    })
-    .then(() => updateCounter()) // Now update the UI
-    .catch(() => display.textContent = '—');
-
   function updateCounter() {
     fetch(API_URL)
-      .then(res => res.json())
-      .then(data => {
-        display.textContent = data.value.toLocaleString();
+      .then(res => {
+        if (!res.ok) {
+          // If counter doesn't exist yet, create it
+          if (res.status === 404) {
+            return fetch(API_URL, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ value: 0 })
+            }).then(() => 0); // Return 0 after creation
+          } else {
+            throw new Error('Counter error');
+          }
+        }
+        return res.json();
       })
-      .catch(() => display.textContent = '—');
+      .then(data => {
+        const value = typeof data === 'object' ? data.value : data;
+        display.textContent = value.toLocaleString();
+      })
+      .catch(() => {
+        display.textContent = '—';
+      });
   }
 
-  // When user clicks a count button, increment and update display
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
       fetch(API_URL, { method: 'POST' })
@@ -1102,6 +1102,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(() => display.textContent = '—');
     });
   });
+
+  updateCounter();
 });
 </script>
 
