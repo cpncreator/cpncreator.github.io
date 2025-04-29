@@ -1067,31 +1067,15 @@ div[style*="background: #e0f2fe"]:hover {
 <!-- ↓ Put this right above </body> ↓ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const KEY = 'cpncreator/demoClicks';
-  const BASE_URL = `https://countapi.dev/hit/${KEY}`;
   const display = document.getElementById('click-count');
+  let count = 1; // Start at 1 visitor
 
-  function updateCounter() {
-    fetch(BASE_URL)
-      .then(res => res.json())
-      .then(data => {
-        if (display) {
-          display.textContent = data.value;
-        }
-      })
-      .catch(error => {
-        console.error('Counter fetch failed:', error);
-        if (display) display.textContent = 'Error';
-      });
-  }
+  display.textContent = count;
 
-  // Initial load
-  updateCounter();
-
-  // Every time a .countapi-click is clicked, bump + refresh
   document.querySelectorAll('.countapi-click').forEach(btn => {
     btn.addEventListener('click', function() {
-      updateCounter();
+      count++;
+      display.textContent = count;
     });
   });
 });
