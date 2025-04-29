@@ -1094,7 +1094,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const clickSpan = document.getElementById('click-count');
 
   const visitDisplay = document.createElement('span');
@@ -1102,8 +1102,10 @@ document.addEventListener('DOMContentLoaded', function() {
   visitDisplay.style.cssText = 'margin-left: 6px; font-size: 0.9rem; color: #fbbf24;';
   clickSpan.after(visitDisplay);
 
-  const VISIT_API_URL = '/visits.php';  // ← use your own endpoint
+  // ✅ Use full URL to your PHP endpoint
+  const VISIT_API_URL = 'https://cleddoffshores.com/visits.php';
 
+  // 🚀 Function to update count from server
   function updateVisitCount() {
     fetch(VISIT_API_URL)
       .then(res => res.json())
@@ -1115,10 +1117,13 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
-  // 1) bump the count
+  // ⬆️ Bump count on load
   fetch(VISIT_API_URL, { method: 'POST' })
     .then(updateVisitCount)
     .catch(updateVisitCount);
+
+  // 🔁 Optional: Refresh count every 5 seconds
+  setInterval(updateVisitCount, 5000);
 });
 </script>
 
