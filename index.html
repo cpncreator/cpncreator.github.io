@@ -1095,40 +1095,34 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // 1) Identify your existing “click-count” element
   const clickSpan = document.getElementById('click-count');
-
   if (!clickSpan) return;
 
+  // 2) Inject a sibling <span> to show visits
   const visitDisplay = document.createElement('span');
   visitDisplay.id = 'visit-count';
-  visitDisplay.style.cssText = 'margin-left: 6px; font-size: 0.9rem; color: #fbbf24;';
+  visitDisplay.style.cssText = 'margin-left:6px;font-size:0.9rem;color:#fbbf24';
   clickSpan.after(visitDisplay);
 
-  const VISIT_API_URL = 'https://cleddoffshores.com/visits.php';
+  // 3) Point at your PHP endpoint (with CORS enabled)
+  const API = 'https://cleddoffshores.com/visit.php';
 
-  function updateVisitCount() {
-    fetch(VISIT_API_URL)
-      .then(res => res.json())
-      .then(data => {
-        const value = (data && typeof data.count === 'number') ? data.count : 0;
-        visitDisplay.textContent = `• ${value}v`;
-      })
-      .catch(() => {
-        visitDisplay.textContent = '• 0v';
-      });
+  // 4) Fetch helper to GET the latest count
+  function showCount() {
+    fetch(API, { method: 'GET', mode: 'cors' })
+      .then(r => r.json())
+      .then(d => { visitDisplay.textContent = `• ${d.count}v`; })
+      .catch(() => { visitDisplay.textContent = '• 0v'; });
   }
 
-  fetch(VISIT_API_URL, { 
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: 'update=1' 
-  })
-  .then(() => updateVisitCount())
-  .catch(() => updateVisitCount());
+  // 5) First POST (to bump), then GET
+  fetch(API, { method: 'POST', mode: 'cors' })
+    .then(showCount)
+    .catch(showCount);
 });
 </script>
+
 
 </body>
 </html>
