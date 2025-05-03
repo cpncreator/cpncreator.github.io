@@ -1067,32 +1067,49 @@ document.addEventListener('DOMContentLoaded', function() {
   const display = document.getElementById('click-count');
   const API_URL = 'https://cleddoffshores.com/counter.php';
 
+  // Update counter display from server
   function updateCounter() {
-    if (!display) return;
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
-        const value = (data && typeof data.count === 'number') ? data.count : 0;
-        display.textContent = value.toLocaleString();
+        if (display) display.textContent = data.count.toLocaleString();
       })
       .catch(() => {
-        display.textContent = '–';
+        if (display) display.textContent = '–';
       });
   }
 
+  // Attach click handlers to both buttons
   document.querySelectorAll('.countapi-click').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(event) {
+      event.preventDefault();
+      const targetHref = this.getAttribute('href');
+
+      // Debug: confirm handler is firing
+      console.log("Click handler fired for:", targetHref);
+
+      // 1) Send the POST
       fetch(API_URL, { method: 'POST' })
-        .then(() => updateCounter())
+        .then(res => res.json())
+        .then(data => {
+          // 2) Update on-page count
+          if (display) display.textContent = data.count.toLocaleString();
+        })
         .catch(() => {
           if (display) display.textContent = '–';
+        })
+        .finally(() => {
+          // 3) Then navigate
+          window.location.href = targetHref;
         });
     });
   });
 
+  // Initial load of the counter
   updateCounter();
 });
 </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const clickSpan = document.getElementById('click-count');
