@@ -102,7 +102,7 @@
     }
 
     function fetchBTCPrice() {
-      fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
+      fetch('https://blockchain.info/ticker')
         .then(res => res.json())
         .then(data => {
           const btcRate = parseFloat(data.bpi.USD.rate.replace(/,/g, ''));
