@@ -50,41 +50,45 @@
   </div>
 
   <script>
-    const btcAmountEl = document.getElementById('btcAmount');
-    fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
-      .then(res => res.json())
-      .then(data => {
-        const btcRate = data.bpi.USD.rate_float;
-        const btcPrice = (700 / btcRate).toFixed(8);
-        btcAmountEl.innerText = `≈ ${btcPrice} BTC`;
-      });
+  const btcAmountEl = document.getElementById('btcAmount');
 
-    const form = document.getElementById('paymentForm');
-    const confirmation = document.getElementById('confirmation');
-    const timerBox = document.getElementById('timerBox');
-    const progressBar = document.getElementById('progressBar');
+  async function fetchBTCPrice() {
+    try {
+      const res = await fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json');
+      const data = await res.json();
+      const btcRate = data.bpi.USD.rate_float;
+      const btcPrice = (700 / btcRate).toFixed(8);
+      btcAmountEl.innerText = `≈ ${btcPrice} BTC`;
+    } catch (e) {
+      btcAmountEl.innerText = "⚠️ Error loading BTC rate";
+    }
+  }
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+  fetchBTCPrice(); // Call once page loads
 
-      // Hide form, show confirmation
-      form.style.display = 'none';
-      confirmation.style.display = 'block';
-      timerBox.style.display = 'block';
+  const form = document.getElementById('paymentForm');
+  const confirmation = document.getElementById('confirmation');
+  const timerBox = document.getElementById('timerBox');
+  const progressBar = document.getElementById('progressBar');
 
-      // Start progress bar simulation (2 min countdown)
-      let seconds = 0;
-      const interval = setInterval(() => {
-        seconds += 2;
-        progressBar.value = (seconds / 120) * 100;
-        if (seconds >= 120) clearInterval(interval);
-      }, 2000);
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
 
-      // TODO: Replace this with actual email trigger (GitHub Actions handles this)
-      console.log("Email will be sent to:", document.getElementById('email').value);
-      console.log("TXID:", document.getElementById('txid').value);
-      console.log("OS:", document.getElementById('os').value);
-    });
-  </script>
+    form.style.display = 'none';
+    confirmation.style.display = 'block';
+    timerBox.style.display = 'block';
+
+    let seconds = 0;
+    const interval = setInterval(() => {
+      seconds += 2;
+      progressBar.value = (seconds / 120) * 100;
+      if (seconds >= 120) clearInterval(interval);
+    }, 2000);
+
+    console.log("Email will be sent to:", document.getElementById('email').value);
+    console.log("TXID:", document.getElementById('txid').value);
+    console.log("OS:", document.getElementById('os').value);
+  });
+</script>
 </body>
 </html>
