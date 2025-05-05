@@ -1,31 +1,43 @@
+from IPython.display import display, HTML
+
+html_code = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bitcoin Payment – CPN Creator</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 40px; max-width: 600px; margin: auto; }
     h1, h2 { color: #222; }
-    code { background: #eee; padding: 4px 6px; display: block; margin: 10px 0; }
+    code, .btc-address { background: #eee; padding: 8px 10px; display: inline-block; margin: 10px 0; cursor: pointer; border-radius: 4px; }
     label { display: block; margin-top: 15px; font-weight: bold; }
     input, select, button { width: 100%; padding: 10px; margin-top: 5px; }
-    #confirmation, #timerBox { display: none; margin-top: 20px; background: #e0ffe0; padding: 20px; border-left: 4px solid green; }
+    #confirmation, #timerBox { display: none; margin-top: 30px; background: #e0ffe0; padding: 30px; border-left: 6px solid green; font-size: 1.1em; }
+    #btcAmount { font-weight: bold; }
+    #qrcode { margin: 20px 0; text-align: center; }
+    #notice { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
   <h1>🔐 Secure Bitcoin Payment</h1>
   <h2>Price: <span style="color: green;">$700</span></h2>
-  <p>Please send exactly:</p>
   <h2 id="btcAmount">Loading BTC amount...</h2>
+  <p id="notice">Please send exactly the amount shown above.</p>
+
   <p>To the address below:</p>
-  <code>bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn</code>
+  <div>
+    <span class="btc-address" onclick="copyBTC()">bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn</span>
+  </div>
+  <div id="qrcode">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn&size=150x150" alt="QR Code for BTC Address">
+  </div>
 
   <form id="paymentForm">
     <label for="email">Your Email</label>
     <input type="email" id="email" required>
 
-    <label for="os">Select Version</label>
+    <label for="os">Do you want Windows or Mac Version?</label>
     <select id="os" required>
       <option value="">Select...</option>
       <option value="Windows">Windows</option>
@@ -35,60 +47,67 @@
     <label for="txid">Transaction ID</label>
     <input type="text" id="txid" required>
 
-    <button type="submit">✅ Submit Payment Info</button>
+    <button type="submit">Submit</button>
   </form>
 
   <div id="confirmation">
-    <p>Thank you! Please allow a few minutes while we confirm the transaction.</p>
+    <p><strong>Thank you!</strong> Please allow a few minutes while we confirm your transaction.</p>
     <p>You will receive a confirmation email with your download link.</p>
     <p>Need help? Contact: <strong>coding-planet@proton.me</strong> or WhatsApp: <strong>+2347083565577</strong></p>
   </div>
 
   <div id="timerBox">
-    <p><strong>Waiting for blockchain confirmation...</strong></p>
-    <progress id="progressBar" value="0" max="100"></progress>
+    <p style="font-size: 1.4em; font-weight: bold;">⏳ Do not close this page until confirmation is completed!</p>
+    <progress id="progressBar" value="0" max="100" style="width: 100%; height: 30px;"></progress>
   </div>
 
   <script>
-  const btcAmountEl = document.getElementById('btcAmount');
-
-  async function fetchBTCPrice() {
-    try {
-      const res = await fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json');
-      const data = await res.json();
-      const btcRate = data.bpi.USD.rate_float;
-      const btcPrice = (700 / btcRate).toFixed(8);
-      btcAmountEl.innerText = `≈ ${btcPrice} BTC`;
-    } catch (e) {
-      btcAmountEl.innerText = "⚠️ Error loading BTC rate";
+    async function fetchBTCPrice() {
+      const btcAmountEl = document.getElementById('btcAmount');
+      try {
+        const res = await fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json');
+        const data = await res.json();
+        const btcRate = data.bpi.USD.rate_float;
+        const btcPrice = (700 / btcRate).toFixed(8);
+        btcAmountEl.innerText = `≈ ${btcPrice} BTC`;
+      } catch {
+        btcAmountEl.innerText = "⚠️ Error loading BTC rate";
+      }
     }
-  }
 
-  fetchBTCPrice(); // Call once page loads
+    function copyBTC() {
+      navigator.clipboard.writeText('bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn').then(() => {
+        alert("Bitcoin address copied to clipboard.");
+      });
+    }
 
-  const form = document.getElementById('paymentForm');
-  const confirmation = document.getElementById('confirmation');
-  const timerBox = document.getElementById('timerBox');
-  const progressBar = document.getElementById('progressBar');
+    fetchBTCPrice();
 
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
+    const form = document.getElementById('paymentForm');
+    const confirmation = document.getElementById('confirmation');
+    const timerBox = document.getElementById('timerBox');
+    const progressBar = document.getElementById('progressBar');
 
-    form.style.display = 'none';
-    confirmation.style.display = 'block';
-    timerBox.style.display = 'block';
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      form.style.display = 'none';
+      confirmation.style.display = 'block';
+      timerBox.style.display = 'block';
 
-    let seconds = 0;
-    const interval = setInterval(() => {
-      seconds += 2;
-      progressBar.value = (seconds / 120) * 100;
-      if (seconds >= 120) clearInterval(interval);
-    }, 2000);
+      let seconds = 0;
+      const interval = setInterval(() => {
+        seconds += 2;
+        progressBar.value = (seconds / 120) * 100;
+        if (seconds >= 120) clearInterval(interval);
+      }, 2000);
 
-    console.log("Email will be sent to:", document.getElementById('email').value);
-    console.log("TXID:", document.getElementById('txid').value);
-    console.log("OS:", document.getElementById('os').value);
-  });
-</script>
+      console.log("Email:", document.getElementById('email').value);
+      console.log("TXID:", document.getElementById('txid').value);
+      console.log("OS:", document.getElementById('os').value);
+    });
+  </script>
 </body>
 </html>
+"""
+
+display(HTML(html_code))
