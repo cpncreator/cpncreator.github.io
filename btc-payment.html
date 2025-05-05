@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitcoin Payment – CPN Creator</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 40px; max-width: 600px; margin: auto; }
+    h1, h2 { color: #222; }
+    code { background: #eee; padding: 4px 6px; display: block; margin: 10px 0; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 5px; }
+    #confirmation, #timerBox { display: none; margin-top: 20px; background: #e0ffe0; padding: 20px; border-left: 4px solid green; }
+  </style>
+</head>
+<body>
+  <h1>🔐 Secure Bitcoin Payment</h1>
+  <h2>Price: <span style="color: green;">$700</span></h2>
+  <p>Please send exactly:</p>
+  <h2 id="btcAmount">Loading BTC amount...</h2>
+  <p>To the address below:</p>
+  <code>bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn</code>
+
+  <form id="paymentForm">
+    <label for="email">Your Email</label>
+    <input type="email" id="email" required>
+
+    <label for="os">Select Version</label>
+    <select id="os" required>
+      <option value="">Select...</option>
+      <option value="Windows">Windows</option>
+      <option value="Mac">Mac</option>
+    </select>
+
+    <label for="txid">Transaction ID</label>
+    <input type="text" id="txid" required>
+
+    <button type="submit">✅ Submit Payment Info</button>
+  </form>
+
+  <div id="confirmation">
+    <p>Thank you! Please allow a few minutes while we confirm the transaction.</p>
+    <p>You will receive a confirmation email with your download link.</p>
+    <p>Need help? Contact: <strong>coding-planet@proton.me</strong> or WhatsApp: <strong>+2347083565577</strong></p>
+  </div>
+
+  <div id="timerBox">
+    <p><strong>Waiting for blockchain confirmation...</strong></p>
+    <progress id="progressBar" value="0" max="100"></progress>
+  </div>
+
+  <script>
+    const btcAmountEl = document.getElementById('btcAmount');
+    fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
+      .then(res => res.json())
+      .then(data => {
+        const btcRate = data.bpi.USD.rate_float;
+        const btcPrice = (700 / btcRate).toFixed(8);
+        btcAmountEl.innerText = `≈ ${btcPrice} BTC`;
+      });
+
+    const form = document.getElementById('paymentForm');
+    const confirmation = document.getElementById('confirmation');
+    const timerBox = document.getElementById('timerBox');
+    const progressBar = document.getElementById('progressBar');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Hide form, show confirmation
+      form.style.display = 'none';
+      confirmation.style.display = 'block';
+      timerBox.style.display = 'block';
+
+      // Start progress bar simulation (2 min countdown)
+      let seconds = 0;
+      const interval = setInterval(() => {
+        seconds += 2;
+        progressBar.value = (seconds / 120) * 100;
+        if (seconds >= 120) clearInterval(interval);
+      }, 2000);
+
+      // TODO: Replace this with actual email trigger (GitHub Actions handles this)
+      console.log("Email will be sent to:", document.getElementById('email').value);
+      console.log("TXID:", document.getElementById('txid').value);
+      console.log("OS:", document.getElementById('os').value);
+    });
+  </script>
+</body>
+</html>
