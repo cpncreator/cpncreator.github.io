@@ -8,30 +8,62 @@ html_code = """
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bitcoin Payment – CPN Creator</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 40px; max-width: 600px; margin: auto; }
-    h1, h2 { color: #222; }
-    code, .btc-address { background: #eee; padding: 8px 10px; display: inline-block; margin: 10px 0; cursor: pointer; border-radius: 4px; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select, button { width: 100%; padding: 10px; margin-top: 5px; }
-    #confirmation, #timerBox { display: none; margin-top: 30px; background: #e0ffe0; padding: 30px; border-left: 6px solid green; font-size: 1.1em; }
-    #btcAmount { font-weight: bold; }
-    #qrcode { margin: 20px 0; text-align: center; }
-    #notice { color: red; font-weight: bold; }
+    body { font-family: Arial, sans-serif; background: #000; color: white; padding: 40px; max-width: 700px; margin: auto; }
+    h1, h2, h3 { color: white; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 22px; margin-bottom: 0; }
+    .error { color: salmon; font-weight: bold; }
+    .btc-box { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .btc-address {
+      background: #111; padding: 10px; cursor: pointer;
+      font-size: 14px; border-radius: 4px;
+    }
+    .qrcode {
+      width: 130px;
+      height: 130px;
+    }
+    #copyMsg {
+      color: lightgreen;
+      display: none;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+    label { display: block; margin-top: 20px; font-weight: bold; }
+    input, select, button {
+      width: 100%; padding: 10px; margin-top: 6px;
+      border: 1px solid #555; background: #000; color: white;
+    }
+    button { cursor: pointer; }
+    #confirmation {
+      display: none; background: #003300;
+      padding: 20px; margin-top: 20px;
+      border-left: 5px solid #00ff00;
+    }
+    #timerBox {
+      display: none;
+      margin-top: 20px;
+      background: #111;
+      padding: 20px;
+      border-left: 5px solid orange;
+    }
+    progress {
+      width: 100%;
+      height: 30px;
+    }
   </style>
 </head>
 <body>
   <h1>🔐 Secure Bitcoin Payment</h1>
-  <h2>Price: <span style="color: green;">$700</span></h2>
+  <h2>Price: <span style="color: #00ff00;">$700</span></h2>
   <h2 id="btcAmount">Loading BTC amount...</h2>
-  <p id="notice">Please send exactly the amount shown above.</p>
+  <p class="error">Please send exactly the amount shown above.</p>
 
   <p>To the address below:</p>
-  <div>
-    <span class="btc-address" onclick="copyBTC()">bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn</span>
+  <div class="btc-box">
+    <code class="btc-address" onclick="copyBTC()">bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn</code>
+    <img class="qrcode" src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn" alt="QR Code">
   </div>
-  <div id="qrcode">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn&size=150x150" alt="QR Code for BTC Address">
-  </div>
+  <p id="copyMsg">✔️ Address copied!</p>
 
   <form id="paymentForm">
     <label for="email">Your Email</label>
@@ -51,34 +83,37 @@ html_code = """
   </form>
 
   <div id="confirmation">
-    <p><strong>Thank you!</strong> Please allow a few minutes while we confirm your transaction.</p>
+    <p>✅ Thank you! Please allow a few minutes while we confirm your transaction.</p>
     <p>You will receive a confirmation email with your download link.</p>
     <p>Need help? Contact: <strong>coding-planet@proton.me</strong> or WhatsApp: <strong>+2347083565577</strong></p>
   </div>
 
   <div id="timerBox">
-    <p style="font-size: 1.4em; font-weight: bold;">⏳ Do not close this page until confirmation is completed!</p>
-    <progress id="progressBar" value="0" max="100" style="width: 100%; height: 30px;"></progress>
+    <h3>⏳ Do not close this page until confirmation is completed!</h3>
+    <progress id="progressBar" value="0" max="100"></progress>
   </div>
 
   <script>
-    async function fetchBTCPrice() {
-      const btcAmountEl = document.getElementById('btcAmount');
-      try {
-        const res = await fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json');
-        const data = await res.json();
-        const btcRate = data.bpi.USD.rate_float;
-        const btcPrice = (700 / btcRate).toFixed(8);
-        btcAmountEl.innerText = `≈ ${btcPrice} BTC`;
-      } catch {
-        btcAmountEl.innerText = "⚠️ Error loading BTC rate";
-      }
-    }
-
     function copyBTC() {
       navigator.clipboard.writeText('bc1qpyw7fqfgqsl85xskdjnsud347kpzw8pkjxy0hn').then(() => {
-        alert("Bitcoin address copied to clipboard.");
+        document.getElementById('copyMsg').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('copyMsg').style.display = 'none';
+        }, 2000);
       });
+    }
+
+    function fetchBTCPrice() {
+      fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
+        .then(res => res.json())
+        .then(data => {
+          const btcRate = parseFloat(data.bpi.USD.rate.replace(/,/g, ''));
+          const btcPrice = (700 / btcRate).toFixed(8);
+          document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
+        })
+        .catch(() => {
+          document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC rate';
+        });
     }
 
     fetchBTCPrice();
