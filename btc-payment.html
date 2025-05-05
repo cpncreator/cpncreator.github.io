@@ -16,7 +16,11 @@
     h1, h2, label, p { color: #fff; }
     h1 { font-size: 2em; }
     h2 { font-size: 1.5em; margin: 10px 0; }
-    #btcAmount { font-weight: bold; color: orange; }
+    #btcAmount {
+      font-weight: bold;
+      color: orange;
+      cursor: pointer;
+    }
 
     .btc-section {
       display: flex;
@@ -28,10 +32,11 @@
 
     .btc-address {
       background: #222;
-      padding: 10px 14px;
+      padding: 12px 16px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 0.9em;
+      font-size: 1.1em;
+      font-weight: bold;
     }
 
     #qrcode img {
@@ -46,7 +51,9 @@
     }
 
     input, select, button {
+      display: block;
       width: 100%;
+      box-sizing: border-box;
       padding: 12px;
       margin-top: 8px;
       border-radius: 4px;
@@ -55,11 +62,17 @@
     }
 
     button {
-      background: green;
+      background: #28a745;
       color: white;
       font-size: 1.2em;
       margin-top: 20px;
       cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #218838;
+      transform: scale(1.02);
     }
 
     #confirmation, #timerBox {
@@ -133,7 +146,11 @@
         .then(data => {
           const btcRate = data.USD.last;
           const btcPrice = (700 / btcRate).toFixed(8);
-          document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
+          const btcEl = document.getElementById('btcAmount');
+          btcEl.innerText = `≈ ${btcPrice} BTC`;
+
+          // Auto-copy BTC amount
+          navigator.clipboard.writeText(btcPrice);
         })
         .catch(() => {
           document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC rate';
