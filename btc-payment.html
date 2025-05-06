@@ -106,8 +106,8 @@
   <div class="btc-section">
     <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
     <div id="qrcode">
-  <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code" width="120" height="120">
-</div>
+      <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code" width="120" height="120">
+    </div>
   </div>
 
   <form id="paymentForm">
@@ -148,7 +148,6 @@
           const btcEl = document.getElementById('btcAmount');
           btcEl.innerText = `≈ ${btcPrice} BTC`;
 
-          // Auto-copy BTC amount
           navigator.clipboard.writeText(btcPrice);
         })
         .catch(() => {
@@ -172,14 +171,42 @@
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Validate TXID
+      const email = document.getElementById('email').value.trim();
+      const os = document.getElementById('os').value.trim();
       const txid = document.getElementById('txid').value.trim();
+
       const txidIsValid = /^[a-fA-F0-9]{64}$/.test(txid);
       if (!txidIsValid) {
         alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
         return;
       }
 
+      // Send email via Formspree
+      const formData = {
+        email: email,
+        message: `New BTC Payment Submission\nEmail: ${email}\nOS: ${os}\nTXID: ${txid}`
+      };
+
+      fetch('https://formspree.io/f/xvgaawzj', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log("✅ Email sent successfully.");
+        } else {
+          alert("❌ Email failed to send. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error("Email send error:", error);
+      });
+
+      // Show confirmation UI
       form.style.display = 'none';
       confirmation.style.display = 'block';
       timerBox.style.display = 'block';
@@ -190,10 +217,6 @@
         progressBar.value = (seconds / 120) * 100;
         if (seconds >= 120) clearInterval(interval);
       }, 2000);
-
-      console.log("Email:", document.getElementById('email').value);
-      console.log("TXID:", txid);
-      console.log("OS:", document.getElementById('os').value);
     });
   </script>
 </body>
