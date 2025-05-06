@@ -213,6 +213,7 @@
               </button>
             `;
 
+            // disable right-click on download button
             const dlBtn = document.getElementById('downloadBtn');
             dlBtn.addEventListener('click', () => {
               window.open(finalURL, '_blank');
@@ -224,17 +225,18 @@
             });
             dlBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-            // send WhatsApp (no OS, no download link)
-            const confirmationMsg = `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`;
-            sendWhatsAppMessage(confirmationMsg);
+            // send WhatsApp without OS
+            sendWhatsAppMessage(
+              `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}\nDownload: ${finalURL}`
+            );
 
-            // Confirmation POST (no download link)
+            // Confirmation POST without OS
             fetch('https://formspree.io/f/xvgaawzj', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
               body: JSON.stringify({
                 email: userEmail,
-                message: confirmationMsg
+                message: `✅ BTC Confirmed\nEmail: ${userEmail}\nTXID: ${userTxid}\nDownload: ${finalURL}`
               })
             });
           }
@@ -253,7 +255,7 @@
         return;
       }
 
-      // initial POST (no download link)
+      // initial POST without OS
       fetch('https://formspree.io/f/xvgaawzj', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
