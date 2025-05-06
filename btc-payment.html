@@ -99,7 +99,6 @@
       font-size: 1.1em;
       word-break: break-word;
     }
-    /* Link Styling */
     a, a:visited, a:hover, a:active {
       color: #fff;
       text-decoration: none;
@@ -110,14 +109,11 @@
 
 <div id="paymentSection">
   <h1>🔐 Secure Bitcoin Payment</h1>
-
   <div class="price-line">
     <span>Price: <span style="color: #00ff00;">$700</span></span>
     <span id="btcAmount">Loading BTC...</span>
   </div>
-
   <p id="notice">Please send exactly the amount shown above.</p>
-
   <p>To the address below:</p>
   <div class="btc-section">
     <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
@@ -147,7 +143,7 @@
 <div id="confirmation">
   <p><strong>Thank you for purchasing CPN Creator.</strong></p>
   <p>Please allow some time for the transaction confirmation to complete.</p>
-  <p><strong>After the confirmation completes, a download link will be provided below.</strong></p>
+  <p><strong>We will email you with a download link once we receive confirmation.</strong></p>
   <p>You can always contact us using any of the below channels.</p>
   <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
 </div>
@@ -192,22 +188,21 @@
     });
   }
 
+  function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
+
   function sendWhatsAppMessage(message) {
     const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
     fetch(url)
       .then(res => res.text())
       .then(data => console.log('WhatsApp sent:', data))
       .catch(err => console.error('WhatsApp error:', err));
-  }
-
-  function generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   }
 
   function checkConfirmations(txid) {
@@ -224,12 +219,12 @@
           const baseURL = userOS === 'Windows'
             ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
             : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
-          const downloadURL = `${baseURL}?uid=${randomSuffix}`;
+          const finalURL = `${baseURL}?id=${randomSuffix}`;
 
           downloadLinkDiv.style.display = 'block';
-          downloadLinkDiv.innerHTML = `<strong>Your download is ready:</strong> <a href="${downloadURL}" target="_blank">${downloadURL}</a>`;
+          downloadLinkDiv.innerHTML = `<strong>Your download is ready:</strong> <a href="${finalURL}" target="_blank">${finalURL}</a>`;
 
-          sendWhatsAppMessage(`✅ BTC confirmed!\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${downloadURL}`);
+          sendWhatsAppMessage(`✅ BTC confirmed!\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${finalURL}`);
 
           fetch('https://formspree.io/f/xvgaawzj', {
             method: 'POST',
@@ -239,7 +234,7 @@
             },
             body: JSON.stringify({
               email: userEmail,
-              message: `✅ BTC Confirmed\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${downloadURL}`
+              message: `✅ BTC Confirmed\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${finalURL}`
             })
           }).then(res => {
             if (res.ok) {
@@ -250,6 +245,41 @@
       });
   }
 
+  document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-::contentReference[oaicite:1]{index=1}
- 
+    userEmail = document.getElementById('email').value.trim();
+    userOS = document.getElementById('os').value.trim();
+    userTxid = document.getElementById('txid').value.trim();
+
+    const txidIsValid = /^[a-fA-F0-9]{64}$/.test(userTxid);
+    if (!txidIsValid) {
+      alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
+      return;
+    }
+
+    fetch('https://formspree.io/f/xvgaawzj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        message: `New BTC Submission\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
+      })
+    });
+
+    this.style.display = 'none';
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('confirmation').style.display = 'block';
+    document.getElementById('timerBox').style.display = 'block';
+
+    checkConfirmations(userTxid);
+    confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
+  });
+
+  fetchBTCPrice();
+</script>
+</body>
+</html>
