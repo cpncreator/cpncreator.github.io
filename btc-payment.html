@@ -222,7 +222,20 @@
           const finalURL = `${baseURL}?id=${randomSuffix}`;
 
           downloadLinkDiv.style.display = 'block';
-          downloadLinkDiv.innerHTML = `<strong>Your download is ready:</strong> <a href="${finalURL}" target="_blank">${finalURL}</a>`;
+downloadLinkDiv.innerHTML = `
+  <button id="downloadBtn" style="padding: 15px; font-size: 1.1em; background: #28a745; border: none; border-radius: 6px; color: #fff; cursor: pointer;">
+    🟢 Click here to download CPN Creator
+  </button>
+`;
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  window.open(downloadURL, '_blank');
+  setTimeout(() => {
+    document.getElementById('downloadLink').style.display = 'none';
+    confirmation.style.display = 'none';
+    timerBox.style.display = 'none';
+  }, 1000);
+});
 
           sendWhatsAppMessage(`✅ BTC confirmed!\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${finalURL}`);
 
