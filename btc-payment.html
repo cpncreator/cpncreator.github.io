@@ -99,6 +99,11 @@
       font-size: 1.1em;
       word-break: break-word;
     }
+    /* Link Styling */
+    a, a:visited, a:hover, a:active {
+      color: #fff;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -195,6 +200,16 @@
       .catch(err => console.error('WhatsApp error:', err));
   }
 
+  function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
   function checkConfirmations(txid) {
     fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
       .then(response => response.json())
@@ -205,9 +220,11 @@
         if (confirmations >= 6) {
           clearInterval(confirmationInterval);
 
-          const downloadURL = userOS === 'Windows'
+          const randomSuffix = generateRandomString(8);
+          const baseURL = userOS === 'Windows'
             ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
             : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
+          const downloadURL = `${baseURL}?uid=${randomSuffix}`;
 
           downloadLinkDiv.style.display = 'block';
           downloadLinkDiv.innerHTML = `<strong>Your download is ready:</strong> <a href="${downloadURL}" target="_blank">${downloadURL}</a>`;
@@ -233,42 +250,6 @@
       });
   }
 
-  document.getElementById('paymentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
 
-    userEmail = document.getElementById('email').value.trim();
-    userOS = document.getElementById('os').value;
-    userTxid = document.getElementById('txid').value.trim();
-
-    if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
-      alert("Invalid TXID.");
-      return;
-    }
-
-    this.style.display = 'none';
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('confirmation').style.display = 'block';
-    document.getElementById('timerBox').style.display = 'block';
-
-    fetch('https://formspree.io/f/xvgaawzj', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        email: userEmail,
-        message: `New BTC Payment\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
-      })
-    });
-
-    confirmationInterval = setInterval(() => {
-      checkConfirmations(userTxid);
-    }, 60000);
-    checkConfirmations(userTxid);
-  });
-
-  fetchBTCPrice();
-</script>
-</body>
-</html>
+::contentReference[oaicite:1]{index=1}
+ 
