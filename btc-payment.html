@@ -77,7 +77,14 @@
       height: 30px;
       margin-top: 15px;
     }
-    #downloadLink { display: none; margin-top: 20px; }
+    #downloadLink { display: none; margin-top: 20px; text-align: center; }
+    #thankYouMessage {
+      display: none;
+      margin-top: 30px;
+      font-size: 1.2em;
+      line-height: 1.4;
+      text-align: center;
+    }
     a, a:visited, a:hover, a:active { color: #fff; text-decoration: none; }
   </style>
 </head>
@@ -120,7 +127,7 @@
   <div id="confirmation">
     <p><strong>Thank you for purchasing CPN Creator.</strong></p>
     <p>Please allow some time for the transaction confirmation to complete.</p>
-    <p><strong>Once the confirmation completes, there will be a download link below.</strong></p>
+    <p><strong>Once the confirmation completes, there will be a download button below.</strong></p>
     <p>You can always contact us using any of the following channels.</p>
     <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
   </div>
@@ -131,6 +138,9 @@
   </div>
 
   <div id="downloadLink"></div>
+  <div id="thankYouMessage">
+    Your download has started. If you have any questions or did not get your download, you can send us a message at Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong>
+  </div>
 
   <script>
     const apiToken = '68cd7b8dcabf4598941296b9f1e09b34';
@@ -142,6 +152,7 @@
     let userOS = '';
     let userTxid = '';
     const downloadLinkDiv = document.getElementById('downloadLink');
+    const thankYouDiv = document.getElementById('thankYouMessage');
 
     function fetchBTCPrice() {
       fetch('https://blockchain.info/ticker')
@@ -165,6 +176,19 @@
     function generateRandomString(length) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+    }
+
+    async function downloadFile(url, filename) {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(blobUrl);
     }
 
     function sendWhatsAppMessage(message) {
@@ -193,20 +217,18 @@
 
             downloadLinkDiv.style.display = 'block';
             downloadLinkDiv.innerHTML = `
-              <a id="downloadBtn" href="${finalURL}" download style="display:inline-block;padding:15px;font-size:1.1em;background:#28a745;border-radius:6px;color:#fff;cursor:pointer;">
-                🟢 Click here to download CPN Creator
-              </a>
+              <button id="downloadBtn">🟢 Download CPN Creator</button>
             `;
 
             const dlBtn = document.getElementById('downloadBtn');
-            dlBtn.addEventListener('click', () => {
-              setTimeout(() => {
-                document.body.innerHTML = `
-                  <div style="font-family:Arial,sans-serif;background:#000;color:#fff;padding:40px;max-width:700px;margin:auto;text-align:center;">
-                    <p style="font-size:1.2em;">Your download has started, if you have any questions or did not get your download, you can send us a message at Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
-                  </div>
-                `;
-              }, 500);
+            dlBtn.addEventListener('click', async () => {
+              dlBtn.disabled = true;
+              await downloadFile(finalURL, 'CPN_Creator.zip');
+              document.getElementById('paymentSection').style.display = 'none';
+              document.getElementById('confirmation').style.display = 'none';
+              document.getElementById('timerBox').style.display = 'none';
+              downloadLinkDiv.style.display = 'none';
+              thankYouDiv.style.display = 'block';
             });
             dlBtn.addEventListener('contextmenu', e => e.preventDefault());
 
