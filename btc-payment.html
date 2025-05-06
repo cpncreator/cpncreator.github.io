@@ -96,14 +96,11 @@
 
 <div id="paymentSection">
   <h1>🔐 Secure Bitcoin Payment</h1>
-
   <div class="price-line">
     <span>Price: <span style="color: #00ff00;">$700</span></span>
     <span id="btcAmount">Loading BTC...</span>
   </div>
-
   <p id="notice">Please send exactly the amount shown above.</p>
-
   <p>To the address below:</p>
   <div class="btc-section">
     <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
@@ -144,7 +141,9 @@
 </div>
 
 <script>
-  const apiToken = '68cd7b8dcabf4598941296b9f1e09b34'; // Replace with your actual BlockCypher API token
+  const apiToken = '68cd7b8dcabf4598941296b9f1e09b34'; // Your actual BlockCypher token
+  let userEmail = '', userOS = '', userTxid = '';
+  let confirmationInterval;
 
   function fetchBTCPrice() {
     fetch('https://blockchain.info/ticker')
@@ -152,8 +151,7 @@
       .then(data => {
         const btcRate = data.USD.last;
         const btcPrice = (700 / btcRate).toFixed(8);
-        const btcEl = document.getElementById('btcAmount');
-        btcEl.innerText = `≈ ${btcPrice} BTC`;
+        document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
         navigator.clipboard.writeText(btcPrice);
       })
       .catch(() => {
@@ -167,85 +165,70 @@
     });
   }
 
-  fetchBTCPrice();
-
-  const form = document.getElementById('paymentForm');
-  const confirmation = document.getElementById('confirmation');
-  const timerBox = document.getElementById('timerBox');
-  const progressBar = document.getElementById('progressBar');
-
-  let confirmationInterval;
-
   function checkConfirmations(txid) {
     fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
       .then(response => response.json())
       .then(data => {
         const confirmations = data.confirmations || 0;
-        progressBar.value = confirmations;
+        document.getElementById('progressBar').value = confirmations;
 
         if (confirmations >= 6) {
           clearInterval(confirmationInterval);
-          // Proceed with post-confirmation actions, such as sending a confirmation email
-          alert("✅ Transaction confirmed with 6 confirmations.");
+          document.getElementById('progressBar').value = 6;
+
+          const successMsg = document.createElement('div');
+          successMsg.style = 'background: #d1fae5; color: #065f46; padding: 20px; margin-top: 20px; font-weight: bold; border-radius: 6px;';
+          successMsg.innerText = "✅ Your Bitcoin transaction is fully confirmed! Your download will be sent shortly.";
+          document.body.appendChild(successMsg);
+
+          fetch('https://formspree.io/f/xvgaawzj', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              email: userEmail,
+              message: `✅ BTC transaction fully confirmed.\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
+            })
+          }).then(res => {
+            if (res.ok) console.log("✔ Confirmation email sent.");
+            else console.warn("⚠️ Email not sent.");
+          });
         }
       })
-      .catch(error => {
-        console.error('Error fetching confirmation count:', error);
-      });
+      .catch(err => console.error("Error checking confirmations:", err));
   }
 
-  form.addEventListener('submit', function(e) {
+  document.getElementById('paymentForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const email = document.getElementById('email').value.trim();
-    const os = document.getElementById('os').value.trim();
-    const txid = document.getElementById('txid').value.trim();
+    userEmail = document.getElementById('email').value.trim();
+    userOS = document.getElementById('os').value.trim();
+    userTxid = document.getElementById('txid').value.trim();
 
-    const txidIsValid = /^[a-fA-F0-9]{64}$/.test(txid);
+    const txidIsValid = /^[a-fA-F0-9]{64}$/.test(userTxid);
     if (!txidIsValid) {
-      alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
+      alert("❌ Invalid Transaction ID.");
       return;
     }
 
-    // Send email to admin and user via Formspree
-    const formData = {
-      email: email,
-      message: `New BTC Payment Submission\nEmail: ${email}\nOS: ${os}\nTXID: ${txid}`
-    };
-
     fetch('https://formspree.io/f/xvgaawzj', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => {
-      if (response.ok) {
-        console.log("✅ Email sent successfully.");
-      } else {
-        alert("❌ Email failed to send. Please try again.");
-      }
-    })
-    .catch(error => {
-      console.error("Email send error:", error);
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        email: userEmail,
+        message: `New BTC Payment Submission\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
+      })
     });
 
-    // Hide form and payment section
-    form.style.display = 'none';
+    document.getElementById('paymentForm').style.display = 'none';
     document.getElementById('paymentSection').style.display = 'none';
-    confirmation.style.display = 'block';
-    timerBox.style.display = 'block';
+    document.getElementById('confirmation').style.display = 'block';
+    document.getElementById('timerBox').style.display = 'block';
 
-    // Start checking confirmations every minute
-    confirmationInterval = setInterval(() => {
-      checkConfirmations(txid);
-    }, 60000); // 60000 milliseconds = 1 minute
-
-    // Initial check
-    checkConfirmations(txid);
+    checkConfirmations(userTxid);
+    confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
   });
+
+  fetchBTCPrice();
 </script>
 </body>
 </html>
