@@ -38,10 +38,7 @@
       font-size: 1.25em;
       font-weight: bold;
     }
-    #qrcode img {
-      width: 120px;
-      height: 120px;
-    }
+    #qrcode img { width: 120px; height: 120px; }
     label { display: block; margin-top: 20px; font-weight: bold; }
     input, select, button {
       display: block;
@@ -80,19 +77,8 @@
       height: 30px;
       margin-top: 15px;
     }
-    #downloadLink {
-      display: none;
-      margin-top: 20px;
-      padding: 15px;
-      background: #333;
-      border-radius: 6px;
-      font-size: 1.1em;
-      word-break: break-word;
-    }
-    a, a:visited, a:hover, a:active {
-      color: #fff;
-      text-decoration: none;
-    }
+    #downloadLink { display: none; margin-top: 20px; }
+    a, a:visited, a:hover, a:active { color: #fff; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -155,7 +141,6 @@
     let userEmail = '';
     let userOS = '';
     let userTxid = '';
-
     const downloadLinkDiv = document.getElementById('downloadLink');
 
     function fetchBTCPrice() {
@@ -208,36 +193,29 @@
 
             downloadLinkDiv.style.display = 'block';
             downloadLinkDiv.innerHTML = `
-              <button id="downloadBtn" style="padding: 15px; font-size: 1.1em; background: #28a745; border: none; border-radius: 6px; color: #fff; cursor: pointer;">
+              <a id="downloadBtn" href="${finalURL}" download style="display:inline-block;padding:15px;font-size:1.1em;background:#28a745;border-radius:6px;color:#fff;cursor:pointer;">
                 🟢 Click here to download CPN Creator
-              </button>
+              </a>
             `;
 
-            // disable right-click on download button
             const dlBtn = document.getElementById('downloadBtn');
             dlBtn.addEventListener('click', () => {
-              window.open(finalURL, '_blank');
               setTimeout(() => {
-                document.getElementById('downloadLink').style.display = 'none';
-                document.getElementById('confirmation').style.display = 'none';
-                document.getElementById('timerBox').style.display = 'none';
-              }, 1000);
+                document.body.innerHTML = `
+                  <div style="font-family:Arial,sans-serif;background:#000;color:#fff;padding:40px;max-width:700px;margin:auto;text-align:center;">
+                    <p style="font-size:1.2em;">Your download has started, if you have any questions or did not get your download, you can send us a message at Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
+                  </div>
+                `;
+              }, 500);
             });
             dlBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-            // send WhatsApp without OS
-            sendWhatsAppMessage(
-              `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}\nDownload: ${finalURL}`
-            );
-
-            // Confirmation POST without OS
+            const confirmationMsg = `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`;
+            sendWhatsAppMessage(confirmationMsg);
             fetch('https://formspree.io/f/xvgaawzj', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-              body: JSON.stringify({
-                email: userEmail,
-                message: `✅ BTC Confirmed\nEmail: ${userEmail}\nTXID: ${userTxid}\nDownload: ${finalURL}`
-              })
+              body: JSON.stringify({ email: userEmail, message: confirmationMsg })
             });
           }
         });
@@ -245,31 +223,22 @@
 
     document.getElementById('paymentForm').addEventListener('submit', function(e) {
       e.preventDefault();
-
       userEmail = document.getElementById('email').value.trim();
       userOS = document.getElementById('os').value;
       userTxid = document.getElementById('txid').value.trim();
-
       if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
         alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
         return;
       }
-
-      // initial POST without OS
       fetch('https://formspree.io/f/xvgaawzj', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          email: userEmail,
-          message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
-        })
+        body: JSON.stringify({ email: userEmail, message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}` })
       });
-
       document.getElementById('paymentForm').style.display = 'none';
       document.getElementById('paymentSection').style.display = 'none';
       document.getElementById('confirmation').style.display = 'block';
       document.getElementById('timerBox').style.display = 'block';
-
       checkConfirmations(userTxid);
       confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
     });
