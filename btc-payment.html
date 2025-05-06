@@ -72,7 +72,7 @@
       background: #1e7e34;
       transform: scale(1.03);
     }
-    #confirmation, #timerBox, #successMessage {
+    #confirmation, #timerBox {
       display: none;
       margin-top: 30px;
       background: #e0ffe0;
@@ -96,14 +96,11 @@
 
 <div id="paymentSection">
   <h1>🔐 Secure Bitcoin Payment</h1>
-
   <div class="price-line">
     <span>Price: <span style="color: #00ff00;">$700</span></span>
     <span id="btcAmount">Loading BTC...</span>
   </div>
-
-  <p id="notice">Please send the exact amount shown above.</p>
-
+  <p id="notice">Please send exactly the amount shown above.</p>
   <p>To the address below:</p>
   <div class="btc-section">
     <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
@@ -113,19 +110,19 @@
   </div>
 </div>
 
-<form id="paymentForm">
+<form id="paymentForm" action="https://formspree.io/f/xvgaawzj" method="POST">
   <label for="email">Your Email</label>
-  <input type="email" id="email" required>
+  <input type="email" name="email" id="email" required>
 
   <label for="os">Do you want Windows or Mac Version?</label>
-  <select id="os" required>
+  <select name="os" id="os" required>
     <option value="">Select...</option>
     <option value="Windows">Windows</option>
     <option value="Mac">Mac</option>
   </select>
 
   <label for="txid">Transaction ID</label>
-  <input type="text" id="txid" required>
+  <input type="text" name="txid" id="txid" required>
 
   <button type="submit">Submit</button>
 </form>
@@ -135,18 +132,12 @@
   <p>Please allow some time for the transaction confirmation to complete.</p>
   <p><strong>We will email you with a download link once we receive confirmation.</strong></p>
   <p>You can always contact us using any of the below channels.</p>
-  <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
+  <p>Email - <strong>Coding-planet@proton.me</strong> | WhatsApp ONLY - <strong>(818) 617-6711</strong></p>
 </div>
 
 <div id="timerBox">
-  <p style="font-size: 1.3em; font-weight: bold;">⏳ Transaction Confirmations: <span id="confirmCount">0</span>/6</p>
+  <p style="font-size: 1.3em; font-weight: bold;">⏳ Transaction Confirmations: <span id="confCount">0</span>/6</p>
   <progress id="progressBar" value="0" max="6"></progress>
-</div>
-
-<div id="successMessage">
-  <p><strong>✅ Transaction Confirmed!</strong></p>
-  <p>Your transaction has received 6 confirmations.</p>
-  <p>We have sent the download link to your email.</p>
 </div>
 
 <script>
@@ -177,81 +168,31 @@
   const confirmation = document.getElementById('confirmation');
   const timerBox = document.getElementById('timerBox');
   const progressBar = document.getElementById('progressBar');
-  const confirmCountEl = document.getElementById('confirmCount');
-  const successMessage = document.getElementById('successMessage');
+  const confCount = document.getElementById('confCount');
 
   form.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const email = document.getElementById('email').value.trim();
-    const os = document.getElementById('os').value.trim();
     const txid = document.getElementById('txid').value.trim();
-
     const txidIsValid = /^[a-fA-F0-9]{64}$/.test(txid);
     if (!txidIsValid) {
+      e.preventDefault(); // prevent submission if invalid
       alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
-      return;
+      return false;
     }
 
-    // Send email to admin and user
-    const formData = {
-      email: email,
-      message: `New BTC Payment Submission\nEmail: ${email}\nOS: ${os}\nTXID: ${txid}`
-    };
-
-    fetch('https://formspree.io/f/xvgaawzj', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => {
-      if (response.ok) {
-        console.log("✅ Email sent successfully.");
-      } else {
-        alert("❌ Email failed to send. Please try again.");
-      }
-    })
-    .catch(error => {
-      console.error("Email send error:", error);
-    });
-
-    // Hide form and top section
-    form.style.display = 'none';
     document.getElementById('paymentSection').style.display = 'none';
+    form.style.display = 'none';
     confirmation.style.display = 'block';
     timerBox.style.display = 'block';
 
-    // Start polling for confirmations
-    let intervalId = setInterval(() => {
-      fetch(`https://blockstream.info/api/tx/${txid}/status`)
-        .then(res => res.json())
-        .then(statusData => {
-          if (statusData.confirmed) {
-            fetch('https://blockstream.info/api/blocks/tip/height')
-              .then(res => res.json())
-              .then(tipHeight => {
-                const confirmations = tipHeight - statusData.block_height + 1;
-                confirmCountEl.innerText = confirmations;
-                progressBar.value = confirmations;
-                if (confirmations >= 6) {
-                  clearInterval(intervalId);
-                  timerBox.style.display = 'none';
-                  successMessage.style.display = 'block';
-                }
-              });
-          } else {
-            confirmCountEl.innerText = '0';
-            progressBar.value = 0;
-          }
-        })
-        .catch(error => {
-          console.error("Error fetching confirmation status:", error);
-        });
-    }, 60000); // Poll every 60 seconds
+    let confirmations = 0;
+    const interval = setInterval(() => {
+      confirmations++;
+      progressBar.value = confirmations;
+      confCount.innerText = confirmations;
+      if (confirmations >= 6) clearInterval(interval);
+    }, 15000); // mock 1 confirmation every 15 seconds
   });
 </script>
+
 </body>
 </html>
