@@ -22,10 +22,7 @@
       font-weight: bold;
       margin: 15px 0;
     }
-    #btcAmount {
-      color: orange;
-      cursor: pointer;
-    }
+    #btcAmount { color: orange; cursor: pointer; }
     .btc-section {
       display: flex;
       align-items: center;
@@ -45,11 +42,7 @@
       width: 120px;
       height: 120px;
     }
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
+    label { display: block; margin-top: 20px; font-weight: bold; }
     input, select, button {
       display: block;
       width: 100%;
@@ -81,10 +74,7 @@
       font-size: 1.1em;
       color: #000;
     }
-    #notice {
-      color: red;
-      font-weight: bold;
-    }
+    #notice { color: red; font-weight: bold; }
     progress {
       width: 100%;
       height: 30px;
@@ -107,191 +97,183 @@
 </head>
 <body>
 
-<div id="paymentSection">
-  <h1>🔐 Secure Bitcoin Payment</h1>
-  <div class="price-line">
-    <span>Price: <span style="color: #00ff00;">$700</span></span>
-    <span id="btcAmount">Loading BTC...</span>
-  </div>
-  <p id="notice">Please send the exact amount shown above.</p>
-  <div class="btc-section">
-    <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
-    <div id="qrcode">
-      <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code" width="120" height="120">
+  <div id="paymentSection">
+    <h1>🔐 Secure Bitcoin Payment</h1>
+    <div class="price-line">
+      <span>Price: <span style="color: #00ff00;">$700</span></span>
+      <span id="btcAmount">Loading BTC...</span>
+    </div>
+    <p id="notice">Please send the exact amount shown above.</p>
+    <div class="btc-section">
+      <div onclick="copyBTC()" class="btc-address">
+        bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y
+      </div>
+      <div id="qrcode">
+        <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code">
+      </div>
     </div>
   </div>
-</div>
 
-<form id="paymentForm">
-  <label for="email">Your Email</label>
-  <input type="email" id="email" required>
+  <form id="paymentForm">
+    <label for="email">Your Email</label>
+    <input type="email" id="email" required>
 
-  <label for="os">Do you want Windows or Mac Version?</label>
-  <select id="os" required>
-    <option value="">Select...</option>
-    <option value="Windows">Windows</option>
-    <option value="Mac">Mac</option>
-  </select>
+    <label for="os">Windows or Mac Version?</label>
+    <select id="os" required>
+      <option value="">Select...</option>
+      <option value="Windows">Windows</option>
+      <option value="Mac">Mac</option>
+    </select>
 
-  <label for="txid">Transaction ID</label>
-  <input type="text" id="txid" required>
+    <label for="txid">Transaction ID</label>
+    <input type="text" id="txid" required>
 
-  <button type="submit">Submit</button>
-</form>
+    <button type="submit">Submit</button>
+  </form>
 
-<div id="confirmation">
-  <p><strong>Thank you for purchasing CPN Creator.</strong></p>
-  <p>Please allow some time for the transaction confirmation to complete.</p>
-  <p><strong>Once the confirmation completes, there will be a download link below.</strong></p>
-  <p>You can always contact us using any of the following channels.</p>
-  <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
-</div>
+  <div id="confirmation">
+    <p><strong>Thank you for purchasing CPN Creator.</strong></p>
+    <p>Please allow some time for the transaction confirmation to complete.</p>
+    <p><strong>Once the confirmation completes, there will be a download link below.</strong></p>
+    <p>You can always contact us using any of the following channels.</p>
+    <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
+  </div>
 
-<div id="timerBox">
-  <p style="font-size: 1.3em; font-weight: bold;">⏳ Close this page after confirmation is completed!</p>
-  <progress id="progressBar" value="0" max="6"></progress>
-</div>
+  <div id="timerBox">
+    <p style="font-size: 1.3em; font-weight: bold;">⏳ Close this page after confirmation is completed!</p>
+    <progress id="progressBar" value="0" max="6"></progress>
+  </div>
 
-<div id="downloadLink"></div>
+  <div id="downloadLink"></div>
 
-<script>
-  const apiToken = '68cd7b8dcabf4598941296b9f1e09b34';
-  const callMeBotApiKey = '1474937';
-  const callMeBotPhone = '18186176711';
+  <script>
+    const apiToken = '68cd7b8dcabf4598941296b9f1e09b34';
+    const callMeBotApiKey = '1474937';
+    const callMeBotPhone = '18186176711';
 
-  let confirmationInterval;
-  let userEmail = '';
-  let userOS = '';
-  let userTxid = '';
+    let confirmationInterval;
+    let userEmail = '';
+    let userOS = '';
+    let userTxid = '';
 
-  const downloadLinkDiv = document.getElementById('downloadLink');
+    const downloadLinkDiv = document.getElementById('downloadLink');
 
-  function fetchBTCPrice() {
-    fetch('https://blockchain.info/ticker')
-      .then(res => res.json())
-      .then(data => {
-        const btcRate = data.USD.last;
-        const btcPrice = (700 / btcRate).toFixed(8);
-        const btcEl = document.getElementById('btcAmount');
-        btcEl.innerText = `≈ ${btcPrice} BTC`;
-        navigator.clipboard.writeText(btcPrice);
-      })
-      .catch(() => {
-        document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
-      });
-  }
-
-  function copyBTC() {
-    navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y').then(() => {
-      alert("Bitcoin address copied to clipboard.");
-    });
-  }
-
-  function generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  }
-
-  function sendWhatsAppMessage(message) {
-    const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
-    fetch(url)
-      .then(res => res.text())
-      .then(data => console.log('WhatsApp sent:', data))
-      .catch(err => console.error('WhatsApp error:', err));
-  }
-
-  function checkConfirmations(txid) {
-    fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
-      .then(response => response.json())
-      .then(data => {
-        const confirmations = data.confirmations || 0;
-        document.getElementById('progressBar').value = confirmations;
-
-        if (confirmations >= 6) {
-          clearInterval(confirmationInterval);
-
-          const randomSuffix = generateRandomString(8);
-          const baseURL = userOS === 'Windows'
-            ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
-            : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
-          const finalURL = `${baseURL}?id=${randomSuffix}`;
-
-          downloadLinkDiv.style.display = 'block';
-downloadLinkDiv.innerHTML = `
-  <button id="downloadBtn" style="padding: 15px; font-size: 1.1em; background: #28a745; border: none; border-radius: 6px; color: #fff; cursor: pointer;">
-    🟢 Click here to download CPN Creator
-  </button>
-`;
-
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  window.open(downloadURL, '_blank');
-  setTimeout(() => {
-    document.getElementById('downloadLink').style.display = 'none';
-    confirmation.style.display = 'none';
-    timerBox.style.display = 'none';
-  }, 1000);
-});
-
-          sendWhatsAppMessage(`✅ BTC confirmed!\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${finalURL}`);
-
-          fetch('https://formspree.io/f/xvgaawzj', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              email: userEmail,
-              message: `✅ BTC Confirmed\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${finalURL}`
-            })
-          }).then(res => {
-            if (res.ok) {
-              console.log('✔ Confirmation email sent.');
-            }
-          });
-        }
-      });
-  }
-
-  document.getElementById('paymentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    userEmail = document.getElementById('email').value.trim();
-    userOS = document.getElementById('os').value.trim();
-    userTxid = document.getElementById('txid').value.trim();
-
-    const txidIsValid = /^[a-fA-F0-9]{64}$/.test(userTxid);
-    if (!txidIsValid) {
-      alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
-      return;
+    function fetchBTCPrice() {
+      fetch('https://blockchain.info/ticker')
+        .then(res => res.json())
+        .then(data => {
+          const btcRate = data.USD.last;
+          const btcPrice = (700 / btcRate).toFixed(8);
+          document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
+          navigator.clipboard.writeText(btcPrice);
+        })
+        .catch(() => {
+          document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
+        });
     }
 
-    fetch('https://formspree.io/f/xvgaawzj', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        email: userEmail,
-        message: `New BTC Submission\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
-      })
+    function copyBTC() {
+      navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
+        .then(() => alert("Bitcoin address copied to clipboard."));
+    }
+
+    function generateRandomString(length) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+    }
+
+    function sendWhatsAppMessage(message) {
+      const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
+      fetch(url)
+        .then(res => res.text())
+        .then(data => console.log('WhatsApp sent:', data))
+        .catch(err => console.error('WhatsApp error:', err));
+    }
+
+    function checkConfirmations(txid) {
+      fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
+        .then(res => res.json())
+        .then(data => {
+          const confirms = data.confirmations || 0;
+          document.getElementById('progressBar').value = confirms;
+
+          if (confirms >= 6) {
+            clearInterval(confirmationInterval);
+
+            const randomSuffix = generateRandomString(8);
+            const baseURL = userOS === 'Windows'
+              ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
+              : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
+            const finalURL = `${baseURL}?id=${randomSuffix}`;
+
+            downloadLinkDiv.style.display = 'block';
+            downloadLinkDiv.innerHTML = `
+              <button id="downloadBtn" style="padding: 15px; font-size: 1.1em; background: #28a745; border: none; border-radius: 6px; color: #fff; cursor: pointer;">
+                🟢 Click here to download CPN Creator
+              </button>
+            `;
+
+            const dlBtn = document.getElementById('downloadBtn');
+            dlBtn.addEventListener('click', () => {
+              window.open(finalURL, '_blank');
+              setTimeout(() => {
+                document.getElementById('downloadLink').style.display = 'none';
+                document.getElementById('confirmation').style.display = 'none';
+                document.getElementById('timerBox').style.display = 'none';
+              }, 1000);
+            });
+            dlBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+            // send WhatsApp (no OS, no download link)
+            const confirmationMsg = `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`;
+            sendWhatsAppMessage(confirmationMsg);
+
+            // Confirmation POST (no download link)
+            fetch('https://formspree.io/f/xvgaawzj', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                email: userEmail,
+                message: confirmationMsg
+              })
+            });
+          }
+        });
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      userEmail = document.getElementById('email').value.trim();
+      userOS = document.getElementById('os').value;
+      userTxid = document.getElementById('txid').value.trim();
+
+      if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
+        alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
+        return;
+      }
+
+      // initial POST (no download link)
+      fetch('https://formspree.io/f/xvgaawzj', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          email: userEmail,
+          message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
+        })
+      });
+
+      document.getElementById('paymentForm').style.display = 'none';
+      document.getElementById('paymentSection').style.display = 'none';
+      document.getElementById('confirmation').style.display = 'block';
+      document.getElementById('timerBox').style.display = 'block';
+
+      checkConfirmations(userTxid);
+      confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
     });
 
-    this.style.display = 'none';
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('confirmation').style.display = 'block';
-    document.getElementById('timerBox').style.display = 'block';
+    fetchBTCPrice();
+  </script>
 
-    checkConfirmations(userTxid);
-    confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
-  });
-
-  fetchBTCPrice();
-</script>
 </body>
 </html>
