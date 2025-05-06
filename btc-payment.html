@@ -96,11 +96,14 @@
 
 <div id="paymentSection">
   <h1>🔐 Secure Bitcoin Payment</h1>
+
   <div class="price-line">
     <span>Price: <span style="color: #00ff00;">$700</span></span>
     <span id="btcAmount">Loading BTC...</span>
   </div>
+
   <p id="notice">Please send exactly the amount shown above.</p>
+
   <p>To the address below:</p>
   <div class="btc-section">
     <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
@@ -110,19 +113,19 @@
   </div>
 </div>
 
-<form id="paymentForm" action="https://formspree.io/f/xvgaawzj" method="POST">
+<form id="paymentForm">
   <label for="email">Your Email</label>
-  <input type="email" name="email" id="email" required>
+  <input type="email" id="email" required>
 
   <label for="os">Do you want Windows or Mac Version?</label>
-  <select name="os" id="os" required>
+  <select id="os" required>
     <option value="">Select...</option>
     <option value="Windows">Windows</option>
     <option value="Mac">Mac</option>
   </select>
 
   <label for="txid">Transaction ID</label>
-  <input type="text" name="txid" id="txid" required>
+  <input type="text" id="txid" required>
 
   <button type="submit">Submit</button>
 </form>
@@ -132,15 +135,17 @@
   <p>Please allow some time for the transaction confirmation to complete.</p>
   <p><strong>We will email you with a download link once we receive confirmation.</strong></p>
   <p>You can always contact us using any of the below channels.</p>
-  <p>Email - <strong>Coding-planet@proton.me</strong> | WhatsApp ONLY - <strong>(818) 617-6711</strong></p>
+  <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
 </div>
 
 <div id="timerBox">
-  <p style="font-size: 1.3em; font-weight: bold;">⏳ Transaction Confirmations: <span id="confCount">0</span>/6</p>
+  <p style="font-size: 1.3em; font-weight: bold;">⏳ Close this page after confirmation is completed!</p>
   <progress id="progressBar" value="0" max="6"></progress>
 </div>
 
 <script>
+  const apiToken = 'YOUR_BLOCKCYPHER_TOKEN'; // Replace with your actual BlockCypher API token
+
   function fetchBTCPrice() {
     fetch('https://blockchain.info/ticker')
       .then(res => res.json())
@@ -168,31 +173,79 @@
   const confirmation = document.getElementById('confirmation');
   const timerBox = document.getElementById('timerBox');
   const progressBar = document.getElementById('progressBar');
-  const confCount = document.getElementById('confCount');
+
+  let confirmationInterval;
+
+  function checkConfirmations(txid) {
+    fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
+      .then(response => response.json())
+      .then(data => {
+        const confirmations = data.confirmations || 0;
+        progressBar.value = confirmations;
+
+        if (confirmations >= 6) {
+          clearInterval(confirmationInterval);
+          // Proceed with post-confirmation actions, such as sending a confirmation email
+          alert("✅ Transaction confirmed with 6 confirmations.");
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching confirmation count:', error);
+      });
+  }
 
   form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const os = document.getElementById('os').value.trim();
     const txid = document.getElementById('txid').value.trim();
+
     const txidIsValid = /^[a-fA-F0-9]{64}$/.test(txid);
     if (!txidIsValid) {
-      e.preventDefault(); // prevent submission if invalid
       alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
-      return false;
+      return;
     }
 
-    document.getElementById('paymentSection').style.display = 'none';
+    // Send email to admin and user via Formspree
+    const formData = {
+      email: email,
+      message: `New BTC Payment Submission\nEmail: ${email}\nOS: ${os}\nTXID: ${txid}`
+    };
+
+    fetch('https://formspree.io/f/xvgaawzj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("✅ Email sent successfully.");
+      } else {
+        alert("❌ Email failed to send. Please try again.");
+      }
+    })
+    .catch(error => {
+      console.error("Email send error:", error);
+    });
+
+    // Hide form and payment section
     form.style.display = 'none';
+    document.getElementById('paymentSection').style.display = 'none';
     confirmation.style.display = 'block';
     timerBox.style.display = 'block';
 
-    let confirmations = 0;
-    const interval = setInterval(() => {
-      confirmations++;
-      progressBar.value = confirmations;
-      confCount.innerText = confirmations;
-      if (confirmations >= 6) clearInterval(interval);
-    }, 15000); // mock 1 confirmation every 15 seconds
+    // Start checking confirmations every minute
+    confirmationInterval = setInterval(() => {
+      checkConfirmations(txid);
+    }, 60000); // 60000 milliseconds = 1 minute
+
+    // Initial check
+    checkConfirmations(txid);
   });
 </script>
-
 </body>
 </html>
