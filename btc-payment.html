@@ -93,6 +93,8 @@
   </style>
 </head>
 <body>
+
+<div id="paymentSection">
   <h1>🔐 Secure Bitcoin Payment</h1>
 
   <div class="price-line">
@@ -109,115 +111,117 @@
       <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code" width="120" height="120">
     </div>
   </div>
+</div>
 
-  <form id="paymentForm">
-    <label for="email">Your Email</label>
-    <input type="email" id="email" required>
+<form id="paymentForm">
+  <label for="email">Your Email</label>
+  <input type="email" id="email" required>
 
-    <label for="os">Do you want Windows or Mac Version?</label>
-    <select id="os" required>
-      <option value="">Select...</option>
-      <option value="Windows">Windows</option>
-      <option value="Mac">Mac</option>
-    </select>
+  <label for="os">Do you want Windows or Mac Version?</label>
+  <select id="os" required>
+    <option value="">Select...</option>
+    <option value="Windows">Windows</option>
+    <option value="Mac">Mac</option>
+  </select>
 
-    <label for="txid">Transaction ID</label>
-    <input type="text" id="txid" required>
+  <label for="txid">Transaction ID</label>
+  <input type="text" id="txid" required>
 
-    <button type="submit">Submit</button>
-  </form>
+  <button type="submit">Submit</button>
+</form>
 
-  <div id="confirmation">
-    <p><strong>Thank you!</strong> Please allow a few minutes while we confirm your transaction.</p>
-    <p>You will receive a confirmation email with your download link.</p>
-    <p>Need help? Contact: <strong>coding-planet@proton.me</strong> or WhatsApp: <strong>+2347083565577</strong></p>
-  </div>
+<div id="confirmation">
+  <p><strong>Thank you for purchasing CPN Creator.</strong> Please allow some time for the transaction confirmation to complete.</p>
+  <p>You will receive an email with your download link.</p>
+  <p>Need help? Contact us using any of the below channels</p>
+  <p><strong>Email</strong>- coding-planet@proton.me or <strong>Whatsapp</strong>: (818) 617-6711</p>
+</div>
 
-  <div id="timerBox">
-    <p style="font-size: 1.5em; font-weight: bold;">⏳ Do not close this page until confirmation is completed!</p>
-    <progress id="progressBar" value="0" max="100"></progress>
-  </div>
+<div id="timerBox">
+  <p style="font-size: 1.5em; font-weight: bold;">⏳ Do not close this page until confirmation is completed!</p>
+  <progress id="progressBar" value="0" max="100"></progress>
+</div>
 
-  <script>
-    function fetchBTCPrice() {
-      fetch('https://blockchain.info/ticker')
-        .then(res => res.json())
-        .then(data => {
-          const btcRate = data.USD.last;
-          const btcPrice = (700 / btcRate).toFixed(8);
-          const btcEl = document.getElementById('btcAmount');
-          btcEl.innerText = `≈ ${btcPrice} BTC`;
-
-          navigator.clipboard.writeText(btcPrice);
-        })
-        .catch(() => {
-          document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
-        });
-    }
-
-    function copyBTC() {
-      navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y').then(() => {
-        alert("Bitcoin address copied to clipboard.");
-      });
-    }
-
-    fetchBTCPrice();
-
-    const form = document.getElementById('paymentForm');
-    const confirmation = document.getElementById('confirmation');
-    const timerBox = document.getElementById('timerBox');
-    const progressBar = document.getElementById('progressBar');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const email = document.getElementById('email').value.trim();
-      const os = document.getElementById('os').value.trim();
-      const txid = document.getElementById('txid').value.trim();
-
-      const txidIsValid = /^[a-fA-F0-9]{64}$/.test(txid);
-      if (!txidIsValid) {
-        alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
-        return;
-      }
-
-      // Send email via Formspree
-      const formData = {
-        email: email,
-        message: `New BTC Payment Submission\nEmail: ${email}\nOS: ${os}\nTXID: ${txid}`
-      };
-
-      fetch('https://formspree.io/f/xvgaawzj', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(formData)
+<script>
+  function fetchBTCPrice() {
+    fetch('https://blockchain.info/ticker')
+      .then(res => res.json())
+      .then(data => {
+        const btcRate = data.USD.last;
+        const btcPrice = (700 / btcRate).toFixed(8);
+        const btcEl = document.getElementById('btcAmount');
+        btcEl.innerText = `≈ ${btcPrice} BTC`;
+        navigator.clipboard.writeText(btcPrice);
       })
-      .then(response => {
-        if (response.ok) {
-          console.log("✅ Email sent successfully.");
-        } else {
-          alert("❌ Email failed to send. Please try again.");
-        }
-      })
-      .catch(error => {
-        console.error("Email send error:", error);
+      .catch(() => {
+        document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
       });
+  }
 
-      // Show confirmation UI
-      form.style.display = 'none';
-      confirmation.style.display = 'block';
-      timerBox.style.display = 'block';
-
-      let seconds = 0;
-      const interval = setInterval(() => {
-        seconds += 2;
-        progressBar.value = (seconds / 120) * 100;
-        if (seconds >= 120) clearInterval(interval);
-      }, 2000);
+  function copyBTC() {
+    navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y').then(() => {
+      alert("Bitcoin address copied to clipboard.");
     });
-  </script>
+  }
+
+  fetchBTCPrice();
+
+  const form = document.getElementById('paymentForm');
+  const confirmation = document.getElementById('confirmation');
+  const timerBox = document.getElementById('timerBox');
+  const progressBar = document.getElementById('progressBar');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const os = document.getElementById('os').value.trim();
+    const txid = document.getElementById('txid').value.trim();
+
+    const txidIsValid = /^[a-fA-F0-9]{64}$/.test(txid);
+    if (!txidIsValid) {
+      alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
+      return;
+    }
+
+    // Send email to admin and user
+    const formData = {
+      email: email,
+      message: `New BTC Payment Submission\nEmail: ${email}\nOS: ${os}\nTXID: ${txid}`
+    };
+
+    fetch('https://formspree.io/f/xvgaawzj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("✅ Email sent successfully.");
+      } else {
+        alert("❌ Email failed to send. Please try again.");
+      }
+    })
+    .catch(error => {
+      console.error("Email send error:", error);
+    });
+
+    // Hide form and top section
+    form.style.display = 'none';
+    document.getElementById('paymentSection').style.display = 'none';
+    confirmation.style.display = 'block';
+    timerBox.style.display = 'block';
+
+    let seconds = 0;
+    const interval = setInterval(() => {
+      seconds += 2;
+      progressBar.value = (seconds / 120) * 100;
+      if (seconds >= 120) clearInterval(interval);
+    }, 2000);
+  });
+</script>
 </body>
 </html>
