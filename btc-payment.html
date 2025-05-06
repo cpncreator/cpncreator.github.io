@@ -90,17 +90,29 @@
       height: 30px;
       margin-top: 15px;
     }
+    #downloadLink {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #333;
+      border-radius: 6px;
+      font-size: 1.1em;
+      word-break: break-word;
+    }
   </style>
 </head>
 <body>
 
 <div id="paymentSection">
   <h1>🔐 Secure Bitcoin Payment</h1>
+
   <div class="price-line">
     <span>Price: <span style="color: #00ff00;">$700</span></span>
     <span id="btcAmount">Loading BTC...</span>
   </div>
+
   <p id="notice">Please send exactly the amount shown above.</p>
+
   <p>To the address below:</p>
   <div class="btc-section">
     <div onclick="copyBTC()" class="btc-address">bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y</div>
@@ -140,10 +152,19 @@
   <progress id="progressBar" value="0" max="6"></progress>
 </div>
 
+<div id="downloadLink"></div>
+
 <script>
-  const apiToken = '68cd7b8dcabf4598941296b9f1e09b34'; // Your actual BlockCypher token
-  let userEmail = '', userOS = '', userTxid = '';
+  const apiToken = '68cd7b8dcabf4598941296b9f1e09b34';
+  const callMeBotApiKey = '1474937';
+  const callMeBotPhone = '18186176711';
+
   let confirmationInterval;
+  let userEmail = '';
+  let userOS = '';
+  let userTxid = '';
+
+  const downloadLinkDiv = document.getElementById('downloadLink');
 
   function fetchBTCPrice() {
     fetch('https://blockchain.info/ticker')
@@ -151,7 +172,8 @@
       .then(data => {
         const btcRate = data.USD.last;
         const btcPrice = (700 / btcRate).toFixed(8);
-        document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
+        const btcEl = document.getElementById('btcAmount');
+        btcEl.innerText = `≈ ${btcPrice} BTC`;
         navigator.clipboard.writeText(btcPrice);
       })
       .catch(() => {
@@ -165,6 +187,14 @@
     });
   }
 
+  function sendWhatsAppMessage(message) {
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
+    fetch(url)
+      .then(res => res.text())
+      .then(data => console.log('WhatsApp sent:', data))
+      .catch(err => console.error('WhatsApp error:', err));
+  }
+
   function checkConfirmations(txid) {
     fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
       .then(response => response.json())
@@ -174,58 +204,68 @@
 
         if (confirmations >= 6) {
           clearInterval(confirmationInterval);
-          document.getElementById('progressBar').value = 6;
 
-          const successMsg = document.createElement('div');
-          successMsg.style = 'background: #d1fae5; color: #065f46; padding: 20px; margin-top: 20px; font-weight: bold; border-radius: 6px;';
-          successMsg.innerText = "✅ Your Bitcoin transaction is fully confirmed! Your download will be sent shortly.";
-          document.body.appendChild(successMsg);
+          const downloadURL = userOS === 'Windows'
+            ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
+            : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
+
+          downloadLinkDiv.style.display = 'block';
+          downloadLinkDiv.innerHTML = `<strong>Your download is ready:</strong> <a href="${downloadURL}" target="_blank">${downloadURL}</a>`;
+
+          sendWhatsAppMessage(`✅ BTC confirmed!\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${downloadURL}`);
 
           fetch('https://formspree.io/f/xvgaawzj', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
             body: JSON.stringify({
               email: userEmail,
-              message: `✅ BTC transaction fully confirmed.\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
+              message: `✅ BTC Confirmed\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}\nDownload: ${downloadURL}`
             })
           }).then(res => {
-            if (res.ok) console.log("✔ Confirmation email sent.");
-            else console.warn("⚠️ Email not sent.");
+            if (res.ok) {
+              console.log('✔ Confirmation email sent.');
+            }
           });
         }
-      })
-      .catch(err => console.error("Error checking confirmations:", err));
+      });
   }
 
   document.getElementById('paymentForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     userEmail = document.getElementById('email').value.trim();
-    userOS = document.getElementById('os').value.trim();
+    userOS = document.getElementById('os').value;
     userTxid = document.getElementById('txid').value.trim();
 
-    const txidIsValid = /^[a-fA-F0-9]{64}$/.test(userTxid);
-    if (!txidIsValid) {
-      alert("❌ Invalid Transaction ID.");
+    if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
+      alert("Invalid TXID.");
       return;
     }
 
-    fetch('https://formspree.io/f/xvgaawzj', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        email: userEmail,
-        message: `New BTC Payment Submission\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
-      })
-    });
-
-    document.getElementById('paymentForm').style.display = 'none';
+    this.style.display = 'none';
     document.getElementById('paymentSection').style.display = 'none';
     document.getElementById('confirmation').style.display = 'block';
     document.getElementById('timerBox').style.display = 'block';
 
+    fetch('https://formspree.io/f/xvgaawzj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        message: `New BTC Payment\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`
+      })
+    });
+
+    confirmationInterval = setInterval(() => {
+      checkConfirmations(userTxid);
+    }, 60000);
     checkConfirmations(userTxid);
-    confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
   });
 
   fetchBTCPrice();
