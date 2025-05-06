@@ -72,7 +72,7 @@
       background: #1e7e34;
       transform: scale(1.03);
     }
-    #confirmation, #timerBox {
+    #confirmation, #timerBox, #successMessage {
       display: none;
       margin-top: 30px;
       background: #e0ffe0;
@@ -133,14 +133,20 @@
 <div id="confirmation">
   <p><strong>Thank you for purchasing CPN Creator.</strong></p>
   <p>Please allow some time for the transaction confirmation to complete.</p>
-  <p><strong>We will email you with a download link once we recieve confirmation.</strong>.</p>
+  <p><strong>We will email you with a download link once we receive confirmation.</strong></p>
   <p>You can always contact us using any of the below channels.</p>
   <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
 </div>
 
 <div id="timerBox">
-  <p style="font-size: 1.3em; font-weight: bold;">⏳ Close this page after confirmation is completed!</p>
-  <progress id="progressBar" value="0" max="100"></progress>
+  <p style="font-size: 1.3em; font-weight: bold;">⏳ Transaction Confirmations: <span id="confirmCount">0</span>/6</p>
+  <progress id="progressBar" value="0" max="6"></progress>
+</div>
+
+<div id="successMessage">
+  <p><strong>✅ Transaction Confirmed!</strong></p>
+  <p>Your transaction has received 6 confirmations.</p>
+  <p>We have sent the download link to your email.</p>
 </div>
 
 <script>
@@ -171,6 +177,8 @@
   const confirmation = document.getElementById('confirmation');
   const timerBox = document.getElementById('timerBox');
   const progressBar = document.getElementById('progressBar');
+  const confirmCountEl = document.getElementById('confirmCount');
+  const successMessage = document.getElementById('successMessage');
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -216,12 +224,33 @@
     confirmation.style.display = 'block';
     timerBox.style.display = 'block';
 
-    let seconds = 0;
-    const interval = setInterval(() => {
-      seconds += 2;
-      progressBar.value = (seconds / 120) * 100;
-      if (seconds >= 120) clearInterval(interval);
-    }, 2000);
+    // Start polling for confirmations
+    let intervalId = setInterval(() => {
+      fetch(`https://blockstream.info/api/tx/${txid}/status`)
+        .then(res => res.json())
+        .then(statusData => {
+          if (statusData.confirmed) {
+            fetch('https://blockstream.info/api/blocks/tip/height')
+              .then(res => res.json())
+              .then(tipHeight => {
+                const confirmations = tipHeight - statusData.block_height + 1;
+                confirmCountEl.innerText = confirmations;
+                progressBar.value = confirmations;
+                if (confirmations >= 6) {
+                  clearInterval(intervalId);
+                  timerBox.style.display = 'none';
+                  successMessage.style.display = 'block';
+                }
+              });
+          } else {
+            confirmCountEl.innerText = '0';
+            progressBar.value = 0;
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching confirmation status:", error);
+        });
+    }, 60000); // Poll every 60 seconds
   });
 </script>
 </body>
