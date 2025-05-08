@@ -188,82 +188,190 @@
 <p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
   </div>
 
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #000;
+    color: #fff;
+    padding: 40px;
+    max-width: 700px;
+    margin: auto;
+  }
+  h1 { font-size: 2em; }
+  .price-line {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin: 15px 0;
+  }
+  #btcAmount { color: orange; cursor: pointer; }
+  .btc-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 15px 0;
+  }
+  .btc-address {
+    background: #222;
+    padding: 14px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.25em;
+    font-weight: bold;
+  }
+  #qrcode img { width: 120px; height: 120px; }
+  label { display: block; margin-top: 20px; font-weight: bold; }
+  input, select, button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 4px;
+    border: none;
+    font-size: 1em;
+  }
+  button {
+    background: linear-gradient(90deg, #28a745, #218838);
+    color: white;
+    font-size: 1.2em;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    background: #1e7e34;
+    transform: scale(1.03);
+  }
+  #confirmation, #timerBox {
+    display: none;
+    margin-top: 30px;
+    background: #e0ffe0;
+    padding: 30px;
+    border-left: 6px solid green;
+    font-size: 1.1em;
+    color: #000;
+  }
+  #notice { color: red; font-weight: bold; }
+  progress {
+    width: 100%;
+    height: 30px;
+    margin-top: 15px;
+  }
+  #downloadLink { display: none; margin-top: 20px; text-align: center; }
+  #thankYouMessage {
+    display: none;
+    margin-top: 30px;
+    font-size: 1.2em;
+    line-height: 1.4;
+    text-align: center;
+  }
+  a, a:visited, a:hover, a:active { color: #fff; text-decoration: none; }
+
+  /* blink animation */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+  .blink {
+    animation: blink 1s step-start infinite;
+  }
+</style>
+
 <script>
   console.log('⚙️ CPN Creator script loaded');
 
   // Copy BTC address
   function copyBTC() {
-    console.log('✂️ copyBTC() called');
     navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
-      .then(() => {
-        console.log('✅ Address copied');
-        alert("Bitcoin address copied to clipboard.");
-      })
-      .catch(err => {
-        console.error('❌ copy failed:', err);
-        alert("Copy failed—see console for details.");
-      });
+      .then(() => alert("📋 Address copied"))
+      .catch(() => alert("❌ Copy address failed"));
   }
 
   // Copy BTC price
   function copyBTCPrice() {
-    console.log('✂️ copyBTCPrice() called');
-    const text = document.getElementById('btcAmount').textContent.trim();
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        console.log('✅ Price copied:', text);
-        alert(`Copied BTC price: ${text}`);
-      })
-      .catch(err => {
-        console.error('❌ copy price failed:', err);
-        alert("Copy price failed—see console.");
-      });
+    const txt = document.getElementById('btcAmount').textContent.trim();
+    navigator.clipboard.writeText(txt)
+      .then(() => alert(`📋 Copied price: ${txt}`))
+      .catch(() => alert("❌ Copy price failed"));
   }
 
-  // Fetch price from CoinGecko
+  // Fetch BTC price
   function fetchBTCPrice() {
-    console.log('⏳ fetchBTCPrice() called');
-    const btcAmountEl = document.getElementById('btcAmount');
-    const priceUSD    = 700;
-
+    const el = document.getElementById('btcAmount');
+    const USD = 700;
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-      .then(res => {
-        if (!res.ok) throw new Error(`Status ${res.status}`);
-        return res.json();
-      })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(data => {
-        const rate   = data.bitcoin.usd;
-        const amount = (priceUSD / rate).toFixed(8);
-        btcAmountEl.textContent = `≈ ${amount} BTC`;
-        btcAmountEl.title = "Click to copy price";
+        const rate = data.bitcoin.usd;
+        el.textContent = `≈ ${(USD / rate).toFixed(8)} BTC`;
+        el.title = "Click to copy price";
       })
-      .catch(err => {
-        console.error('❌ Error fetching BTC price:', err);
-        btcAmountEl.textContent = '⚠️ Error loading BTC';
+      .catch(() => {
+        el.textContent = '⚠️ Error loading BTC';
       });
   }
 
-  // Update “X minutes ago” randomly (1–5)
+  // Blink + random “X minutes ago”
   function updateRecentTime() {
     const el = document.getElementById('recentTime');
-    const mins = Math.floor(Math.random() * 5) + 1;
-    el.textContent = `${mins} minutes ago`;
+    el.textContent = `${Math.floor(Math.random()*5)+1} minutes ago`;
+  }
+
+  // Handle form submit & simulate 6 confirmations
+  function handlePaymentSubmit(e) {
+    e.preventDefault();
+    const os = document.getElementById('os').value;
+    if (!os) return alert("Please select Windows or Mac.");
+    // hide form, show confirmation UI
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('confirmation').style.display = 'block';
+    document.getElementById('timerBox').style.display = 'block';
+
+    // simulate confirmations
+    const bar = document.getElementById('progressBar');
+    let count = 0;
+    const iv = setInterval(() => {
+      bar.value = ++count;
+      if (count >= bar.max) {
+        clearInterval(iv);
+        showDownload(os);
+      }
+    }, 5000);  // one “confirmation” every 5s
+  }
+
+  // Reveal download link & thank-you message
+  function showDownload(os) {
+    const urlMap = {
+      Windows: 'https://yourdomain.com/download/CPNCreator_Windows.exe',
+      Mac:     'https://yourdomain.com/download/CPNCreator_Mac.dmg'
+    };
+    const container = document.getElementById('downloadLink');
+    container.innerHTML = `<a href="${urlMap[os]}" download>⬇️ Download ${os} version</a>`;
+    container.style.display = 'block';
+    document.getElementById('thankYouMessage').style.display = 'block';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('📦 DOMContentLoaded');
-
+    // initial behaviors
     fetchBTCPrice();
     document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
     document.querySelector('.btc-address').addEventListener('click', copyBTC);
 
-    // blinking + random minutes
-    const recentEl = document.getElementById('recentTime');
-    recentEl.classList.add('blink');
+    // blinking + random time
+    const rt = document.getElementById('recentTime');
+    rt.classList.add('blink');
     updateRecentTime();
     setInterval(updateRecentTime, 30000);
 
-    // (optional) auto-refresh BTC rate every minute:
+    // form submission
+    document.getElementById('paymentForm')
+      .addEventListener('submit', handlePaymentSubmit);
+
+    // (optional) refresh rate every minute
     // setInterval(fetchBTCPrice, 60000);
   });
 </script>
