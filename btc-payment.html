@@ -107,7 +107,6 @@
   <span id="btcAmount">≈ Loading BTC...</span>
 </div>
 
-</div>
 <p id="notice" style="color: #f87171; font-weight: bold;">Please send the exact amount shown above.</p>
     <div class="btc-section">
       <div onclick="copyBTC()" class="btc-address" title="Click to copy">
@@ -186,17 +185,18 @@
   const thankYouDiv = document.getElementById('thankYouMessage');
 
   function fetchBTCPrice() {
-    fetch('https://blockchain.info/ticker')
-      .then(res => res.json())
-      .then(data => {
-        const btcRate = data.USD.last;
-        const btcPrice = (700 / btcRate).toFixed(8);
-        document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
-      })
-      .catch(() => {
-        document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
-      });
-  }
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+    .then(res => res.json())
+    .then(data => {
+      const usdRate = data.bitcoin.usd;            // e.g. 57000
+      const btcAmount = (700 / usdRate).toFixed(8); // your $700 price
+      document.getElementById('btcAmount').textContent = `≈ ${btcAmount} BTC`;
+    })
+    .catch(err => {
+      console.error('BTC price fetch error:', err);
+      document.getElementById('btcAmount').textContent = '⚠️ Error loading BTC';
+    });
+}
 
   function copyBTC() {
     navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
