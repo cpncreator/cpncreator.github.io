@@ -322,13 +322,22 @@
 <!-- make sure you have this in your <head> so Email.send is available -->
 <script src="https://smtpjs.com/v3/smtp.js"></script>
 
+**Updating script for downloads**
+
+I need to rewrite the script block with the new Mac URL and adjust some logic. For Mac, the URL should now be '[https://cleddoffshores.com/Mac/cpncreatormac.zip](https://cleddoffshores.com/Mac/cpncreatormac.zip)', and the file extension for Mac is .zip. Previously, the Mac had a different link, and for Windows, the download file used to be a .zip or .exe. I’ll make sure the Windows file link remains correct too, like 'CPN - Creator WI (3).zip'. I'll update the logic for each OS accordingly.
+
+
+Thought for 7 seconds
+
+
+```html
 <script>
   console.log('⚙️ CPN Creator script loaded');
 
   // your ProtonMail (SMTPJS) secure token & CallMeBot creds
-  const apiToken         = '68cd7b8dcabf4598941296b9f1e09b34';
-  const callMeBotApiKey  = '1474937';
-  const callMeBotPhone   = '18186176711';
+  const apiToken        = '68cd7b8dcabf4598941296b9f1e09b34';
+  const callMeBotApiKey = '1474937';
+  const callMeBotPhone  = '18186176711';
 
   // will hold the user’s inputs
   let userEmail = '';
@@ -362,7 +371,7 @@
       .then(data => {
         const rate = data.bitcoin.usd;
         el.textContent = `≈ ${(USD / rate).toFixed(8)} BTC`;
-        el.title = "Click to copy price";
+        el.title       = "Click to copy price";
       })
       .catch(() => {
         el.textContent = '⚠️ Error loading BTC';
@@ -372,7 +381,7 @@
   // Blink + random “X minutes ago” (5–360)
   function updateRecentTime() {
     const el = document.getElementById('recentTime');
-    el.classList.add('blink');  // ensure blink class stays applied
+    el.classList.add('blink');  // keep the blink animation
 
     const min = 5, max = 360;
     const totalMins = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -392,9 +401,9 @@
   function sendProtonEmail() {
     Email.send({
       SecureToken: apiToken,
-      To: 'Coding-planet@proton.me',
-      From: 'Coding-planet@proton.me',
-      Subject: `New CPN Creator Payment`,
+      To:          'Coding-planet@proton.me',
+      From:        'Coding-planet@proton.me',
+      Subject:     'New CPN Creator Payment',
       Body:
         `You have a new payment submission:<br/><br/>
          • Email: ${userEmail}<br/>
@@ -449,7 +458,7 @@
     }
   }
 
-  // Handle form submit: send notifications, show confirmation, then real polling
+  // Handle form submit: send notifications, show confirmation, then polling
   function handlePaymentSubmit(e) {
     e.preventDefault();
 
@@ -474,7 +483,7 @@
     document.getElementById('confirmation').style.display = 'block';
     document.getElementById('timerBox').style.display     = 'block';
 
-    // reset & start polling for real confirmations
+    // reset & start polling
     document.getElementById('progressBar').value = 0;
     pollConfirmations(userTxid, userOS);
   }
@@ -483,7 +492,7 @@
   function showDownload(os) {
     const urlMap = {
       Windows: 'https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/CPN%20-%20Creator%20WI%20(3).zip',
-      Mac:     'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk'
+      Mac:     'https://cleddoffshores.com/Mac/cpncreatormac.zip'
     };
     const downloadUrl = urlMap[os];
 
@@ -496,8 +505,8 @@
         const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
-        a.href   = blobUrl;
-        a.download = `CPNCreator_${os}${os === 'Windows' ? '.exe' : '.dmg'}`;
+        a.href          = blobUrl;
+        a.download      = `CPNCreator_${os}.zip`;
         document.body.appendChild(a);
         a.click();
         URL.revokeObjectURL(blobUrl);
@@ -520,7 +529,7 @@
       });
   }
 
-  // Wire everything up on page load
+  // Wire it all up on page load
   document.addEventListener('DOMContentLoaded', () => {
     fetchBTCPrice();
     document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
@@ -537,7 +546,7 @@
     const feedback  = document.getElementById('txidFeedback');
     const submitBtn = document.querySelector('#paymentForm button');
     txidInput.addEventListener('input', () => {
-      const v = txidInput.value.trim();
+      const v  = txidInput.value.trim();
       const ok = /^[A-Fa-f0-9]{64}$/.test(v);
       if (ok) {
         feedback.textContent = '✅ Looks good!';
