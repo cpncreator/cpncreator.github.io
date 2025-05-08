@@ -100,7 +100,7 @@
 </head>
 <body>
 
-  <div style="background: #111827; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
+  <div id="features" style="background: #111827; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
   <h3 style="color: #38bdf8; margin-bottom: 12px; font-size: 1.3rem;">🔎 What You Get:</h3>
   <ul style="list-style: none; padding-left: 0; line-height: 1.8; font-size: 1.05rem;">
     <li>✅ <strong>AI-Powered CPN Generator</strong> – Built on SSA validation logic</li>
@@ -348,30 +348,33 @@
 
   // 5) Handle form submit & hide everything except confirmation/timer
   function handlePaymentSubmit(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Hide all purchase UI
-    document.querySelector('.price-line').style.display       = 'none';
-    document.getElementById('notice').style.display           = 'none';
-    document.querySelector('.btc-section').style.display      = 'none';
-    document.getElementById('orderPopup').style.display       = 'none';
-    document.getElementById('recentTime').closest('p').style.display = 'none';
+  // hide features section
+  document.getElementById('features').style.display = 'none';
 
-    // Hide form, show confirmation + timer
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('confirmation').style.display   = 'block';
-    document.getElementById('timerBox').style.display       = 'block';
+  // hide all purchase UI
+  document.querySelector('.price-line').style.display         = 'none';
+  document.getElementById('notice').style.display             = 'none';
+  document.querySelector('.btc-section').style.display        = 'none';
+  document.getElementById('orderPopup').style.display         = 'none';
+  document.getElementById('recentTime').closest('p').style.display = 'none';
 
-    // Simulate 6 confirmations (one every 5s)
-    const bar = document.getElementById('progressBar');
-    let count = 0;
-    const iv = setInterval(() => {
-      bar.value = ++count;
-      if (count >= bar.max) {
-        clearInterval(iv);
-        showDownload(document.getElementById('os').value);
-      }
-    }, 5000);
+  // hide form, show confirmation + timer
+  document.getElementById('paymentSection').style.display     = 'none';
+  document.getElementById('confirmation').style.display       = 'block';
+  document.getElementById('timerBox').style.display           = 'block';
+
+  // simulate 6 confirmations (one every 5s)
+  const bar = document.getElementById('progressBar');
+  let count = 0;
+  const iv = setInterval(() => {
+    bar.value = ++count;
+    if (count >= bar.max) {
+      clearInterval(iv);
+      showDownload(document.getElementById('os').value);
+    }
+  }, 5000);
   }
 
   // 6) Reveal download link + thank-you once “confirmed”
