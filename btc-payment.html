@@ -174,169 +174,162 @@
   </div>
 
   <script>
-    const apiToken = '68cd7b8dcabf4598941296b9f1e09b34';
-    const callMeBotApiKey = '1474937';
-    const callMeBotPhone = '18186176711';
+  const apiToken = '68cd7b8dcabf4598941296b9f1e09b34';
+  const callMeBotApiKey = '1474937';
+  const callMeBotPhone = '18186176711';
 
-    let confirmationInterval;
-    let userEmail = '';
-    let userOS = '';
-    let userTxid = '';
-    const downloadLinkDiv = document.getElementById('downloadLink');
-    const thankYouDiv = document.getElementById('thankYouMessage');
+  let confirmationInterval;
+  let userEmail = '';
+  let userOS = '';
+  let userTxid = '';
+  const downloadLinkDiv = document.getElementById('downloadLink');
+  const thankYouDiv = document.getElementById('thankYouMessage');
 
-    function fetchBTCPrice() {
-      fetch('https://blockchain.info/ticker')
-        .then(res => res.json())
-        .then(data => {
-          const btcRate = data.USD.last;
-          const btcPrice = (700 / btcRate).toFixed(8);
-          document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
-          navigator.clipboard.writeText(btcPrice);
-        })
-        .catch(() => {
-          document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
-        });
-    }
-
-    function copyBTC() {
-      navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
-        .then(() => alert("Bitcoin address copied to clipboard."));
-    }
-
-    function generateRandomString(length) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
-    }
-
-    async function downloadFile(url, filename) {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(blobUrl);
-    }
-
-    function sendWhatsAppMessage(message) {
-      const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
-      fetch(url)
-        .then(res => res.text())
-        .then(data => console.log('WhatsApp sent:', data))
-        .catch(err => console.error('WhatsApp error:', err));
-    }
-    function checkConfirmations(txid) {
-  fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
-    .then(res => res.json())
-    .then(data => {
-      const confirms = data.confirmations || 0;
-      document.getElementById('progressBar').value = confirms;
-
-      if (confirms >= 6) {
-        clearInterval(confirmationInterval);
-
-        const randomSuffix = generateRandomString(8);
-        const baseURL = userOS === 'Windows'
-          ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
-          : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
-        const finalURL = `${baseURL}?id=${randomSuffix}`;
-
-        downloadLinkDiv.style.display = 'block';
-        downloadLinkDiv.innerHTML = `<button id="downloadBtn">🟢 Download CPN Creator</button>`;
-
-        const dlBtn = document.getElementById('downloadBtn');
-        dlBtn.addEventListener('click', async () => {
-          dlBtn.disabled = true;
-          await downloadFile(finalURL, 'CPN_Creator.zip');
-          document.getElementById('paymentSection').style.display = 'none';
-          document.getElementById('confirmation').style.display = 'none';
-          document.getElementById('timerBox').style.display = 'none';
-          downloadLinkDiv.style.display = 'none';
-          thankYouDiv.style.display = 'block';
-        });
-        dlBtn.addEventListener('contextmenu', e => e.preventDefault());
-
-        const confirmationMsg = `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`;
-        sendWhatsAppMessage(confirmationMsg);
-
-        fetch('https://formspree.io/f/xvgaawzj', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  },
-  body: JSON.stringify({
-    email: userEmail,
-    message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
-  })
-});
-      }
-    });
-} // ✅ This closes checkConfirmations correctly
-
-
-    document.getElementById('paymentForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  userEmail = document.getElementById('email').value.trim();
-  userOS = document.getElementById('os').value;
-  userTxid = document.getElementById('txid').value.trim();
-
-  if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
-    alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
-    return;
+  function fetchBTCPrice() {
+    fetch('https://blockchain.info/ticker')
+      .then(res => res.json())
+      .then(data => {
+        const btcRate = data.USD.last;
+        const btcPrice = (700 / btcRate).toFixed(8);
+        document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
+      })
+      .catch(() => {
+        document.getElementById('btcAmount').innerText = '⚠️ Error loading BTC';
+      });
   }
 
-  fetch('https://formspree.io/f/xvgaawzj', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      email: userEmail,
-      message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
-    })
+  function copyBTC() {
+    navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
+      .then(() => alert("Bitcoin address copied to clipboard."));
+  }
+
+  function generateRandomString(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+  }
+
+  async function downloadFile(url, filename) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  function sendWhatsAppMessage(message) {
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
+    fetch(url)
+      .then(res => res.text())
+      .then(data => console.log('WhatsApp sent:', data))
+      .catch(err => console.error('WhatsApp error:', err));
+  }
+
+  function checkConfirmations(txid) {
+    fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
+      .then(res => res.json())
+      .then(data => {
+        const confirms = data.confirmations || 0;
+        document.getElementById('progressBar').value = confirms;
+
+        if (confirms >= 6) {
+          clearInterval(confirmationInterval);
+          const randomSuffix = generateRandomString(8);
+          const baseURL = userOS === 'Windows'
+            ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
+            : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
+          const finalURL = `${baseURL}?id=${randomSuffix}`;
+
+          downloadLinkDiv.style.display = 'block';
+          downloadLinkDiv.innerHTML = `<button id="downloadBtn">🟢 Download CPN Creator</button>`;
+          const dlBtn = document.getElementById('downloadBtn');
+
+          dlBtn.addEventListener('click', async () => {
+            dlBtn.disabled = true;
+            await downloadFile(finalURL, 'CPN_Creator.zip');
+            document.getElementById('paymentSection')?.style.display = 'none';
+            document.getElementById('confirmation').style.display = 'none';
+            document.getElementById('timerBox').style.display = 'none';
+            downloadLinkDiv.style.display = 'none';
+            thankYouDiv.style.display = 'block';
+          });
+
+          dlBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+          const confirmationMsg = `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`;
+          sendWhatsAppMessage(confirmationMsg);
+
+          fetch('https://formspree.io/f/xvgaawzj', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              email: userEmail,
+              message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
+            })
+          });
+        }
+      });
+  }
+
+  document.getElementById('paymentForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    userEmail = document.getElementById('email').value.trim();
+    userOS = document.getElementById('os').value;
+    userTxid = document.getElementById('txid').value.trim();
+
+    if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
+      alert("❌ Invalid Transaction ID. It must be 64 characters long and contain only letters a–f and numbers.");
+      return;
+    }
+
+    fetch('https://formspree.io/f/xvgaawzj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
+      })
+    });
+
+    document.getElementById('paymentForm').style.display = 'none';
+    document.getElementById('paymentSection')?.style.display = 'none';
+    document.getElementById('confirmation').style.display = 'block';
+    document.getElementById('timerBox').style.display = 'block';
+    checkConfirmations(userTxid);
+    confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
   });
 
-  document.getElementById('paymentForm').style.display = 'none';
-  document.getElementById('paymentSection').style.display = 'none';
-  document.getElementById('confirmation').style.display = 'block';
-  document.getElementById('timerBox').style.display = 'block';
-  checkConfirmations(userTxid);
-  confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60000);
-});
+  function showOrderPopup() {
+    const popup = document.getElementById('orderPopup');
+    const minutes = Math.floor(Math.random() * 4) + 1;
+    document.getElementById('randomMinutes').textContent = minutes;
+    popup.style.display = 'block';
+    popup.style.opacity = '1';
 
+    setTimeout(() => {
+      popup.style.opacity = '0';
+    }, 4000);
+
+    setTimeout(() => {
+      popup.style.display = 'none';
+    }, 5000);
+  }
+
+  window.addEventListener('load', () => {
     fetchBTCPrice();
-    function showOrderPopup() {
-  const popup = document.getElementById('orderPopup');
-  const minutes = Math.floor(Math.random() * 4) + 1; // 1–4
-  document.getElementById('randomMinutes').textContent = minutes;
-  popup.style.display = 'block';
-  popup.style.opacity = '1';
-
-  // Fade out after 4 seconds
-  setTimeout(() => {
-    popup.style.opacity = '0';
-  }, 4000);
-
-  // Fully hide after fade-out
-  setTimeout(() => {
-    popup.style.display = 'none';
-  }, 5000);
-}
-
-}
-
-window.addEventListener('load', () => {
-  fetchBTCPrice(); // ✅ Move BTC fetch here so DOM is ready
-  setTimeout(showOrderPopup, 2000); // show popup after 2s
-});
-
-  </script>
+    setTimeout(showOrderPopup, 2000);
+  });
+</script>
 
 </body>
 </html>
