@@ -284,14 +284,14 @@
 <script>
   console.log('⚙️ CPN Creator script loaded');
 
-  // 1) Copy BTC address
+  // Copy BTC address
   function copyBTC() {
     navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
       .then(() => alert("📋 Address copied"))
       .catch(() => alert("❌ Copy address failed"));
   }
 
-  // 2) Copy BTC price
+  // Copy BTC price
   function copyBTCPrice() {
     const txt = document.getElementById('btcAmount').textContent.trim();
     navigator.clipboard.writeText(txt)
@@ -299,7 +299,7 @@
       .catch(() => alert("❌ Copy price failed"));
   }
 
-  // 3) Fetch price from CoinGecko
+  // Fetch BTC price
   function fetchBTCPrice() {
     const el = document.getElementById('btcAmount');
     const USD = 700;
@@ -318,30 +318,30 @@
       });
   }
 
-  // 4) Blink + random “X minutes ago”
+  // Blink + random “X minutes ago”
   function updateRecentTime() {
     const el = document.getElementById('recentTime');
     el.textContent = `${Math.floor(Math.random()*5)+1} minutes ago`;
   }
 
-  // 5) Handle form submit & hide all pre-download UI
+  // Handle form submit & hide all pre-download UI
   function handlePaymentSubmit(e) {
     e.preventDefault();
 
-    // hide everything except confirmation/timer initially
+    // Remove elements before download
     document.getElementById('features')?.remove();
-    document.querySelector('.price-line').remove();
-    document.getElementById('notice').remove();
-    document.querySelector('.btc-section').remove();
-    document.getElementById('orderPopup').remove();
-    document.getElementById('recentTime').closest('p').remove();
+    document.querySelector('.price-line')?.remove();
+    document.getElementById('notice')?.remove();
+    document.querySelector('.btc-section')?.remove();
+    document.getElementById('orderPopup')?.remove();
+    document.getElementById('recentTime')?.closest('p')?.remove();
     document.getElementById('paymentSection').style.display = 'none';
 
-    // show confirmation + timer
+    // Show confirmation + timer
     document.getElementById('confirmation').style.display = 'block';
     document.getElementById('timerBox').style.display     = 'block';
 
-    // simulate 6 confirmations (1 every 5s)
+    // Simulate 6 confirmations (1 every 5s)
     const bar = document.getElementById('progressBar');
     let count = 0;
     const iv = setInterval(() => {
@@ -353,50 +353,60 @@
     }, 5000);
   }
 
-  // 6) Auto-download + clean up UI + show centered thank-you
+  // Auto-download via fetch+blob, hide UI, show thank-you
   function showDownload(os) {
-    // your real URLs here:
     const urlMap = {
       Windows: 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI',
       Mac:     'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk'
     };
     const downloadUrl = urlMap[os];
 
-    // trigger download without opening a new window
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = '';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    // Try fetching as blob
+    fetch(downloadUrl)
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.blob();
+      })
+      .then(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        a.download = `CPNCreator_${os}${os==='Windows'?'.exe':'.dmg'}`;
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(blobUrl);
+        a.remove();
+      })
+      .catch(err => {
+        console.error('Download fetch failed, falling back to direct link:', err);
+        window.location.href = downloadUrl;
+      });
 
-    // hide confirmation box & timer
+    // Clean up UI
     document.getElementById('confirmation').style.display = 'none';
     document.getElementById('timerBox').style.display     = 'none';
-
-    // center & display the thank-you message
     const ty = document.getElementById('thankYouMessage');
-    ty.style.display  = 'block';
-    ty.style.position = 'fixed';
-    ty.style.top      = '50%';
-    ty.style.left     = '50%';
-    ty.style.transform= 'translate(-50%, -50%)';
+    ty.style.display   = 'block';
+    ty.style.position  = 'fixed';
+    ty.style.top       = '50%';
+    ty.style.left      = '50%';
+    ty.style.transform = 'translate(-50%, -50%)';
   }
 
-  // 7) Wire it all up
+  // Wire everything up
   document.addEventListener('DOMContentLoaded', () => {
     fetchBTCPrice();
     document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
     document.querySelector('.btc-address').addEventListener('click', copyBTC);
 
-    // blinking + random time
     const rt = document.getElementById('recentTime');
     rt.classList.add('blink');
     updateRecentTime();
     setInterval(updateRecentTime, 30000);
 
-    // form submission
-    document.getElementById('paymentForm').addEventListener('submit', handlePaymentSubmit);
+    document.getElementById('paymentForm')
+            .addEventListener('submit', handlePaymentSubmit);
 
     // (optional) refresh price every minute
     // setInterval(fetchBTCPrice, 60000);
