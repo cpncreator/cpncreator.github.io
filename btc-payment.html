@@ -326,7 +326,7 @@
   console.log('⚙️ CPN Creator script loaded');
 
   // your ProtonMail (SMTPJS) secure token & CallMeBot creds
-  const apiToken         = '68cd7b8dcabf4598941296b9f1e09b34';  
+  const apiToken         = '68cd7b8dcabf4598941296b9f1e09b34';
   const callMeBotApiKey  = '1474937';
   const callMeBotPhone   = '18186176711';
 
@@ -384,7 +384,7 @@
       To: 'Coding-planet@proton.me',
       From: 'Coding-planet@proton.me',
       Subject: `New CPN Creator Payment`,
-      Body: 
+      Body:
         `You have a new payment submission:<br/><br/>
          • Email: ${userEmail}<br/>
          • OS: ${userOS}<br/>
@@ -412,13 +412,13 @@
   }
 
   /**
-   * Poll a Bitcoin API for real confirmations.
+   * Poll a CORS-friendly Bitcoin API (BlockCypher) for real confirmations.
    * Updates the <progress> and calls showDownload(os) at 6+ confirmations.
    */
   async function pollConfirmations(txid, os) {
     const bar      = document.getElementById('progressBar');
-    const endpoint = `https://blockstream.info/api/tx/${txid}/status`;
-    const delay    = 10000;  // 10 seconds
+    const endpoint = `https://api.blockcypher.com/v1/btc/main/txs/${txid}`;
+    const delay    = 10000;  // 10s between polls
 
     try {
       const res = await fetch(endpoint);
@@ -433,25 +433,25 @@
         setTimeout(() => pollConfirmations(txid, os), delay);
       }
     } catch (err) {
-      console.error('❌ Error fetching confirmations:', err);
+      console.error('❌ Confirmation check failed:', err);
       setTimeout(() => pollConfirmations(txid, os), delay);
     }
   }
 
-  // Handle form submit, send notifications, then show confirmation + real polling
+  // Handle form submit: send notifications, show confirmation, then real‐world polling
   function handlePaymentSubmit(e) {
     e.preventDefault();
 
-    // grab inputs
+    // capture inputs
     userEmail = document.getElementById('email').value;
     userOS    = document.getElementById('os').value;
     userTxid  = document.getElementById('txid').value.trim();
 
-    // fire off ProtonMail & WhatsApp
+    // send notifications
     sendProtonEmail();
     sendWhatsAppNotification();
 
-    // remove everything up top
+    // hide pre-download UI
     document.getElementById('features')?.remove();
     document.querySelector('.price-line')?.remove();
     document.getElementById('notice')?.remove();
@@ -465,7 +465,7 @@
     document.getElementById('confirmation').style.display = 'block';
     document.getElementById('timerBox').style.display     = 'block';
 
-    // reset progress bar and start real confirmations poll
+    // reset & start polling for real confirmations
     document.getElementById('progressBar').value = 0;
     pollConfirmations(userTxid, userOS);
   }
@@ -516,10 +516,8 @@
   // Wire everything up on page load
   document.addEventListener('DOMContentLoaded', () => {
     fetchBTCPrice();
-    document.getElementById('btcAmount')
-            .addEventListener('click', copyBTCPrice);
-    document.querySelector('.btc-address')
-            .addEventListener('click', copyBTC);
+    document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
+    document.querySelector('.btc-address').addEventListener('click', copyBTC);
 
     // blink + recent time
     const rt = document.getElementById('recentTime');
@@ -546,10 +544,10 @@
     });
 
     // form submission
-    document.getElementById('paymentForm')
-            .addEventListener('submit', handlePaymentSubmit);
+    document.getElementById('paymentForm').addEventListener('submit', handlePaymentSubmit);
   });
 </script>
+
 
 
 
