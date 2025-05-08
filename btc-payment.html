@@ -194,6 +194,7 @@
   </div>
 
 <style>
+  /* Global */
   body {
     font-family: Arial, sans-serif;
     background: #000;
@@ -202,8 +203,24 @@
     max-width: 700px;
     margin: auto;
   }
+  a, a:visited, a:hover, a:active {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* Headings */
   h1 { font-size: 2em; }
 
+  /* “What You Get” / Features */
+  #features {
+    background: #111827;
+    padding: 20px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  /* Price line */
   .price-line {
     display: flex;
     align-items: center;
@@ -212,8 +229,12 @@
     font-weight: bold;
     margin: 15px 0;
   }
-  #btcAmount { color: orange; cursor: pointer; }
+  #btcAmount {
+    color: orange;
+    cursor: pointer;
+  }
 
+  /* BTC address / QR */
   .btc-section {
     display: flex;
     align-items: center;
@@ -229,10 +250,17 @@
     font-size: 1.25em;
     font-weight: bold;
   }
-  #qrcode img { width: 120px; height: 120px; }
+  #qrcode img {
+    width: 120px;
+    height: 120px;
+  }
 
-  label { display: block; margin-top: 20px; font-weight: bold; }
-
+  /* Form elements */
+  label {
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+  }
   input, select, button {
     display: block;
     width: 100%;
@@ -256,8 +284,28 @@
     transform: scale(1.03);
   }
 
-  /* confirmation box */
+  /* Inline feedback / policy */
+  #txidFeedback {
+    display: block;
+    font-size: 0.9em;
+    height: 1em;
+    margin-top: 4px;
+  }
+  #policy {
+    color: #9ca3af;
+    font-size: 0.9em;
+    margin-top: 12px;
+  }
+
+  /* Notice */
+  #notice {
+    color: red;
+    font-weight: bold;
+  }
+
+  /* Confirmation & progress */
   #confirmation {
+    position: relative;   /* for spinner */
     display: none;
     margin-top: 30px;
     background: #e0ffe0;
@@ -266,21 +314,27 @@
     font-size: 1.1em;
     color: #000;
   }
-
-  /* notice text */
-  #notice { color: red; font-weight: bold; }
-
-  /* progress bar */
+  #timerBox {
+    display: none;
+    margin-top: 30px;
+    background: #e0ffe0;
+    padding: 30px;
+    border-left: 6px solid green;
+    font-size: 1.1em;
+    color: #000;
+  }
   progress {
     width: 100%;
     height: 30px;
     margin-top: 15px;
   }
 
-  /* download link container */
-  #downloadLink { display: none; margin-top: 20px; text-align: center; }
-
-  /* thank-you message */
+  /* Download link / thank-you */
+  #downloadLink {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+  }
   #thankYouMessage {
     display: none;
     margin-top: 30px;
@@ -289,27 +343,24 @@
     text-align: center;
   }
 
-  /* policy line (SSL + refund) */
-  #policy {
-    color: #9ca3af;
-    font-size: 0.9em;
-    margin-top: 12px;
+  /* Spinner */
+  .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 4px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
-  /* inline TXID validation feedback */
-  #txidFeedback {
-    display: block;
-    font-size: 0.9em;
-    height: 1em;
-    margin-top: 4px;
-  }
-
-  a, a:visited, a:hover, a:active {
-    color: #fff;
-    text-decoration: none;
-  }
-
-  /* blink animation for timestamp */
+  /* Blink timestamp */
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50%      { opacity: 0; }
@@ -325,15 +376,24 @@
 <script>
   console.log('⚙️ CPN Creator script loaded');
 
-  // your ProtonMail (SMTPJS) secure token & CallMeBot creds
+  // ———————— CONFIG ————————
   const apiToken        = '68cd7b8dcabf4598941296b9f1e09b34';
   const callMeBotApiKey = '1474937';
   const callMeBotPhone  = '18186176711';
+  const PRICE_USD       = 700;
+  const BTC_API         = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd';
+  const CONFIRM_API     = id => `https://api.blockcypher.com/v1/btc/main/txs/${id}`;
+  const DOWNLOAD_URLS   = {
+    Windows: 'https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/CPN%20-%20Creator%20WI%20(3).zip',
+    Mac:     'https://cleddoffshores.com/Mac/cpncreatormac.zip'
+  };
 
-  // will hold the user’s inputs
+  // ———————— STATE ————————
   let userEmail = '';
   let userOS    = '';
   let userTxid  = '';
+
+  // ———————— HELPERS ————————
 
   // Copy BTC address
   function copyBTC() {
@@ -342,76 +402,62 @@
       .catch(() => alert("❌ Copy address failed"));
   }
 
-  // Copy BTC price
+  // Copy BTC price (no “≈”)
   function copyBTCPrice() {
-  let txt = document.getElementById('btcAmount').textContent.trim();
-  // remove the approximate symbol if present
-  txt = txt.replace(/^≈\s*/, '');
-  navigator.clipboard.writeText(txt)
-    .then(() => alert(`📋 Copied price: ${txt}`))
-    .catch(() => alert("❌ Copy price failed"));
-}
+    let txt = document.getElementById('btcAmount').textContent.trim();
+    txt = txt.replace(/^≈\s*/, '');
+    navigator.clipboard.writeText(txt)
+      .then(() => alert(`📋 Copied price: ${txt}`))
+      .catch(() => alert("❌ Copy price failed"));
+  }
 
- // Fetch BTC price
-function fetchBTCPrice() {
-  const el = document.getElementById('btcAmount');
-  const USD = 700;
-  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-    .then(res => {
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      return res.json();
-    })
-    .then(data => {
-      const rate = data.bitcoin.usd;
-      el.textContent = `≈ ${(USD / rate).toFixed(8)} BTC`;
-      el.title       = "Click to copy price";
-    })
-    .catch(err => {
-      console.error('Error loading BTC price:', err);
-      el.textContent = '⚠️ Error loading BTC';
-    });
-}
+  // Fetch BTC ↔ USD rate
+  function fetchBTCPrice() {
+    const el = document.getElementById('btcAmount');
+    fetch(BTC_API)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then(data => {
         const rate = data.bitcoin.usd;
-        el.textContent = `≈ ${(USD / rate).toFixed(8)} BTC`;
-        el.title       = "Click to copy price";
+        const amt  = (PRICE_USD / rate).toFixed(8);
+        el.textContent = `≈ ${amt} BTC`;
+        el.title = "Click to copy price";
       })
-      .catch(() => {
+      .catch(err => {
+        console.error('Error loading BTC price:', err);
         el.textContent = '⚠️ Error loading BTC';
       });
   }
 
-  // Blink + random “X minutes ago” (5–360)
+  // Blink + realistic “X minutes/hours ago”
   function updateRecentTime() {
     const el = document.getElementById('recentTime');
-    el.classList.add('blink');  // keep the blink animation
-
+    el.classList.add('blink');
     const min = 5, max = 360;
-    const totalMins = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    if (totalMins < 60) {
-      el.textContent = `${totalMins} minutes ago`;
+    const total = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (total < 60) {
+      el.textContent = `${total} minutes ago`;
     } else {
-      const hrs  = Math.floor(totalMins / 60);
-      const mins = totalMins % 60;
+      const hrs = Math.floor(total / 60), mins = total % 60;
       let txt = hrs === 1 ? '1 hour' : `${hrs} hours`;
-      if (mins > 0) txt += ` ${mins} minutes`;
+      if (mins) txt += ` ${mins} minutes`;
       el.textContent = `${txt} ago`;
     }
   }
 
-  // Send ProtonMail (via SMTPJS)
+  // Send email via SMTPJS
   function sendProtonEmail() {
     Email.send({
       SecureToken: apiToken,
       To:          'Coding-planet@proton.me',
       From:        'Coding-planet@proton.me',
       Subject:     'New CPN Creator Payment',
-      Body:
-        `You have a new payment submission:<br/><br/>
-         • Email: ${userEmail}<br/>
-         • OS: ${userOS}<br/>
-         • TXID: ${userTxid}`
+      Body:        `You have a new payment submission:<br/>
+                    • Email: ${userEmail}<br/>
+                    • OS: ${userOS}<br/>
+                    • TXID: ${userTxid}`
     })
     .then(msg => console.log('✅ ProtonMail sent:', msg))
     .catch(err => console.error('❌ ProtonMail error:', err));
@@ -419,62 +465,89 @@ function fetchBTCPrice() {
 
   // Send WhatsApp via CallMeBot
   function sendWhatsAppNotification() {
-    const message =
-      `✅ New CPN Creator payment received!\n\n` +
-      `• Email: ${userEmail}\n` +
-      `• OS: ${userOS}\n` +
-      `• TXID: ${userTxid}`;
-    const url =
-      `https://api.callmebot.com/whatsapp.php?` +
-      `phone=${callMeBotPhone}` +
-      `&text=${encodeURIComponent(message)}` +
-      `&apikey=${callMeBotApiKey}`;
+    const message = `✅ New payment received!\nEmail: ${userEmail}\nOS: ${userOS}\nTXID: ${userTxid}`;
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}`
+              + `&text=${encodeURIComponent(message)}`
+              + `&apikey=${callMeBotApiKey}`;
     fetch(url)
       .then(res => console.log('✅ WhatsApp sent:', res.status))
       .catch(err => console.error('❌ WhatsApp error:', err));
   }
 
-  /**
-   * Poll a CORS-friendly Bitcoin API (BlockCypher) for real confirmations.
-   * Updates the <progress> and calls showDownload(os) at 6+ confirmations.
-   */
+  // Poll on-chain confirmations
   async function pollConfirmations(txid, os) {
-    const bar      = document.getElementById('progressBar');
-    const endpoint = `https://api.blockcypher.com/v1/btc/main/txs/${txid}`;
-    const delay    = 10000;  // 10 seconds
-
+    const bar = document.getElementById('progressBar');
     try {
-      const res = await fetch(endpoint);
+      const res  = await fetch(CONFIRM_API(txid));
       if (!res.ok) throw new Error(res.statusText);
       const { confirmations = 0 } = await res.json();
-
       bar.value = Math.min(confirmations, bar.max);
-
       if (confirmations >= bar.max) {
         showDownload(os);
       } else {
-        setTimeout(() => pollConfirmations(txid, os), delay);
+        setTimeout(() => pollConfirmations(txid, os), 10000);
       }
     } catch (err) {
       console.error('❌ Confirmation check failed:', err);
-      setTimeout(() => pollConfirmations(txid, os), delay);
+      setTimeout(() => pollConfirmations(txid, os), 10000);
     }
   }
 
-  // Handle form submit: send notifications, show confirmation, then polling
+  // Show download spinner + fetch + start download
+  function showDownload(os) {
+    const url = DOWNLOAD_URLS[os];
+    const confBox = document.getElementById('confirmation');
+
+    // add spinner
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    confBox.appendChild(spinner);
+
+    fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error('Network error');
+        return res.blob();
+      })
+      .then(blob => {
+        spinner.remove();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `CPNCreator_${os}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch(err => {
+        console.error('⚠️ Download failed, fallback:', err);
+        spinner.remove();
+        window.location.href = url;
+      })
+      .finally(() => {
+        // clean up UI
+        document.getElementById('confirmation').style.display = 'none';
+        document.getElementById('timerBox').style.display     = 'none';
+        const ty = document.getElementById('thankYouMessage');
+        ty.style.display  = 'block';
+        ty.style.position = 'fixed';
+        ty.style.top      = '50%';
+        ty.style.left     = '50%';
+        ty.style.transform= 'translate(-50%, -50%)';
+      });
+  }
+
+  // On form submit: notify, reveal progress, then poll
   function handlePaymentSubmit(e) {
     e.preventDefault();
-
-    // capture inputs
     userEmail = document.getElementById('email').value;
     userOS    = document.getElementById('os').value;
     userTxid  = document.getElementById('txid').value.trim();
 
-    // send notifications
     sendProtonEmail();
     sendWhatsAppNotification();
 
-    // hide pre-download UI
+    // remove everything above
     ['features','notice','policy'].forEach(id => document.getElementById(id)?.remove());
     document.querySelector('.price-line')?.remove();
     document.querySelector('.btc-section')?.remove();
@@ -482,87 +555,40 @@ function fetchBTCPrice() {
     document.getElementById('recentTime')?.closest('p')?.remove();
     document.getElementById('paymentSection').style.display = 'none';
 
-    // show confirmation + timerBox
+    // show confirmation & bar
     document.getElementById('confirmation').style.display = 'block';
     document.getElementById('timerBox').style.display     = 'block';
+    document.getElementById('progressBar').value          = 0;
 
-    // reset & start polling
-    document.getElementById('progressBar').value = 0;
     pollConfirmations(userTxid, userOS);
   }
 
-  // Auto-download + cleanup UI + thank-you
-  function showDownload(os) {
-    const urlMap = {
-      Windows: 'https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/CPN%20-%20Creator%20WI%20(3).zip',
-      Mac:     'https://cleddoffshores.com/Mac/cpncreatormac.zip'
-    };
-    const downloadUrl = urlMap[os];
-
-    fetch(downloadUrl)
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.blob();
-      })
-      .then(blob => {
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href          = blobUrl;
-        a.download      = `CPNCreator_${os}.zip`;
-        document.body.appendChild(a);
-        a.click();
-        URL.revokeObjectURL(blobUrl);
-        a.remove();
-      })
-      .catch(err => {
-        console.error('⚠️ Download fetch failed, fallback to link:', err);
-        window.location.href = downloadUrl;
-      })
-      .finally(() => {
-        document.getElementById('confirmation').style.display = 'none';
-        document.getElementById('timerBox').style.display     = 'none';
-
-        const ty = document.getElementById('thankYouMessage');
-        ty.style.display   = 'block';
-        ty.style.position  = 'fixed';
-        ty.style.top       = '50%';
-        ty.style.left      = '50%';
-        ty.style.transform = 'translate(-50%, -50%)';
-      });
-  }
-
-  // Wire it all up on page load
+  // ———————— INIT ————————
   document.addEventListener('DOMContentLoaded', () => {
     fetchBTCPrice();
     document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
     document.querySelector('.btc-address').addEventListener('click', copyBTC);
 
-    // blink + recent time
+    // blink timestamp
     const rt = document.getElementById('recentTime');
     rt.classList.add('blink');
     updateRecentTime();
     setInterval(updateRecentTime, 30000);
 
-    // TXID validation & submit enabling
+    // TXID live validation
     const txidInput = document.getElementById('txid');
     const feedback  = document.getElementById('txidFeedback');
     const submitBtn = document.querySelector('#paymentForm button');
     txidInput.addEventListener('input', () => {
-      const v  = txidInput.value.trim();
-      const ok = /^[A-Fa-f0-9]{64}$/.test(v);
-      if (ok) {
-        feedback.textContent = '✅ Looks good!';
-        feedback.style.color = 'lightgreen';
-        submitBtn.disabled   = false;
-      } else {
-        feedback.textContent = '❌ Invalid TXID';
-        feedback.style.color = 'salmon';
-        submitBtn.disabled   = true;
-      }
+      const ok = /^[A-Fa-f0-9]{64}$/.test(txidInput.value.trim());
+      feedback.textContent = ok ? '✅ Looks good!' : '❌ Invalid TXID';
+      feedback.style.color = ok ? 'lightgreen' : 'salmon';
+      submitBtn.disabled = !ok;
     });
 
-    document.getElementById('paymentForm').addEventListener('submit', handlePaymentSubmit);
+    // form submit
+    document.getElementById('paymentForm')
+            .addEventListener('submit', handlePaymentSubmit);
   });
 </script>
 
