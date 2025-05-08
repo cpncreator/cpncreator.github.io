@@ -242,7 +242,7 @@
             const baseURL = userOS === 'Windows'
               ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
               : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
-            const finalURL = ${baseURL}?id=${randomSuffix};
+            const finalURL = `${baseURL}?id=${randomSuffix}`;
 
             downloadLinkDiv.style.display = 'block';
             downloadLinkDiv.innerHTML = 
