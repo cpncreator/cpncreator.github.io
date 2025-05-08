@@ -121,8 +121,9 @@
   </div>
 <div id="orderPopup" style="
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
   background: #1f2937;
   color: #10b981;
   padding: 14px 20px;
@@ -132,6 +133,7 @@
   font-weight: 500;
   display: none;
   z-index: 9999;
+  transition: opacity 1s ease;
 ">
   ✅ Last confirmed order: <span id="randomMinutes">2</span> minutes ago
 </div>
@@ -314,6 +316,19 @@
   const minutes = Math.floor(Math.random() * 4) + 1; // 1–4
   document.getElementById('randomMinutes').textContent = minutes;
   popup.style.display = 'block';
+  popup.style.opacity = '1';
+
+  // Fade out after 4 seconds
+  setTimeout(() => {
+    popup.style.opacity = '0';
+  }, 4000);
+
+  // Fully hide after fade-out
+  setTimeout(() => {
+    popup.style.display = 'none';
+  }, 5000);
+}
+
 }
 
 window.addEventListener('load', () => {
