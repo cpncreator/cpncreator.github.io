@@ -173,7 +173,7 @@
         .then(data => {
           const btcRate = data.USD.last;
           const btcPrice = (700 / btcRate).toFixed(8);
-          document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
+          document.getElementById('btcAmount').innerText = ≈ ${btcPrice} BTC;
           navigator.clipboard.writeText(btcPrice);
         })
         .catch(() => {
@@ -205,7 +205,7 @@
     }
 
     function sendWhatsAppMessage(message) {
-      const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
+      const url = https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey};
       fetch(url)
         .then(res => res.text())
         .then(data => console.log('WhatsApp sent:', data))
@@ -213,7 +213,7 @@
     }
 
     function checkConfirmations(txid) {
-      fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
+      fetch(https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken})
         .then(res => res.json())
         .then(data => {
           const confirms = data.confirmations || 0;
@@ -226,12 +226,12 @@
             const baseURL = userOS === 'Windows'
               ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
               : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
-            const finalURL = `${baseURL}?id=${randomSuffix}`;
+            const finalURL = ${baseURL}?id=${randomSuffix};
 
             downloadLinkDiv.style.display = 'block';
-            downloadLinkDiv.innerHTML = `
+            downloadLinkDiv.innerHTML = 
               <button id="downloadBtn">🟢 Download CPN Creator</button>
-            `;
+            ;
 
             const dlBtn = document.getElementById('downloadBtn');
             dlBtn.addEventListener('click', async () => {
@@ -245,7 +245,7 @@
             });
             dlBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-            const confirmationMsg = `✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`;
+            const confirmationMsg = ✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid};
             sendWhatsAppMessage(confirmationMsg);
             fetch('https://formspree.io/f/xvgaawzj', {
               method: 'POST',
@@ -268,7 +268,7 @@
       fetch('https://formspree.io/f/xvgaawzj', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email: userEmail, message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}` })
+        body: JSON.stringify({ email: userEmail, message: New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid} })
       });
       document.getElementById('paymentForm').style.display = 'none';
       document.getElementById('paymentSection').style.display = 'none';
