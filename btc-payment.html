@@ -359,7 +359,40 @@
     // 4) Show popup
     setTimeout(showOrderPopup, 2000);
   });
+</script><script>
+  // … your other functions (fetchBTCPrice, copyBTC, etc.) …
+
+  // 1) new copy-price function
+  function copyBTCPrice() {
+    console.log('✂️ copyBTCPrice() called');
+    const text = document.getElementById('btcAmount').textContent;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log('✅ Price copied:', text);
+        alert(`Copied BTC price: ${text}`);
+      })
+      .catch(err => {
+        console.error('❌ copy price failed:', err);
+        alert("Copy price failed—see console.");
+      });
+  }
+
+  // 2) wire everything up once the DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('📦 DOMContentLoaded');
+    fetchBTCPrice();
+
+    // ← add this block to enable “click to copy price”
+    const priceEl = document.getElementById('btcAmount');
+    priceEl.style.cursor = 'pointer';
+    priceEl.title = 'Click to copy BTC price';
+    priceEl.addEventListener('click', copyBTCPrice);
+
+    // (optional auto-refresh)
+    // setInterval(fetchBTCPrice, 60_000);
+  });
 </script>
+
 
 </body>
 </html>
