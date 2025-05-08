@@ -1,3 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bitcoin Payment – CPN Creator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 40px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 { font-size: 2em; }
+    .price-line {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+    #btcAmount { color: orange; cursor: pointer; }
+    .btc-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 15px 0;
+    }
+    .btc-address {
+      background: #222;
+      padding: 14px 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.25em;
+      font-weight: bold;
+    }
+    #qrcode img { width: 120px; height: 120px; }
+    label { display: block; margin-top: 20px; font-weight: bold; }
+    input, select, button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 4px;
+      border: none;
+      font-size: 1em;
+    }
+    button {
+      background: linear-gradient(90deg, #28a745, #218838);
+      color: white;
+      font-size: 1.2em;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #1e7e34;
+      transform: scale(1.03);
+    }
+    #confirmation, #timerBox {
+      display: none;
+      margin-top: 30px;
+      background: #e0ffe0;
+      padding: 30px;
+      border-left: 6px solid green;
+      font-size: 1.1em;
+      color: #000;
+    }
+    #notice { color: red; font-weight: bold; }
+    progress {
+      width: 100%;
+      height: 30px;
+      margin-top: 15px;
+    }
+    #downloadLink { display: none; margin-top: 20px; text-align: center; }
+    #thankYouMessage {
+      display: none;
+      margin-top: 30px;
+      font-size: 1.2em;
+      line-height: 1.4;
+      text-align: center;
+    }
+    a, a:visited, a:hover, a:active { color: #fff; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <div style="background: #111827; padding: 20px 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
+  <h3 style="color: #38bdf8; margin-bottom: 12px; font-size: 1.3rem;">🔎 What You Get:</h3>
+  <ul style="list-style: none; padding-left: 0; line-height: 1.8; font-size: 1.05rem;">
+    <li>✅ <strong>AI-Powered CPN Generator</strong> – Built on SSA validation logic</li>
+    <li>🔐 <strong>Reused Number Scanner</strong> – Flagged CPN protection included</li>
+    <li>🖥️ <strong>Offline License (Device-Locked)</strong> – One-time activation, no server needed</li>
+    <li>♻️ <strong>Lifetime Updates + Priority Support</strong> – Always up to date</li>
+  </ul>
+</div>
+
+<p style="color: #16a34a; font-size: 0.95rem; text-align: center; margin-bottom: 20px;">🎉 Trusted by 100+ users — Last confirmed order: <span id="recentTime">2 minutes ago</span></p>
+
+<div class="price-line" style="margin-top: 10px;">
+  <span>Price: <span style="color: #00ff00;">$700</span></span>
+  <span id="btcAmount">≈ Loading BTC...</span>
+</div>
+
+<p id="notice" style="color: #f87171; font-weight: bold;">
+  Please send the exact amount shown above.
+</p>
+
+<div class="btc-section">
+  <div class="btc-address" onclick="copyBTC()" title="Click to copy">
+    bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y
+  </div>
+  <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">
+    📋 Click address to copy
+  </p>
+  <div id="qrcode">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code">
+  </div>
+</div>
+
+<div id="orderPopup" style="
+  position: fixed;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1f2937;
+  color: #10b981;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: none;
+  z-index: 9999;
+  transition: opacity 1s ease;
+">
+  ✅ Last confirmed order: <span id="randomMinutes">2</span> minutes ago
+</div>
+<div id="paymentSection">
+  <form id="paymentForm">
+    <label for="email">Your Email</label>
+    <input type="email" id="email" required>
+
+    <label for="os">Windows or Mac Version?</label>
+    <select id="os" required>
+      <option value="">Select...</option>
+      <option value="Windows">Windows</option>
+      <option value="Mac">Mac</option>
+    </select>
+
+    <label for="txid">Transaction ID</label>
+    <input type="text" id="txid" required>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+  <div id="confirmation">
+  <p><strong>✅ Payment submission received!</strong></p>
+  <p>We're tracking your BTC confirmation now. Once it hits 6 confirmations, your download will unlock automatically.</p>
+  <p>Need help or have questions? Contact us anytime:</p>
+  <p>Email – <strong>Coding-planet@proton.me</strong> | WhatsApp – <strong>(818) 617-6711</strong></p>
+</div>
+
+  <div id="timerBox">
+    <p style="font-size: 1.3em; font-weight: bold;">⏳ Close this page after confirmation is completed!</p>
+    <progress id="progressBar" value="0" max="6"></progress>
+  </div>
+
+  <div id="downloadLink"></div>
+  <div id="thankYouMessage">
+    Your download has started. If you have any questions or did not get your download, you can send us a message on the following.
+<p>Email - <strong>Coding-planet@proton.me</strong> | Whatsapp ONLY - <strong>(818) 617-6711</strong></p>
+  </div>
+
 <script>
   // 1) Make sure the script is loaded
   console.log('⚙️ CPN Creator script loaded');
