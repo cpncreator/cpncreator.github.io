@@ -303,6 +303,7 @@
 }
 
 window.addEventListener('load', () => {
+  fetchBTCPrice(); // ✅ Move BTC fetch here so DOM is ready
   setTimeout(showOrderPopup, 2000); // show popup after 2s
 });
 
