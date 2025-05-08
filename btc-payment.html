@@ -179,55 +179,198 @@
   </div>
 
 <script>
-  // 1) Make sure the script is loaded
-  console.log('⚙️ CPN Creator script loaded');
+  // Configuration
+  const apiToken        = '68cd7b8dcabf4598941296b9f1e09b34';
+  const callMeBotApiKey = '1474937';
+  const callMeBotPhone  = '18186176711';
 
-  // 2) Copy function
-  function copyBTC() {
-    console.log('✂️ copyBTC() called');
-    navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
-      .then(() => {
-        console.log('✅ Address copied');
-        alert("Bitcoin address copied to clipboard.");
-      })
-      .catch(err => {
-        console.error('❌ copy failed:', err);
-        alert("Copy failed—see console for details.");
-      });
-  }
+  // State
+  let confirmationInterval;
+  let userEmail = '';
+  let userOS    = '';
+  let userTxid  = '';
+  const downloadLinkDiv = document.getElementById('downloadLink');
+  const thankYouDiv     = document.getElementById('thankYouMessage');
 
-  // 3) Fetch price
+  // 1) Fetch BTC price from CoinGecko
   function fetchBTCPrice() {
-    console.log('⏳ fetchBTCPrice() called');
     const btcAmountEl = document.getElementById('btcAmount');
     const priceUSD    = 700;
 
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
       .then(res => {
-        console.log('🔍 HTTP status:', res.status);
-        if (!res.ok) throw new Error(`Status ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then(data => {
-        console.log('✅ CoinGecko returned:', data);
         const rate   = data.bitcoin.usd;
         const amount = (priceUSD / rate).toFixed(8);
         btcAmountEl.textContent = `≈ ${amount} BTC`;
       })
       .catch(err => {
-        console.error('❌ Error fetching BTC price:', err);
+        console.error('Error fetching BTC price:', err);
         btcAmountEl.textContent = '⚠️ Error loading BTC';
       });
   }
 
-  // 4) Wire up page logic after DOM is ready
+  // 2) Copy BTC address
+  function copyBTC() {
+    navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
+      .then(() => alert("✅ Bitcoin address copied to clipboard."))
+      .catch(err => {
+        console.error('Copy address failed:', err);
+        alert("❌ Failed to copy address.");
+      });
+  }
+
+  // 3) Copy BTC price
+  function copyBTCPrice() {
+    const text = document.getElementById('btcAmount').textContent;
+    navigator.clipboard.writeText(text)
+      .then(() => alert(`✅ Copied BTC price: ${text}`))
+      .catch(err => {
+        console.error('Copy price failed:', err);
+        alert("❌ Failed to copy price.");
+      });
+  }
+
+  // 4) Random string for download URL
+  function generateRandomString(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+  }
+
+  // 5) Download file helper
+  async function downloadFile(url, filename) {
+    const response = await fetch(url);
+    const blob     = await response.blob();
+    const blobUrl  = URL.createObjectURL(blob);
+    const a        = document.createElement('a');
+    a.href         = blobUrl;
+    a.download     = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  // 6) Send WhatsApp notification
+  function sendWhatsAppMessage(message) {
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(message)}&apikey=${callMeBotApiKey}`;
+    fetch(url).catch(err => console.error('WhatsApp error:', err));
+  }
+
+  // 7) Check Bitcoin confirmations
+  function checkConfirmations(txid) {
+    fetch(`https://api.blockcypher.com/v1/btc/main/txs/${txid}?token=${apiToken}`)
+      .then(res => res.json())
+      .then(data => {
+        const confirms = data.confirmations || 0;
+        document.getElementById('progressBar').value = confirms;
+
+        if (confirms >= 6) {
+          clearInterval(confirmationInterval);
+
+          const suffix = generateRandomString(8);
+          const baseURL = userOS === 'Windows'
+            ? 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI'
+            : 'https://mega.nz/file/GewSzRBS#_D3tjDhH3-QbmkIjbBP23Q5FXexkRHHa_vsLi-QaJBk';
+          const finalURL = `${baseURL}?id=${suffix}`;
+
+          downloadLinkDiv.style.display = 'block';
+          downloadLinkDiv.innerHTML = `<button id="downloadBtn">🟢 Download CPN Creator</button>`;
+
+          const dlBtn = document.getElementById('downloadBtn');
+          dlBtn.addEventListener('click', async () => {
+            dlBtn.disabled = true;
+            await downloadFile(finalURL, 'CPN_Creator.zip');
+            document.getElementById('paymentSection')?.style.display = 'none';
+            document.getElementById('confirmation').style.display = 'none';
+            document.getElementById('timerBox').style.display = 'none';
+            downloadLinkDiv.style.display = 'none';
+            thankYouDiv.style.display = 'block';
+          });
+          dlBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+          sendWhatsAppMessage(`✅ BTC confirmed!\nEmail: ${userEmail}\nTXID: ${userTxid}`);
+
+          fetch('https://formspree.io/f/xvgaawzj', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              email: userEmail,
+              message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
+            })
+          }).catch(() => {});
+        }
+      })
+      .catch(err => console.error('Error checking confirmations:', err));
+  }
+
+  // 8) Handle form submission
+  document.getElementById('paymentForm').addEventListener('submit', e => {
+    e.preventDefault();
+    userEmail = document.getElementById('email').value.trim();
+    userOS    = document.getElementById('os').value;
+    userTxid  = document.getElementById('txid').value.trim();
+
+    if (!/^[a-fA-F0-9]{64}$/.test(userTxid)) {
+      return alert("❌ Invalid TXID (must be 64 hex characters).");
+    }
+
+    // initial Formspree post
+    fetch('https://formspree.io/f/xvgaawzj', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        email: userEmail,
+        message: `New BTC Submission\nEmail: ${userEmail}\nTXID: ${userTxid}`
+      })
+    }).catch(() => {});
+
+    document.getElementById('paymentForm').style.display      = 'none';
+    document.getElementById('paymentSection')?.style.display = 'none';
+    document.getElementById('confirmation').style.display    = 'block';
+    document.getElementById('timerBox').style.display        = 'block';
+
+    checkConfirmations(userTxid);
+    confirmationInterval = setInterval(() => checkConfirmations(userTxid), 60_000);
+  });
+
+  // 9) Show random order-popup
+  function showOrderPopup() {
+    const popup   = document.getElementById('orderPopup');
+    const minutes = Math.floor(Math.random() * 4) + 1;
+    document.getElementById('randomMinutes').textContent = minutes;
+    popup.style.display = 'block';
+    popup.style.opacity = '1';
+
+    setTimeout(() => popup.style.opacity = '0', 4000);
+    setTimeout(() => popup.style.display = 'none', 5000);
+  }
+
+  // 10) Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('📦 DOMContentLoaded');
     fetchBTCPrice();
-    // (you can uncomment the next line if you want auto-refresh)
+
+    // wire copy handlers
+    const priceEl   = document.getElementById('btcAmount');
+    priceEl.style.cursor = 'pointer';
+    priceEl.title        = 'Click to copy BTC price';
+    priceEl.addEventListener('click', copyBTCPrice);
+
+    const addrEl    = document.querySelector('.btc-address');
+    addrEl.style.cursor   = 'pointer';
+    addrEl.title          = 'Click to copy BTC address';
+    addrEl.addEventListener('click', copyBTC);
+
+    setTimeout(showOrderPopup, 2000);
+
+    // (optional) auto-refresh price every minute
     // setInterval(fetchBTCPrice, 60_000);
   });
 </script>
+
 
 </body>
 </html>
