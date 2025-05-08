@@ -189,7 +189,7 @@
         .then(data => {
           const btcRate = data.USD.last;
           const btcPrice = (700 / btcRate).toFixed(8);
-          document.getElementById('btcAmount').innerText = ≈ ${btcPrice} BTC;
+          document.getElementById('btcAmount').innerText = `≈ ${btcPrice} BTC`;
           navigator.clipboard.writeText(btcPrice);
         })
         .catch(() => {
