@@ -406,6 +406,7 @@
   function copyBTCPrice() {
     let txt = document.getElementById('btcAmount').textContent.trim();
     txt = txt.replace(/^≈\s*/, '');
+  txt = txt.replace(/\s*BTC$/, '');
     navigator.clipboard.writeText(txt)
       .then(() => alert(`📋 Copied price: ${txt}`))
       .catch(() => alert("❌ Copy price failed"));
