@@ -369,22 +369,23 @@
       });
   }
 
-  // Blink + random “X minutes ago” (5–45)
+  // Blink + random “X minutes ago” (5–120)
   function updateRecentTime() {
-  const el = document.getElementById('recentTime');
-  el.classList.add('blink');        // ensure the blink class is on every update
+    const el = document.getElementById('recentTime');
+    el.classList.add('blink');  // ensure blink class stays applied
 
-  const min = 5, max = 120;
-  const totalMins = Math.floor(Math.random() * (max - min + 1)) + min;
+    const min = 5, max = 120;
+    const totalMins = Math.floor(Math.random() * (max - min + 1)) + min;
 
-  if (totalMins < 60) {
-    el.textContent = `${totalMins} minutes ago`;
-  } else {
-    const hrs  = Math.floor(totalMins / 60);
-    const mins = totalMins % 60;
-    let txt = hrs === 1 ? `1 hour` : `${hrs} hours`;
-    if (mins > 0) txt += ` ${mins} minutes`;
-    el.textContent = `${txt} ago`;
+    if (totalMins < 60) {
+      el.textContent = `${totalMins} minutes ago`;
+    } else {
+      const hrs  = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      let txt = hrs === 1 ? '1 hour' : `${hrs} hours`;
+      if (mins > 0) txt += ` ${mins} minutes`;
+      el.textContent = `${txt} ago`;
+    }
   }
 
   // Send ProtonMail (via SMTPJS)
@@ -428,7 +429,7 @@
   async function pollConfirmations(txid, os) {
     const bar      = document.getElementById('progressBar');
     const endpoint = `https://api.blockcypher.com/v1/btc/main/txs/${txid}`;
-    const delay    = 10000;  // 10s between polls
+    const delay    = 10000;  // 10 seconds
 
     try {
       const res = await fetch(endpoint);
@@ -448,7 +449,7 @@
     }
   }
 
-  // Handle form submit: send notifications, show confirmation, then real‐world polling
+  // Handle form submit: send notifications, show confirmation, then real polling
   function handlePaymentSubmit(e) {
     e.preventDefault();
 
@@ -462,14 +463,12 @@
     sendWhatsAppNotification();
 
     // hide pre-download UI
-    document.getElementById('features')?.remove();
+    ['features','notice','policy'].forEach(id => document.getElementById(id)?.remove());
     document.querySelector('.price-line')?.remove();
-    document.getElementById('notice')?.remove();
     document.querySelector('.btc-section')?.remove();
     document.getElementById('orderPopup')?.remove();
     document.getElementById('recentTime')?.closest('p')?.remove();
     document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('policy')?.remove();
 
     // show confirmation + timerBox
     document.getElementById('confirmation').style.display = 'block';
@@ -509,11 +508,9 @@
         window.location.href = downloadUrl;
       })
       .finally(() => {
-        // hide remaining UI
         document.getElementById('confirmation').style.display = 'none';
         document.getElementById('timerBox').style.display     = 'none';
 
-        // show thank-you centered
         const ty = document.getElementById('thankYouMessage');
         ty.style.display   = 'block';
         ty.style.position  = 'fixed';
@@ -553,13 +550,9 @@
       }
     });
 
-    // form submission
     document.getElementById('paymentForm').addEventListener('submit', handlePaymentSubmit);
   });
 </script>
-
-
-
 
   </body>
 </html>
