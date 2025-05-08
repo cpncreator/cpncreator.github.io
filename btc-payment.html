@@ -284,97 +284,131 @@
 <script>
   console.log('⚙️ CPN Creator script loaded');
 
-  // Copy BTC address
+  // 1) Copy BTC address
   function copyBTC() {
+    console.log('✂️ copyBTC() called');
     navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
-      .then(() => alert("📋 Address copied"))
-      .catch(() => alert("❌ Copy address failed"));
-  }
-
-  // Copy BTC price
-  function copyBTCPrice() {
-    const txt = document.getElementById('btcAmount').textContent.trim();
-    navigator.clipboard.writeText(txt)
-      .then(() => alert(`📋 Copied price: ${txt}`))
-      .catch(() => alert("❌ Copy price failed"));
-  }
-
-  // Fetch BTC price
-  function fetchBTCPrice() {
-    const el = document.getElementById('btcAmount');
-    const USD = 700;
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(data => {
-        const rate = data.bitcoin.usd;
-        el.textContent = `≈ ${(USD / rate).toFixed(8)} BTC`;
-        el.title = "Click to copy price";
+      .then(() => {
+        console.log('✅ Address copied');
+        alert("Bitcoin address copied to clipboard.");
       })
-      .catch(() => {
-        el.textContent = '⚠️ Error loading BTC';
+      .catch(err => {
+        console.error('❌ copy failed:', err);
+        alert("Copy failed—see console for details.");
       });
   }
 
-  // Blink + random “X minutes ago”
-  function updateRecentTime() {
-    const el = document.getElementById('recentTime');
-    el.textContent = `${Math.floor(Math.random()*5)+1} minutes ago`;
+  // 2) Copy BTC price
+  function copyBTCPrice() {
+    console.log('✂️ copyBTCPrice() called');
+    const btcAmountEl = document.getElementById('btcAmount');
+    const text = btcAmountEl.textContent.trim();
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log('✅ Price copied:', text);
+        alert(`Copied BTC price: ${text}`);
+      })
+      .catch(err => {
+        console.error('❌ copy price failed:', err);
+        alert("Copy price failed—see console.");
+      });
   }
 
-  // Handle form submit & simulate 6 confirmations
+  // 3) Fetch price from CoinGecko (restored full logging & error handling)
+  function fetchBTCPrice() {
+    console.log('⏳ fetchBTCPrice() called');
+    const btcAmountEl = document.getElementById('btcAmount');
+    const priceUSD    = 700;
+
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+      .then(res => {
+        console.log('🔍 HTTP status:', res.status);
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        console.log('✅ CoinGecko returned:', data);
+        const rate   = data.bitcoin.usd;
+        const amount = (priceUSD / rate).toFixed(8);
+        btcAmountEl.textContent = `≈ ${amount} BTC`;
+        btcAmountEl.title = "Click to copy price";
+      })
+      .catch(err => {
+        console.error('❌ Error fetching BTC price:', err);
+        btcAmountEl.textContent = '⚠️ Error loading BTC';
+      });
+  }
+
+  // 4) Blink + randomize “X minutes ago”
+  function updateRecentTime() {
+    const el = document.getElementById('recentTime');
+    const mins = Math.floor(Math.random() * 5) + 1; // 1–5
+    el.textContent = `${mins} minutes ago`;
+  }
+
+  // 5) Handle form submit & hide everything except confirmation/timer
   function handlePaymentSubmit(e) {
     e.preventDefault();
-    const os = document.getElementById('os').value;
-    if (!os) return alert("Please select Windows or Mac.");
-    // hide form, show confirmation UI
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('confirmation').style.display = 'block';
-    document.getElementById('timerBox').style.display = 'block';
 
-    // simulate confirmations
+    // Hide all purchase UI
+    document.querySelector('.price-line').style.display       = 'none';
+    document.getElementById('notice').style.display           = 'none';
+    document.querySelector('.btc-section').style.display      = 'none';
+    document.getElementById('orderPopup').style.display       = 'none';
+    document.getElementById('recentTime').closest('p').style.display = 'none';
+
+    // Hide form, show confirmation + timer
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('confirmation').style.display   = 'block';
+    document.getElementById('timerBox').style.display       = 'block';
+
+    // Simulate 6 confirmations (one every 5s)
     const bar = document.getElementById('progressBar');
     let count = 0;
     const iv = setInterval(() => {
       bar.value = ++count;
       if (count >= bar.max) {
         clearInterval(iv);
-        showDownload(os);
+        showDownload(document.getElementById('os').value);
       }
-    }, 5000);  // one “confirmation” every 5s
+    }, 5000);
   }
 
-  // Reveal download link & thank-you message
+  // 6) Reveal download link + thank-you once “confirmed”
   function showDownload(os) {
     const urlMap = {
       Windows: 'https://yourdomain.com/download/CPNCreator_Windows.exe',
       Mac:     'https://yourdomain.com/download/CPNCreator_Mac.dmg'
     };
-    const container = document.getElementById('downloadLink');
-    container.innerHTML = `<a href="${urlMap[os]}" download>⬇️ Download ${os} version</a>`;
-    container.style.display = 'block';
+    const dl = document.getElementById('downloadLink');
+    dl.innerHTML = `<a href="${urlMap[os]}" download>⬇️ Download ${os} version</a>`;
+    dl.style.display = 'block';
     document.getElementById('thankYouMessage').style.display = 'block';
   }
 
+  // 7) Wire it all up
   document.addEventListener('DOMContentLoaded', () => {
-    // initial behaviors
     fetchBTCPrice();
-    document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
-    document.querySelector('.btc-address').addEventListener('click', copyBTC);
+    document.getElementById('btcAmount')
+            .addEventListener('click', copyBTCPrice);
+    document.querySelector('.btc-address')
+            .addEventListener('click', copyBTC);
 
-    // blinking + random time
+    // Blink + random minutes
     const rt = document.getElementById('recentTime');
     rt.classList.add('blink');
     updateRecentTime();
     setInterval(updateRecentTime, 30000);
 
-    // form submission
+    // Form submission
     document.getElementById('paymentForm')
-      .addEventListener('submit', handlePaymentSubmit);
+            .addEventListener('submit', handlePaymentSubmit);
 
-    // (optional) refresh rate every minute
+    // (Optional) Refresh price every minute:
     // setInterval(fetchBTCPrice, 60000);
   });
 </script>
+
 
   </body>
 </html>
