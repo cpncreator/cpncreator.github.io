@@ -256,9 +256,6 @@
     transform: scale(1.03);
   }
 
-  /* hide external timerBox, using in-button progress instead */
-  #timerBox { display: none !important; }
-
   /* confirmation box */
   #confirmation {
     display: none;
@@ -321,7 +318,6 @@
     animation: blink 1s step-start infinite;
   }
 </style>
-
 
 <!-- make sure you have this in your <head> so Email.send is available -->
 <script src="https://smtpjs.com/v3/smtp.js"></script>
@@ -417,43 +413,42 @@
 
   // Handle form submit, send notifications, then show in-button progress
   function handlePaymentSubmit(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    // capture user inputs
-    userEmail = document.getElementById('email').value;
-    userOS    = document.getElementById('os').value;
-    userTxid  = document.getElementById('txid').value.trim();
+  // grab inputs
+  userEmail = document.getElementById('email').value;
+  userOS    = document.getElementById('os').value;
+  userTxid  = document.getElementById('txid').value.trim();
 
-    // send notifications immediately
-    sendProtonEmail();
-    sendWhatsAppNotification();
+  // fire off ProtonMail & WhatsApp
+  sendProtonEmail();
+  sendWhatsAppNotification();
 
-    // remove pre-download UI
-    document.getElementById('features')?.remove();
-    document.querySelector('.price-line')?.remove();
-    document.getElementById('notice')?.remove();
-    document.querySelector('.btc-section')?.remove();
-    document.getElementById('orderPopup')?.remove();
-    document.getElementById('recentTime')?.closest('p')?.remove();
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('policy')?.remove();
+  // remove everything up top
+  document.getElementById('features')?.remove();
+  document.querySelector('.price-line')?.remove();
+  document.getElementById('notice')?.remove();
+  document.querySelector('.btc-section')?.remove();
+  document.getElementById('orderPopup')?.remove();
+  document.getElementById('recentTime')?.closest('p')?.remove();
+  document.getElementById('paymentSection').style.display = 'none';
+  document.getElementById('policy')?.remove();
 
-    // in-button progress
-    const submitBtn = document.querySelector('#paymentForm button');
-    submitBtn.disabled = true;
-    submitBtn.style.cursor = 'not-allowed';
-    let count = 0;
-    submitBtn.textContent = `Processing... 0/6 confirmations`;
+  // **back to old flow**: show confirmation + timerBox
+  document.getElementById('confirmation').style.display = 'block';
+  document.getElementById('timerBox').style.display     = 'block';
 
-    const iv = setInterval(() => {
-      count++;
-      submitBtn.textContent = `Processing... ${count}/6 confirmations`;
-      if (count >= 6) {
-        clearInterval(iv);
-        showDownload(userOS);
-      }
-    }, 5000);
-  }
+  // drive the progress bar from 0 to 6
+  const bar = document.getElementById('progressBar');
+  let count = 0;
+  const iv = setInterval(() => {
+    bar.value = ++count;
+    if (count >= bar.max) {
+      clearInterval(iv);
+      showDownload(userOS);
+    }
+  }, 5000);
+}
 
   // Auto-download + cleanup UI + thank-you
   function showDownload(os) {
