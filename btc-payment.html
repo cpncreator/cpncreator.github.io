@@ -107,17 +107,22 @@
   <span id="btcAmount">≈ Loading BTC...</span>
 </div>
 
-<p id="notice" style="color: #f87171; font-weight: bold;">Please send the exact amount shown above.</p>
-    <div class="btc-section">
-      <div onclick="copyBTC()" class="btc-address" title="Click to copy">
-  bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y
-</div>
-<p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">📋 Click address to copy</p>
-      <div id="qrcode">
-        <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code">
-      </div>
-    </div>
+<p id="notice" style="color: #f87171; font-weight: bold;">
+  Please send the exact amount shown above.
+</p>
+
+<div class="btc-section">
+  <div class="btc-address" onclick="copyBTC()" title="Click to copy">
+    bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y
   </div>
+  <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">
+    📋 Click address to copy
+  </p>
+  <div id="qrcode">
+    <img src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/qrcode.png" alt="QR Code">
+  </div>
+</div>
+
 <div id="orderPopup" style="
   position: fixed;
   left: 30px;
