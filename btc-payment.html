@@ -335,8 +335,8 @@
   function updateRecentTime() {
   const el = document.getElementById('recentTime');
   const min = 5;
-  const max = 8;
-  const mins = Math.floor(Math.random() * (max - min + 1)) + min;  // 5–8
+  const max = 45;
+  const mins = Math.floor(Math.random() * (max - min + 1)) + min;  // 5–45
   el.textContent = `${mins} minutes ago`;
 }
 
