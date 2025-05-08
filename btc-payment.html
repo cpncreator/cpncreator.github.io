@@ -372,13 +372,15 @@
   // Blink + random “X minutes ago” (5–45)
   function updateRecentTime() {
   const el = document.getElementById('recentTime');
-  const min = 5, max = 120;               // 5 min → 120 min (2 hrs)
+  el.classList.add('blink');        // ensure the blink class is on every update
+
+  const min = 5, max = 120;
   const totalMins = Math.floor(Math.random() * (max - min + 1)) + min;
 
   if (totalMins < 60) {
     el.textContent = `${totalMins} minutes ago`;
   } else {
-    const hrs = Math.floor(totalMins / 60);
+    const hrs  = Math.floor(totalMins / 60);
     const mins = totalMins % 60;
     let txt = hrs === 1 ? `1 hour` : `${hrs} hours`;
     if (mins > 0) txt += ` ${mins} minutes`;
