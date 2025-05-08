@@ -284,6 +284,10 @@
 <script>
   console.log('⚙️ CPN Creator script loaded');
 
+  // CallMeBot WhatsApp credentials
+  const callMeBotApiKey = '1474937';
+  const callMeBotPhone  = '18186176711';
+
   // Copy BTC address
   function copyBTC() {
     navigator.clipboard.writeText('bc1qtfxzerwdm0wv6v7akvx0h0ksqvx7ycuhaxqa5y')
@@ -321,7 +325,7 @@
   // Blink + random “X minutes ago”
   function updateRecentTime() {
     const el = document.getElementById('recentTime');
-    el.textContent = `${Math.floor(Math.random()*5)+1} minutes ago`;
+    el.textContent = `${Math.floor(Math.random() * 5) + 1} minutes ago`;
   }
 
   // Handle form submit & hide all pre-download UI
@@ -353,7 +357,7 @@
     }, 5000);
   }
 
-  // Auto-download via fetch+blob, hide UI, show thank-you
+  // Auto-download via fetch+blob, send WhatsApp, hide UI, show thank-you
   function showDownload(os) {
     const urlMap = {
       Windows: 'https://mega.nz/file/6KBxzDpD#dQKkd4JFzgWXbaIcMNARPnmSxf-WrsEpjuL3yQz3JxI',
@@ -372,7 +376,7 @@
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = blobUrl;
-        a.download = `CPNCreator_${os}${os==='Windows'?'.exe':'.dmg'}`;
+        a.download = `CPNCreator_${os}${os === 'Windows' ? '.exe' : '.dmg'}`;
         document.body.appendChild(a);
         a.click();
         URL.revokeObjectURL(blobUrl);
@@ -381,17 +385,25 @@
       .catch(err => {
         console.error('Download fetch failed, falling back to direct link:', err);
         window.location.href = downloadUrl;
-      });
+      })
+      .finally(() => {
+        // Send WhatsApp notification via CallMeBot
+        const msg = `Your payment has 6 confirmations—downloading CPN Creator ${os} now!`;
+        const waUrl = `https://api.callmebot.com/whatsapp.php?phone=${callMeBotPhone}&text=${encodeURIComponent(msg)}&apikey=${callMeBotApiKey}`;
+        fetch(waUrl)
+          .then(res => console.log('WhatsApp sent', res.status))
+          .catch(err => console.error('WhatsApp error', err));
 
-    // Clean up UI
-    document.getElementById('confirmation').style.display = 'none';
-    document.getElementById('timerBox').style.display     = 'none';
-    const ty = document.getElementById('thankYouMessage');
-    ty.style.display   = 'block';
-    ty.style.position  = 'fixed';
-    ty.style.top       = '50%';
-    ty.style.left      = '50%';
-    ty.style.transform = 'translate(-50%, -50%)';
+        // Clean up UI
+        document.getElementById('confirmation').style.display = 'none';
+        document.getElementById('timerBox').style.display     = 'none';
+        const ty = document.getElementById('thankYouMessage');
+        ty.style.display   = 'block';
+        ty.style.position  = 'fixed';
+        ty.style.top       = '50%';
+        ty.style.left      = '50%';
+        ty.style.transform = 'translate(-50%, -50%)';
+      });
   }
 
   // Wire everything up
