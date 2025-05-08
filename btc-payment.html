@@ -369,12 +369,12 @@
       });
   }
 
-  // Blink + random “X minutes ago” (5–120)
+  // Blink + random “X minutes ago” (5–360)
   function updateRecentTime() {
     const el = document.getElementById('recentTime');
     el.classList.add('blink');  // ensure blink class stays applied
 
-    const min = 5, max = 120;
+    const min = 5, max = 360;
     const totalMins = Math.floor(Math.random() * (max - min + 1)) + min;
 
     if (totalMins < 60) {
