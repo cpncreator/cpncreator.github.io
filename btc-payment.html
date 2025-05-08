@@ -396,12 +396,12 @@
 
   // Send WhatsApp via CallMeBot
   function sendWhatsAppNotification() {
-    const message = 
+    const message =
       `✅ New CPN Creator payment received!\n\n` +
       `• Email: ${userEmail}\n` +
       `• OS: ${userOS}\n` +
       `• TXID: ${userTxid}`;
-    const url = 
+    const url =
       `https://api.callmebot.com/whatsapp.php?` +
       `phone=${callMeBotPhone}` +
       `&text=${encodeURIComponent(message)}` +
@@ -411,44 +411,64 @@
       .catch(err => console.error('❌ WhatsApp error:', err));
   }
 
-  // Handle form submit, send notifications, then show in-button progress
-  function handlePaymentSubmit(e) {
-  e.preventDefault();
+  /**
+   * Poll a Bitcoin API for real confirmations.
+   * Updates the <progress> and calls showDownload(os) at 6+ confirmations.
+   */
+  async function pollConfirmations(txid, os) {
+    const bar      = document.getElementById('progressBar');
+    const endpoint = `https://blockstream.info/api/tx/${txid}/status`;
+    const delay    = 10000;  // 10 seconds
 
-  // grab inputs
-  userEmail = document.getElementById('email').value;
-  userOS    = document.getElementById('os').value;
-  userTxid  = document.getElementById('txid').value.trim();
+    try {
+      const res = await fetch(endpoint);
+      if (!res.ok) throw new Error(res.statusText);
+      const { confirmations = 0 } = await res.json();
 
-  // fire off ProtonMail & WhatsApp
-  sendProtonEmail();
-  sendWhatsAppNotification();
+      bar.value = Math.min(confirmations, bar.max);
 
-  // remove everything up top
-  document.getElementById('features')?.remove();
-  document.querySelector('.price-line')?.remove();
-  document.getElementById('notice')?.remove();
-  document.querySelector('.btc-section')?.remove();
-  document.getElementById('orderPopup')?.remove();
-  document.getElementById('recentTime')?.closest('p')?.remove();
-  document.getElementById('paymentSection').style.display = 'none';
-  document.getElementById('policy')?.remove();
-
-  // **back to old flow**: show confirmation + timerBox
-  document.getElementById('confirmation').style.display = 'block';
-  document.getElementById('timerBox').style.display     = 'block';
-
-  // drive the progress bar from 0 to 6
-  const bar = document.getElementById('progressBar');
-  let count = 0;
-  const iv = setInterval(() => {
-    bar.value = ++count;
-    if (count >= bar.max) {
-      clearInterval(iv);
-      showDownload(userOS);
+      if (confirmations >= bar.max) {
+        showDownload(os);
+      } else {
+        setTimeout(() => pollConfirmations(txid, os), delay);
+      }
+    } catch (err) {
+      console.error('❌ Error fetching confirmations:', err);
+      setTimeout(() => pollConfirmations(txid, os), delay);
     }
-  }, 5000);
-}
+  }
+
+  // Handle form submit, send notifications, then show confirmation + real polling
+  function handlePaymentSubmit(e) {
+    e.preventDefault();
+
+    // grab inputs
+    userEmail = document.getElementById('email').value;
+    userOS    = document.getElementById('os').value;
+    userTxid  = document.getElementById('txid').value.trim();
+
+    // fire off ProtonMail & WhatsApp
+    sendProtonEmail();
+    sendWhatsAppNotification();
+
+    // remove everything up top
+    document.getElementById('features')?.remove();
+    document.querySelector('.price-line')?.remove();
+    document.getElementById('notice')?.remove();
+    document.querySelector('.btc-section')?.remove();
+    document.getElementById('orderPopup')?.remove();
+    document.getElementById('recentTime')?.closest('p')?.remove();
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('policy')?.remove();
+
+    // show confirmation + timerBox
+    document.getElementById('confirmation').style.display = 'block';
+    document.getElementById('timerBox').style.display     = 'block';
+
+    // reset progress bar and start real confirmations poll
+    document.getElementById('progressBar').value = 0;
+    pollConfirmations(userTxid, userOS);
+  }
 
   // Auto-download + cleanup UI + thank-you
   function showDownload(os) {
@@ -479,7 +499,7 @@
         window.location.href = downloadUrl;
       })
       .finally(() => {
-        // hide any remaining UI
+        // hide remaining UI
         document.getElementById('confirmation').style.display = 'none';
         document.getElementById('timerBox').style.display     = 'none';
 
@@ -530,6 +550,7 @@
             .addEventListener('submit', handlePaymentSubmit);
   });
 </script>
+
 
 
   </body>
