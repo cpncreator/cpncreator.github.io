@@ -344,11 +344,13 @@
 
   // Copy BTC price
   function copyBTCPrice() {
-    const txt = document.getElementById('btcAmount').textContent.trim();
-    navigator.clipboard.writeText(txt)
-      .then(() => alert(`📋 Copied price: ${txt}`))
-      .catch(() => alert("❌ Copy price failed"));
-  }
+  let txt = document.getElementById('btcAmount').textContent.trim();
+  // remove the approximate symbol if present
+  txt = txt.replace(/^≈\s*/, '');
+  navigator.clipboard.writeText(txt)
+    .then(() => alert(`📋 Copied price: ${txt}`))
+    .catch(() => alert("❌ Copy price failed"));
+}
 
   // Fetch BTC price
   function fetchBTCPrice() {
