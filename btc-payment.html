@@ -573,8 +573,8 @@
     // blink timestamp
     const rt = document.getElementById('recentTime');
     rt.classList.add('blink');
-    updateRecentTime();
-    setInterval(updateRecentTime, 30000);
+    updateRecentTime(); // update once
+// no setInterval — no repeated changes
 
     // TXID live validation
     const txidInput = document.getElementById('txid');
