@@ -219,13 +219,15 @@
       height: auto;
     }
     #carousel {
-      overflow-x: scroll;
-      max-width: 100%;
-    }
-    #carousel img {
-      max-width: 100%;
-      height: auto;
-    }
+  display: flex;
+  width: 100%; /* ← prevent overflow */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+#carousel img {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
     button[onclick*="moveSlide"] {
       padding: 6px 10px !important;
       font-size: 1.2rem !important;
