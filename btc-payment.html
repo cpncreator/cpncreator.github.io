@@ -141,6 +141,23 @@
     animation: spin 1s linear infinite;
   }
 
+  #orderPopup {
+    position: fixed;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1f2937;
+    color: #10b981;
+    padding: 14px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: none;
+    z-index: 9999;
+    transition: opacity 1s ease;
+  }
+
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
@@ -189,6 +206,10 @@
 
     label, input, select {
       font-size: 1em;
+    }
+
+    input, select, label {
+      margin-bottom: 14px;
     }
 
     #orderPopup {
