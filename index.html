@@ -24,13 +24,13 @@
     line-height: 1.6;
   }
   header {
-    background: linear-gradient(to right, #0f172a, #1e3a8a);
-    color: #ffffff;
-    text-align: center;
-    padding: 140px 20px 120px;
-    opacity: 0;
-    animation: fadeIn 1.5s ease-in-out forwards;
-  }
+  background: linear-gradient(to right, #0f172a, #1e3a8a);
+  color: #ffffff;
+  text-align: center;
+  padding: 140px 20px 120px;
+  opacity: 1; /* <-- prevent layout bounce */
+  animation: none; /* <-- disable problematic animation */
+}
   header h1 {
     font-size: 3.5rem;
     font-weight: 800;
