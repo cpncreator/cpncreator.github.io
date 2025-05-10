@@ -20,6 +20,8 @@
       color: white;
       text-align: center;
       padding: 140px 20px 120px;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-in-out forwards;
     }
     header h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; }
     header p {
@@ -60,17 +62,18 @@
       color: #475569;
     }
     .btn {
-  background-color: #38bdf8;
-  color: #0f172a;
-  padding: 14px 32px;
-  font-weight: 700;
-  font-size: 1.05rem;
-  border-radius: 999px;
-  text-decoration: none;
-  display: inline-block;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
+      background-color: #38bdf8;
+      color: #0f172a;
+      padding: 14px 32px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-radius: 999px;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
     .btn:hover {
       background: #0ea5e9;
       color: #ffffff;
@@ -104,6 +107,15 @@
       margin: 40px auto;
       max-width: 100%;
       border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .image-placeholder:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+    .image-placeholder.animate-in {
+      opacity: 1;
+      transform: translateY(0);
     }
     .feature-grid {
       display: grid;
@@ -117,6 +129,13 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+    .feature-box.show {
+      opacity: 1;
+      transform: translateY(0);
     }
     .feature-box h3 {
       margin-bottom: 10px;
@@ -136,15 +155,6 @@
       color: #94a3b8;
       font-size: 0.9rem;
     }
-    .image-placeholder:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .image-placeholder.animate-in {
-      opacity: 1;
-      transform: translateY(0);
-    }
     .footer-animated {
       opacity: 0;
       transform: translateY(30px);
@@ -154,95 +164,80 @@
       opacity: 1;
       transform: translateY(0);
     }
-    header { opacity: 0; animation: fadeIn 1.5s ease-in-out forwards; }
-    .btn { animation: pulse 2s infinite; }
-    .feature-box {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease;
-    }
-    .feature-box.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
     @keyframes fadeIn {
       to { opacity: 1; }
+    }
+    .fade-in-delayed {
+      opacity: 0;
+      animation: fadeIn 1.5s ease-in-out forwards;
+      animation-delay: 1.2s;
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.03); }
     }
+
     /* 📱 Mobile Responsiveness Fixes */
-@media (max-width: 600px) {
-  body, section {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-  div[style*="box-shadow: 0 4px 12px rgba(0,0,0,0.06)"] {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-  header {
-    padding: 100px 20px 80px;
-  }
-
-  header h1 {
-    font-size: 2rem !important;
-  }
-
-  header p {
-    font-size: 1rem !important;
-  }
-
-  .image-placeholder {
-    width: 100% !important;
-    height: auto;
-  }
-
-  #carousel img {
-    width: 90vw !important;
-  }
-
-  button[onclick*="moveSlide"] {
-    padding: 6px 10px !important;
-    font-size: 1.2rem;
-  }
-
-  .testimonial-wrapper {
-    flex-direction: column !important;
-    align-items: center;
-  }
-
-  .trust-badge-row {
-    flex-direction: column !important;
-    align-items: center;
-  }
-  .btn.header-cta {
-  font-size: 0.95rem !important;
-  padding: 12px 20px !important;
-  white-space: nowrap;
-  }
-  #carousel {
-  overflow-x: scroll;
-  max-width: 100%;
-  }
-#carousel img {
-  max-width: 100%;
-  height: auto;
-  }
-.testimonial-wrapper > div {
-  max-width: 95vw !important;
-  }
-
-
-  }
-  </style>
+    @media (max-width: 600px) {
+      body, section {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      div[style*="box-shadow: 0 4px 12px rgba(0,0,0,0.06)"] {
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      header {
+        padding: 100px 20px 80px;
+      }
+      header h1 {
+        font-size: 2rem !important;
+      }
+      header p {
+        font-size: 1rem !important;
+      }
+      .image-placeholder {
+        width: 100% !important;
+        height: auto;
+      }
+      #carousel img {
+        width: 90vw !important;
+      }
+      button[onclick*="moveSlide"] {
+        padding: 6px 10px !important;
+        font-size: 1.2rem;
+      }
+      .testimonial-wrapper {
+        flex-direction: column !important;
+        align-items: center;
+      }
+      .trust-badge-row {
+        flex-direction: column !important;
+        align-items: center;
+      }
+      .btn.header-cta {
+        font-size: 0.95rem !important;
+        padding: 12px 20px !important;
+        white-space: nowrap;
+      }
+      #carousel {
+        overflow-x: scroll;
+        max-width: 100%;
+      }
+      #carousel img {
+        max-width: 100%;
+        height: auto;
+      }
+      .testimonial-wrapper > div {
+        max-width: 95vw !important;
+      }
+    }
+</style>
 
 </head>
 <body>
 
- <<header class="fade-in-delayed">
+ <header class="fade-in-delayed">
   <!-- 🔔 Update Badge -->
   <div style="position: absolute; top: 20px; right: 20px; background: #facc15; color: #1e293b; padding: 8px 16px; font-weight: 700; font-size: 0.85rem; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 1000;">
     🔔 Update Available: v1.4.1
@@ -866,150 +861,6 @@ function moveSlide(direction) {
 }
 </script>
 
-<style>
-  header {
-    opacity: 0;
-    animation: fadeIn 1.5s ease-in-out forwards;
-  }
-  
-  .scarcity-alert {
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
-  padding: 20px 26px;
-  border-radius: 14px;
-  max-width: 500px;
-  margin: 40px auto 30px;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  animation: pulseBox 2s infinite;
-}
-
-.scarcity-main {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #b91c1c;
-  margin-bottom: 6px;
-}
-
-.scarcity-sub {
-  font-size: 1rem;
-  color: #7f1d1d;
-  margin: 0;
-}
-
-@keyframes pulseBox {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(239,68,68, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(239,68,68, 0);
-  }
-}
-
-.btn {
-  animation: pulse 2s infinite;
-}
-
-.feature-box {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease;
-}
-
-.feature-box.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.03);
-  }
-
-  .feature-box {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
-  }
-  .feature-box.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.03);
-    }
-  }
-  .fade-in-delayed {
-  opacity: 0;
-  animation: fadeIn 1.5s ease-in-out forwards;
-  animation-delay: 0.6s;
-}
-
-.badge-animate {
-  animation: popBadge 0.6s ease-in-out forwards;
-}
-
-.header-cta {
-  display: inline-block;
-  margin-top: 30px;
-  background: #38bdf8;
-  color: #0f172a;
-  padding: 14px 32px;
-  font-weight: 700;
-  font-size: 1.05rem;
-  border-radius: 999px;
-  text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-
-@keyframes popBadge {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  80% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* ✨ Fix: Fade animation only for header CTA */
-.fade-in-delayed {
-  opacity: 0;
-  animation: fadeIn 1.5s ease-in-out forwards;
-  animation-delay: 1.2s;
-}
-
-/* 🎯 Trust Badge Hover Effect */
-div[style*="background: #e0f2fe"] {
-  transition: transform 0.3s ease;
-}
-div[style*="background: #e0f2fe"]:hover {
-  transform: scale(1.05);
-}
-</style>
 <button id="scrollTopBtn" style="position:fixed;bottom:30px;right:30px;background:#38bdf8;border:none;padding:12px 20px;border-radius:30px;color:#0f172a;font-weight:700;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.1);">⬆ Top</button>
 <script>
   const scrollTopBtn = document.getElementById("scrollTopBtn");
