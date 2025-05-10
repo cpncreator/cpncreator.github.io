@@ -8,6 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" integrity="sha512-X3LQoy7H0kdrIZ7U/ERH5zAElU8YcQ1fQOQruKHk4KFPp3+9d7Z+kAfGb5TzIjYw5gmDiBGczOYZykB7soh1eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
@@ -374,15 +378,10 @@
 </section>
   
 <!-- 🧨 Scarcity Message -->
-<div class="scarcity-alert">
-  <p class="scarcity-main">
-    ⚠️ Only <strong id="copies-left">5</strong> copies left
-  </p>
-  <p class="scarcity-sub">
-    Claimed by <strong id="claimed-pros">4,134</strong> pros
-  </p>
+<div class="scarcity-alert" style="text-align:center; padding: 20px 10px; margin: 20px auto; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; max-width: 95%; box-shadow: 0 2px 6px rgba(0,0,0,0.05); font-size: 1rem; line-height: 1.4; color: #92400e;">
+  <p class="scarcity-main" style="margin-bottom: 6px;">⚠️ Only <strong id="copies-left">5</strong> copies left</p>
+  <p class="scarcity-sub">Claimed by <strong id="claimed-pros">4,134</strong> pros</p>
 </div>
-
 
   <section>
   <h2>🖥️ Inside the CPN Creator App</h2>
