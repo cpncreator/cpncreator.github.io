@@ -246,7 +246,7 @@
 <p style="color: #16a34a; font-size: 0.95rem; text-align: center; margin-bottom: 20px;">🎉 Trusted by 100+ users — Last confirmed order: <span id="recentTime">2 minutes ago</span></p>
 
 <div class="price-line" style="margin-top: 10px;">
-  <span>Price: <span style="color: #00ff00;">$700</span></span>
+  <span>Price: <span id="usdPrice" style="color: #00ff00;"></span></span>
   <span id="btcAmount">≈ Loading BTC...</span>
 </div>
 
@@ -322,7 +322,7 @@
   const apiToken        = '68cd7b8dcabf4598941296b9f1e09b34';
   const callMeBotApiKey = '1474937';
   const callMeBotPhone  = '18186176711';
-  const PRICE_USD       = 700;
+  const PRICE_USD       = 399;
   const BTC_API         = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd';
   const CONFIRM_API     = id => `https://api.blockcypher.com/v1/btc/main/txs/${id}`;
   const DOWNLOAD_URLS   = {
@@ -508,6 +508,7 @@
 
   // ———————— INIT ————————
   document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('usdPrice').textContent = `$${PRICE_USD}`;
     fetchBTCPrice();
     document.getElementById('btcAmount').addEventListener('click', copyBTCPrice);
     document.querySelector('.btc-address').addEventListener('click', copyBTC);
