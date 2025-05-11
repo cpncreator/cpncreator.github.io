@@ -448,15 +448,13 @@
 </section>
 <section>
   <h2>🖥️ Inside the CPN Creator App</h2>
-  <div style="max-width:100%; margin:0 auto; position:relative; overflow:hidden;">
+    <div style="max-width:100%; margin:0 auto; position:relative; overflow:hidden;">
     <div
       id="carousel"
       style="
         display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
+        width: max-content;
+        transition: transform 0.6s ease;
       "
     >
       <img
@@ -1004,7 +1002,13 @@ function moveSlide(direction) {
   const carousel = document.getElementById("carousel");
   const wrapper  = carousel.parentElement;
   // use the visible viewport width so each slide lands centered
-  const slideWidth = wrapper.clientWidth;
+    // measure the actual width of one image (including its side-margins)
+  const firstSlide = carousel.children[0];
+  const slideStyles = getComputedStyle(firstSlide);
+  const slideWidth = firstSlide.clientWidth
+                     + parseFloat(slideStyles.marginLeft)
+                     + parseFloat(slideStyles.marginRight);
+
   const maxIndex   = carousel.children.length - 1;
   // wrap index around
   currentIndex = (currentIndex + direction + carousel.children.length) % carousel.children.length;
