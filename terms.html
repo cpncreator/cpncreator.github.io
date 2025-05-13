@@ -21,9 +21,21 @@
   <p>By accessing and using CPN Creator, you agree to the following terms:</p>
   <ul>
     <li>This software is for educational and simulation use only.</li>
-    <li>No guarantees are made regarding credit approval, legality, or accuracy of generated data.</li>
+    <li>No guarantees are made regarding accuracy of generated data.</li>
     <li>You are responsible for how you use the application.</li>
   </ul>
   <p><a href="index.html">← Back to Home</a></p>
+   <div id="footer-container"></div>
+<script>
+  fetch('footer.html')
+    .then(res => res.text())
+    .then(data => document.getElementById('footer-container').innerHTML = data);
+</script>
+  <div id="footer-container"></div>
+  <script>
+    fetch('footer.html')
+      .then(res => res.text())
+      .then(data => document.getElementById('footer-container').innerHTML = data);
+  </script>
 </body>
 </html>
