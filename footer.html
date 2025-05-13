@@ -19,6 +19,47 @@
       <a href="terms.html" style="color: #38bdf8; text-decoration: underline;">Terms of Service</a> &nbsp;|&nbsp;
       <a href="refund.html" style="color: #38bdf8; text-decoration: underline;">Refund Policy</a>
     </p>
-    <p style="margin-top: 10px;">© 2025 CPN Creator</p>
+    <p style="margin-top: 10px;">
+      © 2025 CPN Creator
+      <span id="click-count" style="margin-left: 10px; color: #94a3b8;">–</span>
+      <span id="visit-count" style="margin-left: 6px; color: #fbbf24;">• 0v</span>
+    </p>
   </div>
+
+  <!-- Display-Only View + Click Counter Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const clickSpan = document.getElementById('click-count');
+      const visitSpan = document.getElementById('visit-count');
+
+      const CLICK_API_URL = 'https://cleddoffshores.com/counter.php';
+      const VISIT_API_URL = 'https://cleddoffshores.com/visits.php';
+
+      function updateClickCount() {
+        fetch(CLICK_API_URL)
+          .then(res => res.json())
+          .then(data => {
+            if (clickSpan) clickSpan.textContent = data.count.toLocaleString();
+          })
+          .catch(() => {
+            if (clickSpan) clickSpan.textContent = '–';
+          });
+      }
+
+      function updateVisitCount() {
+        fetch(VISIT_API_URL)
+          .then(res => res.json())
+          .then(data => {
+            if (visitSpan) visitSpan.textContent = `• ${data.count}v`;
+          })
+          .catch(() => {
+            if (visitSpan) visitSpan.textContent = '• 0v';
+          });
+      }
+
+      // Only read (do NOT post to visit count)
+      updateVisitCount();
+      updateClickCount();
+    });
+  </script>
 </footer>
