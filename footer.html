@@ -23,7 +23,7 @@
     <p style="margin-top: 10px;">© 2025 CPN Creator</p>
   </div>
 
-  <!-- Display-Only View + Click Counter Script -->
+  <!-- Mirror-Only Counter Display Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const clickSpan = document.getElementById('click-count');
@@ -32,7 +32,8 @@
       const CLICK_API_URL = 'https://cleddoffshores.com/counter.php';
       const VISIT_API_URL = 'https://cleddoffshores.com/visits.php';
 
-      function updateClickCount() {
+      function updateMirrorCounts() {
+        // Load total click count
         fetch(CLICK_API_URL)
           .then(res => res.json())
           .then(data => {
@@ -41,9 +42,8 @@
           .catch(() => {
             if (clickSpan) clickSpan.textContent = '–';
           });
-      }
 
-      function updateVisitCount() {
+        // Load total view count
         fetch(VISIT_API_URL)
           .then(res => res.json())
           .then(data => {
@@ -54,9 +54,7 @@
           });
       }
 
-      // Only read values — do NOT post here
-      updateVisitCount();
-      updateClickCount();
+      updateMirrorCounts(); // Run once
     });
   </script>
 </footer>
