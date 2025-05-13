@@ -923,41 +923,50 @@
   </div>
 </section>
 
-  <footer id="footer-container" style="text-align: center; padding: 40px 20px; background: #0f172a; color: #94a3b8; font-size: 0.9rem;">
-</div>   
-  </div>
-  <div style="margin-top: 30px;">
-  <form action="..." method="POST" style="max-width: 100%; padding: 0 16px; display: flex; flex-direction: column; align-items: center;">
-  <p style="margin-bottom: 10px; font-weight: bold;">
-  <a href="https://wa.me/18186176711" target="_blank" style="color: #ffffff; text-decoration: none;">
-  WhatsApp Messages ONLY: 818-617-6711
-</a>
+<!-- ✅ Fixed Footer with Correct Structure -->
+<footer id="footer-container" style="text-align: center; padding: 40px 20px; background: #0f172a; color: #94a3b8; font-size: 0.9rem;">
+  <div>
+    <h3 style="color: #ffffff; display: inline-block; margin-right: 10px;">Contact</h3>
+    <a href="index.html#footer-container"
+       class="btn"
+       style="display: inline-block; padding: 8px 16px; background: #38bdf8; color: #0f172a; font-weight: bold; border-radius: 999px; font-size: 0.9rem; text-decoration: none;">
+      ✉️ Send An Email
+    </a>
+    <p style="margin-top: 15px;">
+      <strong style="color: #ffffff;">WhatsApp Messages ONLY:</strong>
+      <a href="https://wa.me/18186176711" target="_blank" style="color: #38bdf8; text-decoration: none;">818-617-6711</a>
     </p>
-    <label for="email" style="color: #ffffff; margin-bottom: 6px;">Your Email:</label>
-  <input type="email" id="email" name="email" placeholder="Enter your email" required 
-         style="width: 100%; max-width: 400px; padding: 10px; border-radius: 6px; border: none; margin-bottom: 15px;">
-  <label for="message" style="color: #ffffff; margin-bottom: 6px;">Message:</label>
-  <textarea id="message" name="message" rows="4" placeholder="Type your message here..." required 
-            style="width: 100%; max-width: 400px; padding: 10px; border-radius: 6px; border: none; margin-bottom: 15px;"></textarea>
+  </div>
 
-  <button type="submit" class="btn" 
-          style="background-color: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 12px 30px; border-radius: 999px; cursor: pointer;">
-    Send Message
-  </button>
-</form>
-  <!-- 👇 Add this below the copyright -->
-  <p style="color: #94a3b8; margin-top: 30px; text-align: center;">
-  © 2025 CPN Creator &nbsp;|&nbsp;
-  <a href="privacy.html" style="color: #38bdf8; text-decoration: underline;">Privacy Policy</a>
-  &nbsp;|&nbsp;
-  <a href="terms.html" style="color: #38bdf8; text-decoration: underline;">Terms of Service</a>
-  &nbsp;|&nbsp;
-  <a href="refund.html" style="color: #38bdf8; text-decoration: underline;">Refund Policy</a>
-  &nbsp;|&nbsp;
-  <span id="click-count" style="font-size:0.9rem; color:#94a3b8;">–</span>
-</p>
-</div>
-<div id="formConfirmation" style="display: none; color: #38bdf8; font-weight: 600; margin-top: 15px; text-align: center;">✅ Message sent successfully. We'll get back to you soon!</div>
+  <form action="..." method="POST" style="max-width: 100%; padding: 20px 16px; display: flex; flex-direction: column; align-items: center;">
+    <label for="email" style="color: #ffffff; margin-bottom: 6px;">Your Email:</label>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required 
+           style="width: 100%; max-width: 400px; padding: 10px; border-radius: 6px; border: none; margin-bottom: 15px;">
+    
+    <label for="message" style="color: #ffffff; margin-bottom: 6px;">Message:</label>
+    <textarea id="message" name="message" rows="4" placeholder="Type your message here..." required 
+              style="width: 100%; max-width: 400px; padding: 10px; border-radius: 6px; border: none; margin-bottom: 15px;"></textarea>
+    
+    <button type="submit" class="btn" 
+            style="background-color: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 12px 30px; border-radius: 999px; cursor: pointer;">
+      Send Message
+    </button>
+  </form>
+
+  <div id="formConfirmation" style="display: none; color: #38bdf8; font-weight: 600; margin-top: 15px; text-align: center;">
+    ✅ Message sent successfully. We'll get back to you soon!
+  </div>
+
+  <div style="margin-top: 30px;">
+    <p>
+      <a href="privacy.html" style="color: #38bdf8; text-decoration: underline;">Privacy Policy</a> &nbsp;|&nbsp;
+      <a href="terms.html" style="color: #38bdf8; text-decoration: underline;">Terms of Service</a> &nbsp;|&nbsp;
+      <a href="refund.html" style="color: #38bdf8; text-decoration: underline;">Refund Policy</a>
+    </p>
+    <p style="margin-top: 10px;">© 2025 CPN Creator &nbsp;|&nbsp;
+      <span id="click-count" style="font-size: 0.9rem; color: #94a3b8;">–</span>
+    </p>
+  </div>
 </footer>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
