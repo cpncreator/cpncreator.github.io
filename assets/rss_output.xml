@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-    <rss version="2.0">
-    <channel>
-        <title>CPN Creator Buyer Traffic Feed</title>
+<rss version="2.0">
+<channel>
+    <title>CPN Creator Buyer Traffic Feed</title>
+    <link>https://cpncreator.github.io</link>
+    <description>Targeted credit repair & CPN buyer-intent traffic</description>
+    <lastBuildDate>Wed, 14 May 2025 03:03:29 +0000</lastBuildDate>
+
+    <item>
+        <title>No Buyer Posts Found – Visit the Official Tool</title>
         <link>https://cpncreator.github.io</link>
-        <description>Targeted credit repair & CPN buyer-intent traffic</description>
-        <lastBuildDate>Wed, 14 May 2025 03:03:29 +0000</lastBuildDate>
-        
-        <item>
-            <title>No Buyer Posts Found – Try This Verified CPN Tool</title>
-            <link>https://cpncreator.github.io — YouTube: https://youtu.be/R6Q5ZwBqA50</link>
-            <description>There were no buyer queries detected in this scan, but our verified CPN tool is always available to help you start your credit journey instantly.</description>
-            <pubDate>Wed, 14 May 2025 03:03:29 +0000</pubDate>
-        </item>
-        
-    </channel>
-    </rss>
+        <description>This is the official CPN generator for verified, SSA-compliant numbers. Great for credit repair professionals.</description>
+        <pubDate>Wed, 14 May 2025 03:03:29 +0000</pubDate>
+    </item>
+
+    <item>
+        <title>Watch the Video Demo of CPN Creator</title>
+        <link>https://youtu.be/R6Q5ZwBqA50</link>
+        <description>This video walkthrough explains how the tool works and how you can generate your own clean CPN today.</description>
+        <pubDate>Wed, 14 May 2025 03:03:29 +0000</pubDate>
+    </item>
+
+</channel>
+</rss>
