@@ -449,86 +449,6 @@
     </a>
   </div>
 </section>
-<section>
-  <h2>🖥️ Inside the CPN Creator App</h2>
-    <div style="max-width:100%; margin:0 auto; position:relative; overflow:hidden;">
-    <div
-      id="carousel"
-      style="
-        display: flex;
-        width: max-content;
-        transition: transform 0.6s ease;
-      "
-    >
-      <img
-        src="https://cdn.jsdelivr.net/gh/cpncreator/cpncreator.github.io/assets/webpp/cpn%20create33-1%20(1).webp"
-        alt="CPN App Screen"
-        loading="lazy"
-        decoding="async"
-        style="flex-shrink:0; margin:0 10px; scroll-snap-align:center; width:960px; max-height:480px; object-fit:contain; border-radius:12px;"
-      />
-      <img
-        src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/webpp/1-1%20(1).webp"
-        alt="App Dashboard Interface"
-        loading="lazy"
-        decoding="async"
-        style="flex-shrink:0; margin:0 10px; scroll-snap-align:center; width:960px; max-height:480px; object-fit:contain; border-radius:12px;"
-      />
-      <img
-        src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/webpp/2-1%20(1).webp"
-        alt="CPN Result Output"
-        loading="lazy"
-        decoding="async"
-        style="flex-shrink:0; margin:0 10px; scroll-snap-align:center; width:960px; max-height:480px; object-fit:contain; border-radius:12px;"
-      />
-      <img
-        src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/webpp/3-1%20(1).webp"
-        alt="SSA Rule Validator Chart"
-        loading="lazy"
-        decoding="async"
-        style="flex-shrink:0; margin:0 10px; scroll-snap-align:center; width:960px; max-height:480px; object-fit:contain; border-radius:12px;"
-      />
-      <img
-        src="https://raw.githubusercontent.com/cpncreator/cpncreator.github.io/main/assets/webpp/4-1%20(1).webp"
-        alt="Batch Generation Mode"
-        loading="lazy"
-        decoding="async"
-        style="flex-shrink:0; margin:0 10px; scroll-snap-align:center; width:960px; max-height:480px; object-fit:contain; border-radius:12px;"
-      />
-    </div>
-
-    <button
-      onclick="moveSlide(-1)"
-      style="
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        transform: translateY(-50%);
-        background: #0f172a;
-        color: #fff;
-        border: none;
-        padding: 10px 14px;
-        cursor: pointer;
-        border-radius: 6px;
-      "
-    >‹</button>
-    <button
-      onclick="moveSlide(1)"
-      style="
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        background: #0f172a;
-        color: #fff;
-        border: none;
-        padding: 10px 14px;
-        cursor: pointer;
-        border-radius: 6px;
-      "
-    >›</button>
-  </div>
-</section>
 
 <section style="padding: 20px 0 10px;">
   <div style="text-align: center;">
@@ -1006,24 +926,6 @@ function showConfirmation(event) {
       alert("There was an error sending your message. Please try again later.");
     }
   }).catch(() => alert("There was an error connecting. Please try again later."));
-}
-  let currentIndex = 0;
-function moveSlide(direction) {
-  const carousel = document.getElementById("carousel");
-  const wrapper  = carousel.parentElement;
-  // use the visible viewport width so each slide lands centered
-    // measure the actual width of one image (including its side-margins)
-  const firstSlide = carousel.children[0];
-  const slideStyles = getComputedStyle(firstSlide);
-  const slideWidth = firstSlide.clientWidth
-                     + parseFloat(slideStyles.marginLeft)
-                     + parseFloat(slideStyles.marginRight);
-
-  const maxIndex   = carousel.children.length - 1;
-  // wrap index around
-  currentIndex = (currentIndex + direction + carousel.children.length) % carousel.children.length;
-  carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-}
 </script>
 
 <button id="scrollTopBtn" style="position:fixed;bottom:30px;right:30px;background:#38bdf8;border:none;padding:12px 20px;border-radius:30px;color:#0f172a;font-weight:700;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.1);">⬆ Top</button>
