@@ -1065,6 +1065,27 @@ document.addEventListener('DOMContentLoaded', function () {
   setInterval(updateVisitCount, 5000);
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const emailInput = document.getElementById("email");
+  const messageInput = document.getElementById("message");
+  const submitBtn = document.querySelector("button[type='submit']");
+
+  function checkInputs() {
+    if (emailInput.value.trim() && messageInput.value.trim()) {
+      submitBtn.disabled = false;
+    } else {
+      submitBtn.disabled = true;
+    }
+  }
+
+  emailInput.addEventListener("input", checkInputs);
+  messageInput.addEventListener("input", checkInputs);
+
+  // Start with it disabled
+  submitBtn.disabled = true;
+});
+</script>
 
 </body>
 </html>
