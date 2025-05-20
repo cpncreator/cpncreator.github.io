@@ -913,7 +913,12 @@ document.querySelectorAll('footer').forEach(section => {
 function showConfirmation(event) {
   event.preventDefault();
   const form = event.target;
+
+  // Disable the send button immediately
+  form.querySelector("button[type='submit']").disabled = true;
+
   const data = new FormData(form);
+
   fetch(form.action, {
     method: form.method,
     body: data,
@@ -925,7 +930,12 @@ function showConfirmation(event) {
     } else {
       alert("There was an error sending your message. Please try again later.");
     }
-  }).catch(() => alert("There was an error connecting. Please try again later."));
+  }).catch(() => alert("There was an error connecting. Please try again later."))
+    .finally(() => {
+      // Optional: re-enable if needed
+      form.querySelector("button[type='submit']").disabled = false;
+    });
+}
 </script>
 
 <button id="scrollTopBtn" style="position:fixed;bottom:30px;right:30px;background:#38bdf8;border:none;padding:12px 20px;border-radius:30px;color:#0f172a;font-weight:700;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.1);">⬆ Top</button>
