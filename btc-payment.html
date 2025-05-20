@@ -272,24 +272,26 @@
 </div>
 <div id="paymentSection">
   <form id="paymentForm">
-    <label for="email">Your Email</label>
-    <input type="email" id="email" required>
+  <label for="email">Your Email</label>
+  <input type="email" id="email" required>
 
-    <label for="os">Windows or Mac Version?</label>
-    <select id="os" required>
-      <option value="">Select...</option>
-      <option value="Windows">Windows</option>
-      <option value="Mac">Mac</option>
-    </select>
+  <label for="os">Windows or Mac Version?</label>
+  <select id="os" required>
+    <option value="">Select...</option>
+    <option value="Windows">Windows</option>
+    <option value="Mac">Mac</option>
+  </select>
 
-    <label for="txid">Transaction ID</label>
-    <input type="text" id="txid" required>
-    <span id="txidFeedback"></span>
-<div id="policy">
-  🔒 SSL secured checkout | One-time license download – non-refundable
-</div>
+  <label for="txid">Transaction ID</label>
+  <input type="text" id="txid" required>
+  <span id="txidFeedback"></span>
 
-  </form>
+  <div id="policy">
+    🔒 SSL secured checkout | One-time license download – non-refundable
+  </div>
+
+  <button type="submit">Submit Payment</button> <!-- ADD THIS LINE -->
+</form>
 </div>
 
   <div id="confirmation">
